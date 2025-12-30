@@ -1,4 +1,6 @@
 ﻿// MidBoss.h
+/* 우선 Monster class 상속 필요
+* 
 #pragma once
 #include "Monster.h"
 #include "MidBossData.h"
@@ -17,3 +19,5 @@ public:
     void Attack() override;
     void GetHit(int damage) override;
 };
+
+*/

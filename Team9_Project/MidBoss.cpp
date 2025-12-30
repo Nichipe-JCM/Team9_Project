@@ -1,4 +1,5 @@
 ﻿// MidBoss.cpp
+/* 우선 Monster class 상속 필요
 #include "MidBoss.h"
 #include <iostream>
 
@@ -36,3 +37,4 @@ void MidBoss::GetHit(int damage)
     cout << "[MID BOSS] " << name << "는 쉽게 쓰러지지 않는다!" << endl;
     Monster::GetHit(damage);
 }
+*/
