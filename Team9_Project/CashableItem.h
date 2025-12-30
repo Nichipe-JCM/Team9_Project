@@ -6,5 +6,5 @@ class CashableItem : public Item
 {
 public:
 	CashableItem(const string& name, int value);
-	string getType() const override { return "È¯±İ¾ÆÀÌÅÛ"; }
+	string getType() const override { return "í™˜ê¸ˆì•„ì´í…œ"; }
 };
