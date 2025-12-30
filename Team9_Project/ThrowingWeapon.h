@@ -12,5 +12,5 @@ public:
 
 private:
 	int damage;
-	int quantity; // ÅõÃ´È½¼ö
+	int quantity; // 투척 횟수
 };
