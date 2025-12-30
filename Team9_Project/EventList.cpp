@@ -1,4 +1,4 @@
-#include "HPBuffEvent.h"
+#include "EventList.h"
 #include <iostream>
 
 using namespace std;
@@ -13,7 +13,6 @@ void HPBuffEvent::EventEffect(Character* character) {
 
 	Count++;
 }
-
 void HPBuffEvent::EventCount() {
 	cout << "호수 이벤트 조우 횟수: " << Count << endl;
 }
