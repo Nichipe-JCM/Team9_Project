@@ -125,8 +125,10 @@
   <ItemGroup>
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Event.cpp" />
+    <ClCompile Include="EventManger.cpp" />
     <ClCompile Include="FinalBoss.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="HPBuffEvent.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MidBoss.cpp" />
@@ -137,8 +139,10 @@
   <ItemGroup>
     <ClInclude Include="Character.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="EventManger.h" />
     <ClInclude Include="FinalBoss.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="HPBuffEvent.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="MidBoss.h" />
     <ClInclude Include="Mob.h" />
