@@ -8,7 +8,7 @@ public:
 	ThrowingWeapon(const string& name, int value, int damage, int quantity);
 	int getDamage() const;
 	int getQuantity() const;
-	string getType() const override { return "무기"; }
+	string getType() const override { return "투척무기"; }
 
 private:
 	int damage;
