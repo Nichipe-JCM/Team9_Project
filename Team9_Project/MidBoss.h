@@ -1,7 +1,19 @@
-﻿#pragma once
+﻿// MidBoss.h
+#pragma once
 #include "Monster.h"
-class MidBoss :
-    public Monster
-{
-};
+#include "MidBossData.h"
+#include <map>
 
+class MidBoss : public Monster //MidBoss는 Monster 상속
+{
+private:
+    int dropItemId; // CashableItems 대체 (ID로 관리)
+
+    static std::map<int, MidBossData> midBossTable;
+
+public:
+    MidBoss(int id);
+
+    void Attack() override;
+    void GetHit(int damage) override;
+};
