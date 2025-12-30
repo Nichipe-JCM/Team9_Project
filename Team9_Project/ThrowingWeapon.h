@@ -8,9 +8,9 @@ public:
 	ThrowingWeapon(const string& name, int value, int damage, int quantity);
 	int getDamage() const;
 	int getQuantity() const;
-	string getType() const override { return "ÅõÃ´¹«±â"; }
+	string getType() const override { return "ë¬´ê¸°"; }
 
 private:
 	int damage;
-	int quantity; // ÅõÃ´È½¼ö
+	int quantity; // Ã…ÃµÃƒÂ´ÃˆÂ½Â¼Ã¶
 };
