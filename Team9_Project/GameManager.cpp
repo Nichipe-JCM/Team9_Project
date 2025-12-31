@@ -28,43 +28,43 @@ bool GameManager::DefaultMenuCheck(int choice) { //기본메뉴 체크. 기본�
 	}
 }
 void GameManager::RunGame() { // 게임의 전체적인 프로세스 진행
-	//Stage = 1; // 스테이지 초기화
-	//while (true) {
-	//	SpawnMonster(Stage); // 스테이지 기준 몬스터 생성
-	//	Battle(); // 전투
-	//	if (Player->GetHP() <= 0) { // 플레이어 사망시 게임오버 출력 후 RunGame 종료
-	//		GameOver();
-	//		return;
-	//	}
-	//	BattleVictory(); // 전투 승리시 보상 지급 및 상점 or 이벤트
-	//	Stage++;
-	//	if (Stage > 21) { // 스테이지가 22이상일 경우(최종보스를 잡았을 경우) 엔딩 출력 후 처음으로
-	//		Ending();
-	//		return;
-	//	}
-	//}
+	m_Stage = 1; // 스테이지 초기화
+	while (true) {
+		SpawnMonster(m_Stage); // 스테이지 기준 몬스터 생성
+		Battle(); // 전투
+		if (m_Player->GetHP() <= 0) { // 플레이어 사망시 게임오버 출력 후 RunGame 종료
+			GameOver();
+			return;
+		}
+		BattleVictory(); // 전투 승리시 보상 지급 및 상점 or 이벤트
+		m_Stage++;
+		if (m_Stage > 21) { // 스테이지가 22이상일 경우(최종보스를 잡았을 경우) 엔딩 출력 후 처음으로
+			Ending();
+			return;
+		}
+	}
 }
 void GameManager::SpawnMonster(int stage) { // 스테이지별 몬스터 소환(임시 주석처리)
-	//if (stage == 21) CurrentMonster = new FinalBoss(); // 최종보스
-	//else if (stage % 5 == 0) CurrentMonster = new MidBoss(); // 중간보스
-	//else if (stage < 21) CurrentMonster = new Mob(); //일반몹
+	//if (stage == 21) m_CurrentMonster = new FinalBoss(); // 최종보스
+	//else if (stage % 5 == 0) m_CurrentMonster = new MidBoss(); // 중간보스
+	//else if (stage < 21) m_CurrentMonster = new Mob(); //일반몹
 	//else {} // stage가 범위 밖치명적 오류
 }
 void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력이 0이 될때까지 반복 루프
 	//while (true) { // 둘중 하나의 체력이 0이 될때까지 반복
-	//	if (Player->GetHP() <= 0) break;
-	//	Player->Attack();
-	//	if (CurrentMonster->GetHP() <= 0) break;
-	//	CurrentMonster->Attack();
+	//	if (m_Player->GetHP() <= 0) break;
+	//	m_Player->Attack();
+	//	if (m_CurrentMonster->GetHP() <= 0) break;
+	//	m_CurrentMonster->Attack();
 	//}
 
 }
 void GameManager::BattleVictory() { // 전투승리시
 	cout << "승리어쩌고저쩌고" << endl;
-	//Player->SetEXP(CurrentMonster->GetDropEXP);
-	//Player->SetGold(CurrentMonster->GetDropGold);
-	//Player->Additem(); // 아마도 드랍템 체크. stage 체크 if문 필요할지도?
-	delete CurrentMonster; // 현재 몬스터 삭제
+	//m_Player->SetEXP(m_CurrentMonster->GetDropEXP);
+	//m_Player->SetGold(m_CurrentMonster->GetDropGold);
+	//m_Player->Additem(); // 아마도 드랍템 체크. stage 체크 if문 필요할지도?
+	delete m_CurrentMonster; // 현재 몬스터 삭제
 	while (true) { // 선택지
 		cout << "1. 상점으로" << endl;
 		cout << "2. 무작위 이벤트" << endl;
@@ -130,7 +130,7 @@ void GameManager::Opening() {
 			cin.ignore(10000, '\n');
 		}
 	}
-	//Player = new Character(); // 캐릭터 생성
+	//m_Player = new Character(); // 캐릭터 생성
 	cout << "당신의 캐릭터 " << name << "이(가) 생성되었습니다!" << endl;
 }
 void GameManager::Ending() {
