@@ -5,12 +5,14 @@ using namespace std;
 class ThrowingWeapon : public Item
 {
 public:
-	ThrowingWeapon(const string& name, int value, int damage, int quantity);
+	ThrowingWeapon(const string& m_name, int m_value, int m_damage, int m_quantity);
 	int getDamage() const;
 	int getQuantity() const;
+	bool use();
 	string getType() const override { return "투척무기"; }
+	void PrintInfo() const override;
 
 private:
-	int damage;
-	int quantity; // 투척 횟수
+	int m_damage;
+	int m_quantity;
 };
