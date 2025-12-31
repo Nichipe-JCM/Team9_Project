@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Character.h"
-#include "Event.h"
+#include "EventManager.h"
 #include "Monster.h"
 #include "Shop.h"
 class GameManager

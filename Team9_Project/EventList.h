@@ -2,15 +2,58 @@
 #include "Event.h"
 
 
-class HPBuffEvent : public Event{
+class BuyBookEvent : public Event{
 private:
 	int m_Count;
 public:
-	HPBuffEvent() :m_Count(0) {}
+	BuyBookEvent() :m_Count(0) {}
 
-	void EventEffect(Character* character) override {}
+	void EventEffect(Character* character) override;
 
-	void EventCount() override {}
+	void EventCount() override;
 
 };
 
+class SurpriseSessionEvent : public Event {
+private:
+	int m_Count;
+public:
+	SurpriseSessionEvent() : m_Count(0) {}
+
+	void EventEffect(Character* character) override;
+
+	void EventCount() override;
+};
+
+class TILIsImportantEvent : public Event {
+private:
+	int m_Count;
+public:
+	TILIsImportantEvent() : m_Count(0) {}
+
+	void EventEffect(Character* character) override;
+
+	void EventCount() override;
+};
+
+class DrinkCaffeineEvent : public Event {
+private:
+	int m_Count;
+public:
+	DrinkCaffeineEvent() : m_Count(0) {}
+
+	void EventEffect(Character* character) override;
+
+	void EventCount() override;
+};
+
+class FixCodeEvent : public Event {
+private:
+	int m_Count;
+public:
+	FixCodeEvent() : m_Count(0) {}
+
+	void EventEffect(Character* character) override;
+
+	void EventCount() override;
+};
