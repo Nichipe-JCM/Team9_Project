@@ -14,5 +14,5 @@ void HPBuffEvent::EventEffect(Character* character) {
 	Count++;
 }
 void HPBuffEvent::EventCount() {
-	cout << "호수 이벤트 조우 횟수: " << Count << endl;
+	cout << "호수 이벤트 조우 횟수: " << m_Count << endl;
 }

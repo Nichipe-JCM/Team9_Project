@@ -7,7 +7,7 @@ class Event;
 using namespace std;
 class EventManger {
 private:
-	vector<Event*> EventList;
+	vector<Event*> m_EventList;
 
 public:
 	EventManger();

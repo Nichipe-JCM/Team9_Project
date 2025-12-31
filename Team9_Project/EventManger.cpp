@@ -8,12 +8,12 @@
 using namespace std;
 
 EventManger:: EventManger() {
-	EventList.push_back(new HPBuffEvent);
+	m_EventList.push_back(new HPBuffEvent);
 }
 
 EventManger :: ~EventManger(){
-		for (size_t i = 0; i < EventList.size(); i++) {
-			delete EventList[i];
+		for (size_t i = 0; i < m_EventList.size(); i++) {
+			delete m_EventList[i];
 		}
 
 }
