@@ -4,9 +4,9 @@
 
 class HPBuffEvent : public Event{
 private:
-	int Count;
+	int m_Count;
 public:
-	HPBuffEvent() :Count(0) {}
+	HPBuffEvent() :m_Count(0) {}
 
 	void EventEffect(Character* character) override {}
 
