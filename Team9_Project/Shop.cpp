@@ -8,26 +8,26 @@ using namespace std;
 void Shop::ItemSetting() 
 {	
 			
-	Product.clear();
+	m_Product.clear();
 
 	for (int i = 0; i < 2; i++) {
 		int RandomValue = rand() % 4;
 
 		if (RandomValue == 0)
 		{
-			Product.push_back(new ThrowableItems());
+			m_Product.push_back(new ThrowableItems());
 		}
 		else if (RandomValue == 1)
 		{
-			Product.push_back(new Equipment());
+			m_Product.push_back(new Equipment());
 		}
 		else if (RandomValue == 2)
 		{
-			Product.push_back(new BuffItem());
+			m_Product.push_back(new BuffItem());
 		}
 		else if (RandomValue == 3)
 		{
-			Product.push_back(new Potion());
+			m_Product.push_back(new Potion());
 		}
 	}
 
@@ -41,7 +41,7 @@ void Shop::BuyItem()
 	ItemSetting();
 
 	for (int i = 0; i < 2; i++) {
-		cout << i+1 << "." << "품목 : " << Product[i]->GetName() << "가격 : " << Product[i]->GetGold() << endl;
+		cout << i+1 << "." << "품목 : " << m_Product[i]->GetName() << "가격 : " << m_Product[i]->GetGold() << endl;
 	}
 	cout << "구매할 아이템을 선택해주세요." << endl;
 
@@ -66,7 +66,7 @@ void Shop::BuyItem()
 
 void Shop::FirstProduct() 
 {
-	cout << "1." << "품목 : " << Product[0]->GetName() << "가격 : " << Product[0]->GetGold() <<"구매했습니다." << endl;
+	cout << "1." << "품목 : " << m_Product[0]->GetName() << "가격 : " << m_Product[0]->GetGold() <<"구매했습니다." << endl;
 }
 
 

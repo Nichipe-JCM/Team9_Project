@@ -129,6 +129,7 @@
     <ClCompile Include="FinalBoss.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="EventList.cpp" />
+    <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MidBoss.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="FinalBoss.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="EventList.h" />
+    <ClInclude Include="Inventory.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="MidBoss.h" />
     <ClInclude Include="Mob.h" />

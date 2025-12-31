@@ -9,7 +9,7 @@ class Item;
 class Shop
 {
 private:
-	vector<Item*>Product; // 아이템 호출 
+	vector<Item*> m_Product; // 아이템 호출 
 	
 
 public:

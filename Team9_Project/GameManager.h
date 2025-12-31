@@ -6,9 +6,9 @@
 class GameManager
 {
 private:
-	int Stage;
-	Character* Player;
-	Monster* CurrentMonster;
+	int m_Stage;
+	Character* m_Player;
+	Monster* m_CurrentMonster;
 public:
 	GameManager();
 	~GameManager();

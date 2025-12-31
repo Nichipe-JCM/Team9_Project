@@ -25,12 +25,12 @@ public:
 
 	// set
 	void setName(const string name);
-	void setHP(int HP);
+	void setHP(int m_HP);
 
 protected:
 	string name;
-	int HP;
-	int ATK;
-	int dropGold;
-	int dropEXP;
+	int m_HP;
+	int m_ATK;
+	int m_dropGold;
+	int m_dropEXP;
 };

@@ -6,10 +6,10 @@ Item::Item(const string& name, int value)
 
 string Item::getName() const
 {
-	return name;
+	return m_name;
 }
 
 int Item::getValue() const
 {
-	return value;
+	return m_value;
 }
