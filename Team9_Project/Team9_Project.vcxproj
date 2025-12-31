@@ -126,7 +126,7 @@
   <ItemGroup>
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Event.cpp" />
-    <ClCompile Include="EventManger.cpp" />
+    <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="FinalBoss.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="EventList.cpp" />
