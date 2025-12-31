@@ -1,40 +1,60 @@
-﻿// MidBoss.cpp
-/* 우선 Monster class 상속 필요
-#include "MidBoss.h"
+﻿#include "MidBoss.h" // MidBoss 클래스 구현을 위해 헤더 포함
+
 #include <iostream>
 
 using namespace std;
 
-// 🔹 미드보스 데이터 테이블
-map<int, MidBossData> MidBoss::midBossTable =
+
+// 미드보스 데이터 테이블 정의 // static 멤버 변수는 cpp 파일에서 반드시 한 번 정의해야 함
+map<int, MidBossData> MidBoss::midBossTable =  // key : id (1~4) // value : 해당 id에 대응하는 미드보스 정보
+//  미드보스 데이터 테이블
 {
-    { 1, { "김조은 튜터", 300, 50, 100, 200 } },
-    { 2, { "김극민", 500, 100, 300, 500 } },
-    { 3, { "김봉재", 800, 150, 600, 900 } },
-    { 4, { "손승현", 1200, 200, 1000, 1500 } }
+    { 1, { "김조은 튜터",  5,  200, 100 } },   // Stage 5
+    { 2, { "김극민",     10,  300, 200 } },   // Stage 10
+    { 3, { "김봉재",     15,  600, 400 } },   // Stage 15
+    { 4, { "손승현",     20, 1000, 800 } }   // Stage 20
 };
 
-MidBoss::MidBoss(int id)
+
+// MidBoss 생성자
+MidBoss::MidBoss(int id)  // id 값에 따라 midBossTable에서 데이터를 가져와 // Monster 생성자에 전달
     : Monster(
-        midBossTable.at(id).name,
-        midBossTable.at(id).hp,
-        midBossTable.at(id).atk,
-        midBossTable.at(id).dropGold,
-        midBossTable.at(id).dropExp
-    ),
-    //dropItemId(id) //Drop 아이템은 아이템 class 상속 예정
+        midBossTable.at(id).name,      // 몬스터 이름
+        midBossTable.at(id).level,     // 몬스터 레벨
+        midBossTable.at(id).dropGold,  // 드랍 골드
+        midBossTable.at(id).dropExp    // 드랍 경험치
+    )
 {
-    cout << "[MID BOSS] " << name << " 등장!" << endl;
+
+    cout << "[MID BOSS] " << name << " 등장!" << endl; // 미드보스 등장 연출
 }
 
-void MidBoss::Attack()
+
+
+
+void MidBoss::attack(Player* player) // 미드보스 공격 // Monster의 기본 공격에 미드보스 전용 메시지를 오버라이드
 {
-    cout << "[MID BOSS] " << name << "의 공격!" << endl;
+    cout << "[MID BOSS] " << name << "의 과제 공격!" << endl;
+
+    // 실제 공격 로직은 부모 클래스에게 맡김
+    Monster::attack(player);
 }
 
-void MidBoss::GetHit(int damage)
+
+
+void MidBoss::GetHit(int damage) // 미드보스 피격 시 전용 메시지를 출력한 뒤 // 실제 데미지 계산은 Monster에게 위임
 {
     cout << "[MID BOSS] " << name << "는 쉽게 쓰러지지 않는다!" << endl;
+
     Monster::GetHit(damage);
 }
+
+/* void MidBoss::Die() //**********************Monster의 Die() 함수를가져와야 함.
+{
+    cout << "[MID BOSS] " << name << " 격파!" << endl;
+    cout << "강력한 기운이 사라진다..." << endl;
+
+    Monster::Die();  //  핵심: 부모에게 실제 처리 위임
+}
+
 */
