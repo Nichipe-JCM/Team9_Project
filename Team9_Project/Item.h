@@ -17,6 +17,6 @@ public:
 	virtual string getType() const = 0;
 
 private:
-	string name;
-	int value;
+	string m_name;
+	int m_value;
 };

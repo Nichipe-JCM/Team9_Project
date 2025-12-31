@@ -9,17 +9,17 @@ using namespace std;
 class Character
 {
 private:
-	string Name;
-	int HP, MaxHP;
-	int ATK;
-	int EXP;
-	int EXPToLevelUp;
-	int Level;
-	int MaxLevel;
-	int Gold;
-	int MaxInventorySize;
+	string m_name;
+	int m_HP, MaxHP;
+	int m_ATK;
+	int m_EXP;
+	int m_EXPToLevelUp;
+	int m_Level;
+	int m_MaxLevel;
+	int m_Gold;
+	int m_MaxInventorySize;
 
-	vector<Item> Inventory;
+	vector<Item> m_Inventory;
 
 
 public:
