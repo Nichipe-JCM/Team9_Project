@@ -3,19 +3,20 @@
 
 
 class Event;
+class Character;
 
 using namespace std;
-class EventManger {
+class EventManager {
 private:
 	vector<Event*> m_EventList;
 
 public:
-	EventManger();
+	EventManager();
 	
 
-	~EventManger();
+	~EventManager();
 
-	void StartEvent();
+	void StartEvent(Character* character);
 
 };
 

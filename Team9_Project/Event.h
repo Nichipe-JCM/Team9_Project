@@ -1,4 +1,6 @@
-﻿#pragma once
+#pragma once
+#include "Character.h"
+
 class Event
 {
 public:
