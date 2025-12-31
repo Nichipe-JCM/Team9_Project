@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "Item.h"
 #include <vector>
+class StatusManager;
+class Character;
 
 class Inventory
 {
@@ -10,9 +12,11 @@ private:
 public:
 	Inventory(int slot);
 	~Inventory();
-	void AddItem(Item* item);
-	void RemoveItem(int index);
-	void UseItem(int index);
-	vector<Item*> GetItem();
+	bool AddItem(Item* item);
+	void RemoveItemFromIndex(int index);
+	void RemoveItemFromPointer(Item* item);
+	Item* GetItem(int index);
+	vector<Item*>& GetInventory();
+	void ManageInventory(StatusManager* sm, Character* ch);
 };
 

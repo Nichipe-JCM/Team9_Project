@@ -1,14 +1,22 @@
 ﻿#pragma once
 #include "Character.h"
-#include "Event.h"
 #include "Monster.h"
 #include "Shop.h"
+#include "EventManager.h"
+#include "StatusManager.h"
+
+class Inventory;
+
 class GameManager
 {
 private:
 	int m_Stage;
 	Character* m_Player;
 	Monster* m_CurrentMonster;
+	EventManager* m_Event;
+	Shop* m_Shop;
+	StatusManager* m_SM;
+
 public:
 	GameManager();
 	~GameManager();
@@ -22,9 +30,9 @@ public:
 	void VisitEvent();
 	void Opening();
 	void Ending();
-	void ViewCharacterStatus();
-	void ViewBattleStatus();
-	void ViewAchievements();
-	void ViewInventory();
+	void ViewCharacterStatus(StatusManager* sm);
+	void ViewBattleStatus(StatusManager* sm);
+	void ViewAchievements(StatusManager* sm);
+	void ViewInventory(StatusManager* sm, Inventory* inv);
 };
 

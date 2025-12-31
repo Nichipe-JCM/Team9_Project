@@ -1,10 +1,12 @@
 ﻿#include "GameManager.h"
 #include "Utils.h"
 #include <iostream>
+#include <Windows.h>
 
 using namespace std;
 
 int main() {
+	SetConsoleOutputCP(65001);
 	while (true) {
 		GameManager GM;
 		GM.Opening();
