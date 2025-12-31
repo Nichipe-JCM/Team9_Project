@@ -7,6 +7,7 @@ using namespace std;
 
 // 미드보스 데이터 테이블 정의 // static 멤버 변수는 cpp 파일에서 반드시 한 번 정의해야 함
 map<int, MidBossData> MidBoss::midBossTable =  // key : id (1~4) // value : 해당 id에 대응하는 미드보스 정보
+//  미드보스 데이터 테이블
 {
     { 1, { "김조은 튜터",  5,  200, 100 } },   // Stage 5
     { 2, { "김극민",     10,  300, 200 } },   // Stage 10
