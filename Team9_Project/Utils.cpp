@@ -28,3 +28,7 @@ int Utils::DefaultMenu() {
     cout << "---------------------------------" << endl;
     return GetSafeInput();
 }
+
+void Utils::DrawLine() {
+    cout << "=================================" << endl;
+}

@@ -3,12 +3,34 @@
 #include "Mob.h"
 #include "FinalBoss.h"
 #include "Utils.h"
+#include "Inventory.h"
 #include <iostream>
 #include <cctype>
 
 using namespace std;
-GameManager::GameManager() {}
-GameManager::~GameManager() {}
+GameManager::GameManager() {
+	m_Event = new EventManager();
+	m_Shop = new Shop();
+	m_SM = new StatusManager();
+}
+GameManager::~GameManager() {
+	if (m_Player != nullptr) {
+		delete m_Player;
+		m_Player = nullptr;
+	}
+	if (m_CurrentMonster != nullptr) {
+		delete m_CurrentMonster;
+		m_CurrentMonster = nullptr;
+	}
+	if (m_Event != nullptr) {
+		delete m_Event;
+		m_Event = nullptr;
+	}
+	if (m_Shop != nullptr) {
+		delete m_Shop;
+		m_Shop = nullptr;
+	}
+}
 bool GameManager::DefaultMenuCheck(int choice) { //기본메뉴 체크. 기본메뉴에 대해서는 Utils.cpp 확인
 	switch (choice) {
 	case 7:
@@ -44,11 +66,22 @@ void GameManager::RunGame() { // 게임의 전체적인 프로세스 진행
 		}
 	}
 }
-void GameManager::SpawnMonster(int stage) { // 스테이지별 몬스터 소환(임시 주석처리)
-	if (stage == 21) m_CurrentMonster = new FinalBoss(); // 최종보스
-	else if (stage % 5 == 0) m_CurrentMonster = new MidBoss(); // 중간보스
-	else if (stage < 21) m_CurrentMonster = new Mob(); //일반몹
-	else {} // stage가 범위 밖치명적 오류
+void GameManager::SpawnMonster(int stage) {
+	if (stage == 21) { // 최종보스
+		m_CurrentMonster = new FinalBoss();
+	}
+	else if (stage % 5 == 0) { // 중간보스
+		int midBossId = stage / 5;
+		m_CurrentMonster = new MidBoss(midBossId);
+	}
+	else if (stage < 21) { // 일반몹
+		m_CurrentMonster = new Mob();
+	}
+	else {
+		cout << "**예상치 못한 오류가 발생하였습니다. stage를 1로 리셋하고 일반 몬스터를 소환합니다.**" << endl;
+		m_Stage = 1;
+		m_CurrentMonster = new Mob();
+	} // stage가 범위 밖일 경우 : 치명적 오류!
 }
 void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력이 0이 될때까지 반복 루프
 	while (true) { // 둘중 하나의 체력이 0이 될때까지 반복
@@ -92,7 +125,7 @@ void GameManager::VisitShop() {
 	//상점 관련 호출
 }
 void GameManager::VisitEvent() {
-	//이벤트 관련 호출
+	m_Event->StartEvent();
 }
 void GameManager::Opening() {
 	string name;
@@ -130,21 +163,21 @@ void GameManager::Opening() {
 			cin.ignore(10000, '\n');
 		}
 	}
-	//m_Player = new Character(); // 캐릭터 생성
+	m_Player = new Character(name); // 캐릭터 생성
 	cout << "당신의 캐릭터 " << name << "이(가) 생성되었습니다!" << endl;
 }
 void GameManager::Ending() {
-	//엔딩 연출
+	cout << "YOU WIN!" << endl; // 임시
 }
-void GameManager::ViewCharacterStatus() {
-	//캐릭터 스테이터스 조회
+void GameManager::ViewCharacterStatus(StatusManager* sm) {
+	sm->DisplayCharacterStatus(m_Player);
 }
-void GameManager::ViewBattleStatus() {
-	//전투 전적 조회
+void GameManager::ViewBattleStatus(StatusManager* sm) {
+	sm->DisplayBattleStatus();
 }
-void GameManager::ViewAchievements() {
-	//업적 조회
+void GameManager::ViewAchievements(StatusManager* sm) {
+	//sm->DisplayAchievements();
 }
-void GameManager::ViewInventory() {
-	//인벤토리 조회
+void GameManager::ViewInventory(StatusManager* sm, Inventory* Inv) {
+	Inv->ManageInventory(sm, m_Player);
 }
