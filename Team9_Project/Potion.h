@@ -5,10 +5,10 @@ using namespace std;
 class Potion : public Item
 {
 public:
-	Potion(const string& name, int value, int healAmount);
-	int getHealAmount() const;
-	string getType() const override { return "Ìè¨ÏÖò"; }
-
-private:
-	int healAmount;
+	Potion(const string& m_name, int m_value)
+		: Item(m_name, m_value) {
+	}
+	// √ﬂªÛ¿∏∑Œ µŒ∞Ì ø‹∫Œø°º≠ ¡¶¿€
+	virtual int getEffectAmount() const = 0;
+	virtual string getType() const override = 0;
 };

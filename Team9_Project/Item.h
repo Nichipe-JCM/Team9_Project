@@ -1,22 +1,33 @@
-﻿#pragma once
-#include<string>
-using namespace std;
+#pragma once
+#include <string>
 
-class Item
-{
+enum class ItemCategory { Weapon, Throwing, HPotion, BPotion, Cash };
+enum class Rarity { Common, Rare, Epic, Legendary };
+
+class Item {
+protected:
+	std::string m_name;
+	int m_value;
+	int m_attack;
+	int m_heal;
+	int m_buff;
+	ItemCategory m_itemType;
+	Rarity m_rarity;
+
 public:
-	Item(const string& name, int value, int attack = 0, int heal);
-	virtual ~Item() = default;
+	Item(const std::string& name, int value, int attack, int heal, int buff,
+		ItemCategory itemType, Rarity rarity);
 
-	string getName() const;
+	std::string getName() const;
 	int getValue() const;
 	int getAttack() const;
 	int getHeal() const;
+	int getBuff() const;
+	ItemCategory getItemType() const;
+	Rarity getRarity() const;
 
-	// 아이템 타입을 문자열로 반환 (무기, 포션 이렇게)
-	virtual string getType() const = 0;
+	virtual std::string getType() const { return "아이템"; }
+	virtual void PrintInfo() const;
 
-private:
-	string m_name;
-	int m_value;
+	virtual ~Item() = default;
 };
