@@ -8,7 +8,7 @@
 #include <cctype>
 
 using namespace std;
-GameManager::GameManager() {
+GameManager::GameManager(): m_Stage(0),	m_Player(nullptr), m_CurrentMonster(nullptr) {
 	m_Event = new EventManager();
 	m_Shop = new Shop(this);
 	m_SM = new StatusManager();
