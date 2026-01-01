@@ -1,0 +1,6 @@
+#include "Itempool.h"
+#include "Weapon.h"
+#include "Potion.h"
+#include "ThrowingWeapon.h"
+#include "CashableItem.h"
+#include "BuffPotion.h"
