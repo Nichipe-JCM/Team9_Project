@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <string>
 #include <vector>
 
@@ -8,6 +8,8 @@ using namespace std;
 class Item;
 
 class Monster;
+
+class Inventory;
 
 class Character//캐릭터 클래스
 {
@@ -28,10 +30,12 @@ private:
 	Item* m_EquippedThrow;//장착중인 투척류
 	Item* m_Equippeditem;//무기
 
+	Inventory* m_Inventory; // 임시로 인벤토리 추가
+
 
 
 public:
-	Character(string name, int hp=200, int maxHp=200, int atk=30, int level=1,int gold=0, int exp=0);//캐릭터의 초기값
+	Character(string name, int hp=200, int maxHp=200, int atk=9999, int level=1,int gold=0, int exp=0);//캐릭터의 초기값
 
 	string getName()const;
 	int getHP()const;
@@ -41,6 +45,7 @@ public:
 	int getLevel()const;
 	int getEXPToLevelUp()const;
 	int getGold()const;
+	Inventory* getInventory()const;
 	
 
 	void setHP(int Hp);
@@ -53,7 +58,7 @@ public:
 	void GainGold(int amount);
 
 	void LevelUp();
-	void Attack(Monster& target);
+	void Attack(Monster* target);
 	void GetHit(int damage);
 
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Potion.h"
 
 class BuffPotion : public Potion

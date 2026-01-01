@@ -7,6 +7,7 @@ class Mob :
 public:
     Mob(const std::string& name, int level, int gold, int exp)
         : Monster(name, level, gold, exp) { }
+
+    static Monster* createRandomMonster();
 };
 
-Monster* createRandomMonster();

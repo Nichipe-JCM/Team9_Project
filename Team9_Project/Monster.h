@@ -2,23 +2,10 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include "Item.h"
 
 class Character;
 class Item;
-
-// 아이템 희귀도 설정
-enum class Rarity {
-	Common,
-	Rare,
-	Epic,
-	Legendary
-};
-
-// 아이템 카테고리 
-enum class ItemCategory
-{
-	Weapon, Throwing, HPotion, BPotion, Cash
-};
 
 
 // 아이템과 드랍확률을 그냥 묶어버리기...
@@ -37,9 +24,10 @@ class Monster
 public:
 	// 레벨 기반 생성자
 	Monster(const std::string& name, int level, int gold, int exp);
+	virtual ~Monster() = default;
 
 	virtual void attack(Character* target);
-	void GetHit(int damage);
+	virtual void GetHit(int damage);
 
 	std::shared_ptr<Item> dropItem();
 	bool checkDeath();

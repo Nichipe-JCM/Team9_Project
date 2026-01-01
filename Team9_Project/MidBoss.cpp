@@ -32,7 +32,7 @@ MidBoss::MidBoss(int id)  // id 값에 따라 midBossTable에서 데이터를 �
 
 
 
-void MidBoss::attack(Player* player) // 미드보스 공격 // Monster의 기본 공격에 미드보스 전용 메시지를 오버라이드
+void MidBoss::attack(Character* player) // 미드보스 공격 // Monster의 기본 공격에 미드보스 전용 메시지를 오버라이드
 {
     cout << "[MID BOSS] " << name << "의 과제 공격!" << endl;
 

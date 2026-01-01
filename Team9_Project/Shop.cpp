@@ -1,9 +1,14 @@
-﻿#include "Shop.h"
+#include "Shop.h"
 #include "Item.h"
 #include "Inventory.h"
 #include "Character.h"
 #include "Utils.h"
 #include "GameManager.h"
+#include "Weapon.h"         
+#include "ThrowingWeapon.h" 
+#include "BuffPotion.h"
+#include "HealingPotion.h"
+#include "CashableItem.h"
 #include <cstdlib>
 #include <ctime>
 
@@ -17,21 +22,21 @@ void Shop::ItemSetting()
 	{
 		int RandomValue = rand() % 4;
 
-		if (RandomValue == 0)
+		if (RandomValue == 0) //임시로 넣어놨습니다. 전체 아이템 목록이 생기면 거기서 무작위로 받아올 수 있어야 합니다
 		{
-			m_Product.push_back(new ThrowableItems());
+			m_Product.push_back(new ThrowingWeapon("임시투척", 10, 10, 10));
 		}
 		else if (RandomValue == 1)
 		{
-			m_Product.push_back(new Equipment());
+			m_Product.push_back(new Weapon("임시무기", 10, 10));
 		}
 		else if (RandomValue == 2)
 		{
-			m_Product.push_back(new BuffItem());
+			m_Product.push_back(new BuffPotion("임시버프", 10, 10));
 		}
 		else if (RandomValue == 3)
 		{
-			m_Product.push_back(new Potion());
+			m_Product.push_back(new HealingPotion("임시포션", 10, 10));
 		}
 	}
 
@@ -172,14 +177,14 @@ void Shop::BuyItem(Character* player)
 // 판매 이벤트 -> RemoveItem()
 
 void Shop::SellItemFuntion(int NewProduct, Character* player) {
-	vector<Item*> items = m_Inventory->GetItem();
+	vector<Item*> items = player->getInventory()->GetInventory(); // 인벤토리 호출 부분
 	Item* itemToSell = items[NewProduct];
 	
 	int sellPrice = itemToSell->getValue() * 0.6;
 
 	player->setGold(player->getGold() + sellPrice);
 	
-	m_Inventory->RemoveItem(NewProduct);
+	m_Inventory->RemoveItemFromIndex(NewProduct);
 
 	cout << itemToSell->getName() << "를" << sellPrice
 		<< " 에 판매했습니다!" << endl;
@@ -242,7 +247,5 @@ void Shop:: NextStage(GameManager* gm) {
 	m_ShopMessage.clear();
 	for (auto item : m_Product) delete item;
 	m_Product.clear();
-
-	gm->RunGame();
 
 }// 다음 스테이지로 넘어감 -> 

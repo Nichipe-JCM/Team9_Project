@@ -20,7 +20,7 @@ FinalBoss::FinalBoss()
 }
 
 // FinalBoss 공격
-void FinalBoss::attack(Player* player)
+void FinalBoss::attack(Character* player)
 {
     // [6] 최종 보스 전용 공격 메시지
     cout << "강창민 튜터님의 압도적인 C++ 전체 복습 공격!" << endl;
@@ -39,7 +39,7 @@ void FinalBoss::GetHit(int damage)
     Monster::GetHit(damage);
 
     // [10] 체력이 0이 되었을 때 최종 메시지 출력
-    if (HP <= 0)
+    if (m_HP <= 0)
     {
         cout << endl;
         cout << "===================================" << endl;

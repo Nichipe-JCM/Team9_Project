@@ -1,4 +1,4 @@
-#include "Character.h"
+﻿#include "Character.h"
 #include "Item.h"
 #include "Monster.h"
 #include "Inventory.h"
@@ -11,6 +11,7 @@ Character::Character(string name, int hp, int maxHp, int atk, int level, int gol
 {
 	m_Equippeditem = nullptr;
 	m_EquippedThrow = nullptr;
+    m_Inventory = new Inventory(20); // 임시로 생성자에 20칸의 인벤토리를 넣었습니다
 
 	m_Wepatk = 0;
 	m_Throw = false;
@@ -77,6 +78,7 @@ int Character::getEXP()const { return m_EXP; }
 int Character::getEXPToLevelUp()const { return m_EXPToLevelUp; }
 int Character::getLevel()const { return m_Level; }
 int Character::getGold()const { return m_Gold; }
+Inventory* Character::getInventory()const { return m_Inventory; } // 신규 함수
 
 void Character::setHP(int hp) { m_HP = hp; }
 void Character::setMaxHP(int maxHp) { m_MaxHP = maxHp; }
@@ -109,15 +111,16 @@ void Character::LevelUp() {
 		}
 	}
 }
-void Character::Attack(Monster& target) {
+void Character::Attack(Monster* target) {
 	if (m_Throw && m_EquippedThrow != nullptr) {//투적 무기 사용
 		cout << m_name << "이(가)" << m_EquippedThrow->getName() << "을(를) 던졌습니다!" << endl;
-		target.GetHit(m_ATK);
+		target->GetHit(m_ATK);
 		m_Throw = false;//사용후 비활성화
 		m_EquippedThrow = nullptr;
 	}
 	else {
-		cout << m_name << "이(가)" << target.getName() << "을(를) 공격합니다!" << endl;
+		cout << m_name << "이(가)" << target->getName() << "을(를) 공격합니다!" << endl;
+		target->GetHit(m_ATK);
 	}
 }
 void Character::GetHit(int damage) {

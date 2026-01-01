@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "Item.h"
 #include <vector>
+using namespace std;
+
 class StatusManager;
 class Character;
 

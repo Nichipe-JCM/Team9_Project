@@ -3,6 +3,7 @@
 #include "Inventory.h"
 #include "Item.h"
 #include "Utils.h"
+#include <iostream>
 using namespace std;
 
 StatusManager::StatusManager() {}

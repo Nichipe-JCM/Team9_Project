@@ -10,7 +10,7 @@
 using namespace std;
 GameManager::GameManager() {
 	m_Event = new EventManager();
-	m_Shop = new Shop();
+	m_Shop = new Shop(this);
 	m_SM = new StatusManager();
 }
 GameManager::~GameManager() {
@@ -34,16 +34,16 @@ GameManager::~GameManager() {
 bool GameManager::DefaultMenuCheck(int choice) { //기본메뉴 체크. 기본메뉴에 대해서는 Utils.cpp 확인
 	switch (choice) {
 	case 7:
-		ViewInventory();
+		ViewInventory(m_SM, m_Player->getInventory());
 		return true;
 	case 8:
-		ViewCharacterStatus();
+		ViewCharacterStatus(m_SM);
 		return true;
 	case 9:
-		ViewBattleStatus();
+		ViewBattleStatus(m_SM);
 		return true;
 	case 0:
-		ViewAchievements();
+		ViewAchievements(m_SM);
 		return true;
 	default:
 		return false; // "7,8,9,0 아님
@@ -53,8 +53,9 @@ void GameManager::RunGame() { // 게임의 전체적인 프로세스 진행
 	m_Stage = 1; // 스테이지 초기화
 	while (true) {
 		SpawnMonster(m_Stage); // 스테이지 기준 몬스터 생성
+		cout << "현재 스테이지: " << m_Stage << endl;
 		Battle(); // 전투
-		if (m_Player->GetHP() <= 0) { // 플레이어 사망시 게임오버 출력 후 RunGame 종료
+		if (m_Player->getHP() <= 0) { // 플레이어 사망시 게임오버 출력 후 RunGame 종료
 			GameOver();
 			return;
 		}
@@ -75,30 +76,32 @@ void GameManager::SpawnMonster(int stage) {
 		m_CurrentMonster = new MidBoss(midBossId);
 	}
 	else if (stage < 21) { // 일반몹
-		m_CurrentMonster = new Mob();
+		m_CurrentMonster = Mob::createRandomMonster();
 	}
 	else {
 		cout << "**예상치 못한 오류가 발생하였습니다. stage를 1로 리셋하고 일반 몬스터를 소환합니다.**" << endl;
 		m_Stage = 1;
-		m_CurrentMonster = new Mob();
+		m_CurrentMonster = Mob::createRandomMonster();
 	} // stage가 범위 밖일 경우 : 치명적 오류!
 }
 void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력이 0이 될때까지 반복 루프
 	while (true) { // 둘중 하나의 체력이 0이 될때까지 반복
-		if (m_Player->GetHP() <= 0) break;
-		m_Player->Attack();
-		if (m_CurrentMonster->GetHP() <= 0) break;
-		m_CurrentMonster->Attack();
+		if (m_Player->getHP() <= 0) break;
+		m_Player->Attack(m_CurrentMonster);
+		if (m_CurrentMonster->getHP() <= 0) break;
+		m_CurrentMonster->attack(m_Player);
 	}
 
 }
 void GameManager::BattleVictory() { // 전투승리시
 	cout << "승리어쩌고저쩌고" << endl;
-	m_Player->SetEXP(m_CurrentMonster->GetDropEXP);
-	m_Player->SetGold(m_CurrentMonster->GetDropGold);
-	m_Player->Additem(); // 아마도 드랍템 체크. stage 체크 if문 필요할지도?
+	m_Player->setEXP(m_CurrentMonster->getDropGold());
+	m_Player->setGold(m_CurrentMonster->getDropGold());
+	// m_Player->Additem(); // 아마도 드랍템 체크. stage 체크 if문 필요할지도?
+	m_SM->AddKill(m_CurrentMonster->getName());
 	delete m_CurrentMonster; // 현재 몬스터 삭제
-	while (true) { // 선택지
+	m_CurrentMonster = nullptr;
+	while (m_Stage < 21) { // 선택지. 최종보스 이하 스테이지일때만 나오게
 		cout << "1. 상점으로" << endl;
 		cout << "2. 무작위 이벤트" << endl;
 		int select = Utils::DefaultMenu(); // 기본 선택지 아래에 기본메뉴 표시 + 안전한 입력 받음
@@ -125,7 +128,7 @@ void GameManager::VisitShop() {
 	//상점 관련 호출
 }
 void GameManager::VisitEvent() {
-	m_Event->StartEvent();
+	//m_Event->StartEvent();
 }
 void GameManager::Opening() {
 	string name;
@@ -161,6 +164,7 @@ void GameManager::Opening() {
 		}
 		else {
 			cin.ignore(10000, '\n');
+			break;
 		}
 	}
 	m_Player = new Character(name); // 캐릭터 생성

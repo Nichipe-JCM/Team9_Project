@@ -1,8 +1,8 @@
-#include "HealingPotion.h"
+﻿#include "HealingPotion.h"
 #include <iostream>
 
-HealingPotion::HealingPotion(const string& name, int value, int healAmount)
-	: Potion(name, value), m_healAmount(healAmount) {}
+HealingPotion::HealingPotion(const string& name, int value, int healAmount) // 여기도 전체적으로 고쳐서 레어리티를 넘겨줘야 할 것으로 보입니다
+	: Potion(name, value, healAmount, 0, ItemCategory::HPotion), m_healAmount(healAmount) {}
 
 int HealingPotion::getEffectAmount() const
 {

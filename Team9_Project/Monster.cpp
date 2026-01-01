@@ -5,6 +5,7 @@
 #include "HealingPotion.h"
 #include "BuffPotion.h"
 #include "CashableItem.h"
+#include "Item.h"
 
 #include <iostream>
 #include <string>
@@ -36,7 +37,7 @@ void Monster::attack(Character* target)
 	cout << name << "의 공격! (공격력: " << m_ATK << ")" << endl;
 	// player->gethit(m_atk)
 	if (target != nullptr) {
-		target->getHit(m_ATK); // 나중에 character.h에 gethit 들어오면 오류 사라짐
+		target->GetHit(m_ATK); // 나중에 character.h에 gethit 들어오면 오류 사라짐
 	}
 }
 
@@ -58,14 +59,14 @@ bool Monster::checkDeath() {
 
 		cout << m_dropGold << " 골드와 " << m_dropEXP << " 경험치를 획득했다!" << endl;
 
-		auto dropped = dropItem();
-		if (dropped)
-		{
-			cout << "플레이어가 "
-				<< dropped->getName()
-				<< "을(를) 획득했다!\n";
-		}
-		return true;
+		//auto dropped = dropItem();
+		//if (dropped)
+		//{
+		//	cout << "플레이어가 "
+		//		<< dropped->getName()
+		//		<< "을(를) 획득했다!\n";
+		//}
+		//return true;
 	}
 	return false;
 }
@@ -316,29 +317,29 @@ Item* getRandomDrop(const string& monsterName) {
 
 
 shared_ptr<Item> Monster::dropItem() {
-	auto it = monsterDrops.find(name);
-	if (it == monsterDrops.end()) return nullptr;
+	//auto it = monsterDrops.find(name);
+	//if (it == monsterDrops.end()) return nullptr;
 
-	static random_device rd;
-	static mt19937 gen(rd());
+	//static random_device rd;
+	//static mt19937 gen(rd());
 
-	double total = 0.0;
-	for (auto& d : it->second) total += d.dropRate;
+	//double total = 0.0;
+	//for (auto& d : it->second) total += d.dropRate;
 
-	uniform_real_distribution<> dist(0.0, total);
-	double roll = dist(gen);
+	//uniform_real_distribution<> dist(0.0, total);
+	//double roll = dist(gen);
 
-	double acc = 0.0;
-	for (auto& d : it->second) {
-		acc += d.dropRate;
-		if (roll <= acc) {
-			cout << name << "이(가) "
-				<< getRarityColor(d.rarity)
-				<< d.item->getName()
-				<< "\033[0m 을 드랍했다!\n";
-			return d.item;
-		}
-	}
+	//double acc = 0.0;
+	//for (auto& d : it->second) {
+	//	acc += d.dropRate;
+	//	if (roll <= acc) {
+	//		cout << name << "이(가) "
+	//			<< getRarityColor(d.rarity)
+	//			<< d.item->getName()
+	//			<< "\033[0m 을 드랍했다!\n";
+	//		return d.item;
+	//	}
+	//}
 
 	cout << name << "아무것도 나오지 않았다...\n";
 	return nullptr;

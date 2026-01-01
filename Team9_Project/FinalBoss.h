@@ -14,7 +14,7 @@ public:
     FinalBoss();
 
     // 최종 보스 전용 공격 연출
-    void attack(Player* player) override;
+    void attack(Character* player) override;
 
     // 최종 보스 전용 피격 연출
     void GetHit(int damage) override;

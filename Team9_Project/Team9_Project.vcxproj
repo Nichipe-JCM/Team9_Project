@@ -140,7 +140,6 @@
     <ClCompile Include="MidBoss.cpp" />
     <ClCompile Include="Mob.cpp" />
     <ClCompile Include="Monster.cpp" />
-    <ClCompile Include="Potion.cpp" />
     <ClCompile Include="Shop.cpp" />
     <ClCompile Include="StatusManager.cpp" />
     <ClCompile Include="ThrowingWeapon.cpp" />

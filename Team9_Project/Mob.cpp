@@ -4,7 +4,7 @@
 #include <ctime> 
 using namespace std;
 
-Monster* createRandomMonster() // 정해진 리스트에서 랜덤으로 몬스터가 등장하게 하기
+Monster* Mob::createRandomMonster() // 정해진 리스트에서 랜덤으로 몬스터가 등장하게 하기
 {
 	static bool seeded = false;
 	if (!seeded) {
