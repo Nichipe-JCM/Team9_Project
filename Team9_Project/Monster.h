@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <string>
 #include <vector>
 #include <memory>
@@ -13,9 +13,18 @@ struct DropEntry
 {
 	std::shared_ptr<Item> item;
 	Rarity rarity;
-	double dropRate; // 확률 (0.0 ~ 1.0)
+	double dropRate;
 	ItemCategory category;
-};
+
+	DropEntry(std::shared_ptr<Item> item, Rarity rarity, double dropRate, ItemCategory category)
+		: item(item), rarity(rarity), dropRate(dropRate), category(category)
+	{
+		// 생성자에서 레어리티 검증
+		if (item->getRarity() != rarity) {
+			throw std::invalid_argument("아이템 레어리티와 DropEntry 레어리티가 일치하지 않습니다.");
+		}
+	}
+}; // 검증은 ai에게 물어봄
 
 
 class Monster
