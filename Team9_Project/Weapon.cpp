@@ -1,4 +1,4 @@
-#include "Weapon.h"
+﻿#include "Weapon.h"
 #include <iostream>
 using namespace std;
 
@@ -15,5 +15,5 @@ int Weapon::Damage() const
 
 void Weapon::PrintInfo() const {
 	Item::PrintInfo();
-	cout << "타입: 무기, 코딩력: " << getAttack() << ", 판매 가격: " << getValue() << "코인" << endl;
+	cout << "타입: 무기, 코딩력: " << getAttack() << ", 판매 가격: " << getValue()*0.6 << "코인" << endl;
 }

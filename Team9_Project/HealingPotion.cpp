@@ -1,8 +1,8 @@
-#include "HealingPotion.h"
+﻿#include "HealingPotion.h"
 #include <iostream>
 
 HealingPotion::HealingPotion(const std::string& name, int value, int healAmount, ItemCategory type, Rarity rarity)
-	: Potion(name, value, healAmount, 0, type, rarity), m_healAmount(healAmount) { }
+	: Potion(name, value, healAmount, 0, ItemCategory(type), Rarity(rarity)), m_healAmount(healAmount) { }
 
 int HealingPotion::getEffectAmount() const
 {
@@ -10,5 +10,5 @@ int HealingPotion::getEffectAmount() const
 }
 void HealingPotion::PrintInfo() const {
 	Item::PrintInfo();
-	cout << "타입: 회복 포션, 회복량: " << getHeal() << ", 판매 가격: " << getValue() << "코인" << endl;
+	cout << "타입: 회복 포션, 회복량: " << getHeal() << ", 판매 가격: " << getValue()*0.6 << "코인" << endl;
 }

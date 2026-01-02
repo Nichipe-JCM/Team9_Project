@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <string>
 #include <vector>
 
@@ -38,7 +38,7 @@ private:
 
 public:
 	Character(string name, int hp=200, int maxHp=200, int atk=9999, int level=1,int gold=0, int exp=0);//캐릭터의 초기값
-
+	~Character();
 	;
 
 	string getName()const;

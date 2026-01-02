@@ -1,4 +1,4 @@
-#include "GameManager.h"
+﻿#include "GameManager.h"
 #include "MidBoss.h"
 #include "Mob.h"
 #include "FinalBoss.h"
@@ -73,9 +73,11 @@ void GameManager::RunGame() { // 게임의 전체적인 프로세스 진행
 			return;
 		}
 		BattleVictory(); // 전투 승리시 보상 지급 및 상점 or 이벤트
+		m_AM->UpdateAchievements(m_Player, m_SM);
 		m_Stage++;
 		if (m_Stage > 21) { // 스테이지가 22이상일 경우(최종보스를 잡았을 경우) 엔딩 출력 후 처음으로
 			Ending();
+			m_AM->UpdateAchievements(m_Player, m_SM);
 			return;
 		}
 	}
@@ -120,10 +122,12 @@ void GameManager::BattleVictory() { // 전투승리시
 	m_Player->setEXP(m_Player->getEXP() + m_CurrentMonster->getDropGold());
 	m_Player->setGold(m_Player->getGold() + m_CurrentMonster->getDropGold());
 	m_Player->LevelUp();
-	// m_Player->Additem(); // 아마도 드랍템 체크. stage 체크 if문 필요할지도?
+	Item* dropitem = m_CurrentMonster->dropItem();
+	if (dropitem != nullptr) m_Player->getInventory()->AddItem(dropitem);	
 	m_SM->AddKill(m_CurrentMonster->getName());
 	delete m_CurrentMonster; // 현재 몬스터 삭제
 	m_CurrentMonster = nullptr;
+	m_AM->UpdateAchievements(m_Player, m_SM);
 	while (m_Stage < 21) { // 선택지. 최종보스 이하 스테이지일때만 나오게
 		cout << "1. 상점으로" << endl;
 		cout << "2. 무작위 이벤트" << endl;
@@ -154,13 +158,13 @@ void GameManager::GameOver() {
 
 
 void GameManager::VisitShop() {
-	//상점 관련 호출
+	m_Shop->ShopSelect(m_Player);
 }
 
 
 
 void GameManager::VisitEvent() {
-	//m_Event->StartEvent();
+	m_Event->StartEvent(m_Player, this);
 }
 
 
@@ -227,7 +231,7 @@ void GameManager::ViewBattleStatus(StatusManager* sm) {
 
 
 void GameManager::ViewAchievements(StatusManager* sm) {
-	//sm->DisplayAchievements();
+	sm->DisplayAchievements(m_AM);
 }
 
 

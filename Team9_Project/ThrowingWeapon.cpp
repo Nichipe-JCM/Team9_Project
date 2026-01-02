@@ -1,4 +1,4 @@
-#include "ThrowingWeapon.h"
+﻿#include "ThrowingWeapon.h"
 #include <stdexcept>
 #include <iostream>
 using namespace std;
@@ -32,5 +32,5 @@ bool ThrowingWeapon::use()
 
 void ThrowingWeapon::PrintInfo() const {
 	Item::PrintInfo();
-	cout << "타입: 투척 무기, 코딩력: " << getAttack() << ", 판매 가격: " << getValue() << "코인" << endl;
+	cout << "타입: 투척 무기, 코딩력: " << getAttack() << ", 판매 가격: " << getValue()*0.6 << "코인" << endl;
 }

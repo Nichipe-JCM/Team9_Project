@@ -1,4 +1,4 @@
-#include "Item.h"
+﻿#include "Item.h"
 #include <iostream>
 
 Item::Item(const std::string& name, int value, int attack, int heal, int buff,
@@ -26,11 +26,6 @@ static std::string rarityToString(Rarity rarity) {
 }
 
 void Item::PrintInfo() const {
-	std::cout << "[" << getName() << "]("
-		<< rarityToString(getRarity()) << ") "
-		<< "Value: " << getValue()
-		<< " ATK: " << getAttack()
-		<< " Heal: " << getHeal()
-		<< " Buff: " << getBuff()
-		<< std::endl;
+	std::cout << "[" << getName() << "](" << rarityToString(getRarity()) << ") ";
 }
+

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Item.h"
 #include "Monster.h"
 class Weapon : public Item
@@ -8,6 +8,9 @@ public:
 	int Damage() const;
 	std::string getType() const override { return "무기"; }
 	void PrintInfo() const override;
+	Item* clone() const override {
+		return new Weapon(*this); // 복사 생성자 호출 (내용을 그대로 베낌)
+	}
 
 private:
 	int m_damage;

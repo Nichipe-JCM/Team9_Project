@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <string>
 
 enum class ItemCategory { Weapon, Throwing, HPotion, BPotion, Cash };
@@ -30,4 +30,5 @@ public:
 	virtual void PrintInfo() const;
 
 	virtual ~Item() = default;
+	virtual Item* clone() const = 0;
 };
