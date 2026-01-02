@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Event.h"
 
 
@@ -125,6 +125,24 @@ private:
 	int m_Count;
 public:
 	LegacyCodeEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class NappingEvent : public Event {
+private:
+	int m_Count;
+public:
+	NappingEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class PartTimeJobEvent : public Event {
+private:
+	int m_Count;
+public:
+	PartTimeJobEvent() : m_Count(0) {}
 	void EventEffect(Character* character, GameManager* gm) override;
 	void EventCount() override;
 };
