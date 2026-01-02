@@ -10,11 +10,8 @@ class Character;
 
 class AchievementManager
 {
-private:
-
-    map<string, bool> m_Achievements;
-
 public:
+    map<string, bool> m_Achievements;
     AchievementManager();
     ~AchievementManager();
     void Init();
