@@ -1,14 +1,14 @@
-#pragma once
+﻿#pragma once
 #include "Event.h"
 
 
-class BuyBookEvent : public Event{
+class BuyBookEvent : public Event {
 private:
 	int m_Count;
 public:
 	BuyBookEvent() :m_Count(0) {}
 
-	void EventEffect(Character* character,GameManager* gm) override;
+	void EventEffect(Character* character, GameManager* gm) override;
 
 	void EventCount() override;
 
@@ -20,7 +20,7 @@ private:
 public:
 	SurpriseSessionEvent() : m_Count(0) {}
 
-	void EventEffect(Character* character,GameManager* gm) override;
+	void EventEffect(Character* character, GameManager* gm) override;
 
 	void EventCount() override;
 };
@@ -31,7 +31,7 @@ private:
 public:
 	TILIsImportantEvent() : m_Count(0) {}
 
-	void EventEffect(Character* character,GameManager* gm) override;
+	void EventEffect(Character* character, GameManager* gm) override;
 
 	void EventCount() override;
 };
@@ -42,7 +42,7 @@ private:
 public:
 	DrinkCaffeineEvent() : m_Count(0) {}
 
-	void EventEffect(Character* character,GameManager* gm) override;
+	void EventEffect(Character* character, GameManager* gm) override;
 
 	void EventCount() override;
 };
@@ -53,7 +53,7 @@ private:
 public:
 	FixCodeEvent() : m_Count(0) {}
 
-	void EventEffect(Character* character,GameManager* gm) override;
+	void EventEffect(Character* character, GameManager* gm) override;
 
 	void EventCount() override;
 };
@@ -88,5 +88,43 @@ public:
 
 	void EventEffect(Character* character, GameManager* gm) override;
 
+	void EventCount() override;
+};
+
+class CodeCopyEvent : public Event {
+private:
+	int m_Count;
+public:
+	CodeCopyEvent() : m_Count(0) {}
+
+	void EventEffect(Character* character, GameManager* gm) override;
+
+	void EventCount() override;
+};
+
+class ZepGambleEvent : public Event {
+private:
+	int m_Count;
+public:
+	ZepGambleEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class FunctionNamingEvent : public Event {
+private:
+	int m_Count;
+public:
+	FunctionNamingEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class LegacyCodeEvent : public Event {
+private:
+	int m_Count;
+public:
+	LegacyCodeEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
 	void EventCount() override;
 };

@@ -1,4 +1,4 @@
-#include "Character.h"
+﻿#include "Character.h"
 #include "Item.h"
 #include "Monster.h"
 #include "Inventory.h"
@@ -7,22 +7,17 @@
 #include "BuffPotion.h"
 #include <iostream>
 #include <string>
-
 using namespace std;
-
 Character::Character(string name, int hp, int maxHp, int atk, int level, int gold, int exp)
-	:m_name(name), m_HP(hp), m_MaxHP(maxHp), m_ATK(atk), m_Level(level), m_Gold(gold), m_EXP(exp), m_EXPToLevelUp(100), m_MaxLevel(10)
+	:m_name(name), m_HP(hp), m_MaxHP(maxHp), m_ATK(atk), m_Level(level), m_Gold(gold), m_EXP(exp), m_EXPToLevelUp(100), m_MaxLevel(10), m_Wepatk(0), m_Throw(false), m_Alive(true)
 {
 	m_Equippeditem = nullptr;
 	m_EquippedThrow = nullptr;
-    m_Inventory = new Inventory(20); // 임시로 생성자에 20칸의 인벤토리를 넣었습니다
-	
+	m_Inventory = new Inventory(20); // 임시로 생성자에 20칸의 인벤토리를 넣었습니다
 
 	m_Wepatk = 0;
 	m_Throw = false;
 	cout << "캐릭터 [" << m_name << "]이(가) 생성되었습니다." << endl;
-
-
 	if (name.length() < 2) {
 	}
 	else if (name.length() > 12) {
@@ -35,8 +30,9 @@ Character::~Character() {
 		m_Inventory = nullptr;
 	}
 }//동적할당 메모리누수 방지
-
-
+bool Character::isAlive() const {
+	return m_Alive;
+}
 void Character::showStatus() {
 	cout << "--- " << m_name << " (Lv." << m_Level << ") ---" << endl;
 	cout << "HP: " << m_HP << " / " << m_MaxHP << endl;
@@ -45,18 +41,15 @@ void Character::showStatus() {
 	cout << "보유 골드: " << m_Gold << " G" << endl;
 	cout << "-----------------------" << endl;
 }
-
 void Character::usePotion(Potion& potion)
 {
 	if (potion.getType() == "회복포션")
 	{
 		m_HP += potion.getEffectAmount();
 		if (m_HP > m_MaxHP) m_HP = m_MaxHP;
-
 		cout << m_name << "이(가)" << potion.getName() << "을 사용하여 HP를 " << potion.getEffectAmount() << "회복했습니다. (현재 HP: " << m_HP << " ) " << endl;
 	}
 }
-
 void Character::manageEquipment(int action, Item* item, int slot)
 {
 	switch (action)
@@ -66,7 +59,6 @@ void Character::manageEquipment(int action, Item* item, int slot)
 		cout << "무기: " << (m_Equippeditem ? m_Equippeditem->getName() : "착용중인 무기 없음") << endl;
 		cout << "투척류: " << (m_EquippedThrow ? m_EquippedThrow->getName() : "착용중인 투척류 없음") << endl;
 		break;
-
 	case 1:
 		if (item != nullptr)
 		{
@@ -84,8 +76,7 @@ void Character::manageEquipment(int action, Item* item, int slot)
 				cout << item->getName() << "을(를) 장착했습니다." << endl;
 			}
 		}
-		  break;
-
+		break;
 	case 2:
 		if (slot == 1 && m_Equippeditem != nullptr)
 		{
@@ -102,17 +93,15 @@ void Character::manageEquipment(int action, Item* item, int slot)
 		break;
 	}
 }
-
 string Character::getName()const { return m_name; }
 int Character::getHP()const { return m_HP; }
 int Character::getMaxHP()const { return m_MaxHP; }
-int Character::getATK()const { return m_ATK+m_Wepatk; }
+int Character::getATK()const { return m_ATK + m_Wepatk; }
 int Character::getEXP()const { return m_EXP; }
 int Character::getEXPToLevelUp()const { return m_EXPToLevelUp; }
 int Character::getLevel()const { return m_Level; }
 int Character::getGold()const { return m_Gold; }
 Inventory* Character::getInventory()const { return m_Inventory; } // 신규 함수
-
 void Character::setHP(int hp) { m_HP = hp; }
 void Character::setMaxHP(int maxHp) { m_MaxHP = maxHp; }
 void Character::setATK(int atk) { m_ATK = atk; }
@@ -126,9 +115,11 @@ void Character::setLevel(int level) { m_Level = level; }
 void Character::setGold(int gold) { m_Gold = gold; }
 void Character::GainGold(int amount) {//얻는 골드
 	m_Gold += amount;
+	if (m_Gold < 0) {
+		m_Gold = 0;//zep코인 음수 방지
+	}
 	cout << "Zep코인을" << amount << "획득했습니다!(보유 Zep코인: " << m_Gold << "Zep 코인)" << endl;
 }
-
 void Character::LevelUp() {
 	if (m_Level < m_MaxLevel && m_EXP >= m_EXPToLevelUp) {
 		m_Level++;
@@ -148,7 +139,7 @@ void Character::LevelUp() {
 void Character::Attack(Monster* target) {
 	if (m_Throw && m_EquippedThrow != nullptr) {//투적 무기 사용
 		cout << m_name << "이(가)" << m_EquippedThrow->getName() << "을(를) 던졌습니다!" << endl;
-		target->GetHit(m_ATK+m_EquippedThrow->getAttack());//투척무기 자체 피해량 적용
+		target->GetHit(m_ATK + m_EquippedThrow->getAttack());//투척무기 자체 피해량 적용
 		m_Throw = false;//사용후 비활성화
 		m_EquippedThrow = nullptr;
 	}
