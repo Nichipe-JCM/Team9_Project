@@ -1,10 +1,12 @@
 #pragma once
 #include "Character.h"
 
+class GameManager;
+
 class Event
 {
 public:
-	virtual void EventEffect(Character* character) = 0;
+	virtual void EventEffect(Character* character,GameManager* gm) = 0;
 	virtual void EventCount() = 0;
 	virtual ~Event(){}
 };

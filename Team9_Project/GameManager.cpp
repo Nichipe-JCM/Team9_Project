@@ -1,4 +1,4 @@
-﻿#include "GameManager.h"
+#include "GameManager.h"
 #include "MidBoss.h"
 #include "Mob.h"
 #include "FinalBoss.h"
