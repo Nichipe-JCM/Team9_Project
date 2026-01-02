@@ -1,9 +1,11 @@
-﻿#pragma once
+#pragma once
 #include <string>
 #include <vector>
 
 
 using namespace std;
+
+class Potion;
 
 class Item;
 
@@ -37,6 +39,8 @@ private:
 public:
 	Character(string name, int hp=200, int maxHp=200, int atk=9999, int level=1,int gold=0, int exp=0);//캐릭터의 초기값
 
+	;
+
 	string getName()const;
 	int getHP()const;
 	int getMaxHP()const;
@@ -61,10 +65,7 @@ public:
 	void Attack(Monster* target);
 	void GetHit(int damage);
 
-
-	void Equip(Item& item);//아이템 장착
-	void UnEquip(int slot);//아이템 헤제
-	void showEquipment();//장비창 보기
 	void showStatus();//캐릭터 스텟 보기
-	void useHealItem();//사용포션
+	void usePotion(Potion& potion);
+    void manageEquipment(int action, Item* item, int slot); // 무기 투척류 장비착용 해제 포함
 };

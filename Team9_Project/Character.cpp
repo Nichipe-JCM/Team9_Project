@@ -1,17 +1,22 @@
-﻿#include "Character.h"
+#include "Character.h"
 #include "Item.h"
 #include "Monster.h"
 #include "Inventory.h"
+#include "HealingPotion.h"
+#include "Potion.h"
+#include "BuffPotion.h"
 #include <iostream>
 #include <string>
+
 using namespace std;
 
 Character::Character(string name, int hp, int maxHp, int atk, int level, int gold, int exp)
-	:m_name(name), m_HP(hp), m_MaxHP(maxHp), m_ATK(atk), m_Level(level), m_Gold(gold), m_EXP(exp), m_Equippeditem(nullptr), m_EquippedThrow(nullptr), m_EXPToLevelUp(100), m_MaxLevel(10)
+	:m_name(name), m_HP(hp), m_MaxHP(maxHp), m_ATK(atk), m_Level(level), m_Gold(gold), m_EXP(exp), m_EXPToLevelUp(100), m_MaxLevel(10)
 {
 	m_Equippeditem = nullptr;
 	m_EquippedThrow = nullptr;
     m_Inventory = new Inventory(20); // 임시로 생성자에 20칸의 인벤토리를 넣었습니다
+	
 
 	m_Wepatk = 0;
 	m_Throw = false;
@@ -24,6 +29,13 @@ Character::Character(string name, int hp, int maxHp, int atk, int level, int gol
 		m_name = name.substr(0, 12);
 	}//닉네임의 글자수 2글자 이상 12글자 이하
 }
+Character::~Character() {
+	if (m_Inventory != nullptr) {
+		delete m_Inventory;
+		m_Inventory = nullptr;
+	}
+}//동적할당 메모리누수 방지
+
 
 void Character::showStatus() {
 	cout << "--- " << m_name << " (Lv." << m_Level << ") ---" << endl;
@@ -34,46 +46,67 @@ void Character::showStatus() {
 	cout << "-----------------------" << endl;
 }
 
+void Character::usePotion(Potion& potion)
+{
+	if (potion.getType() == "회복포션")
+	{
+		m_HP += potion.getEffectAmount();
+		if (m_HP > m_MaxHP) m_HP = m_MaxHP;
 
-void Character::showEquipment() {
-	cout << "[" << m_name << "]의 장비창" << endl;
-	cout << "무기: " << (m_Equippeditem ? m_Equippeditem->getName() : "착용중인 무기 없음") << endl;//장비창 UI기능
-}
-void Character::Equip(Item& item) {
-	if (item.getType() == "Weapon") {
-		if (m_Equippeditem != nullptr)UnEquip(1);//이미 장착중인 무기가 있다면 현재 장착중인 무기 해제
-		m_Equippeditem = &item;
-		/* 무기 장착시 공격력 증가 추가 예정*/
-		cout << item.getName() << "을(를) 장착했습니다. 코딩력" << /*무기 공격력 변수추가 예정*/  "상승" << endl;
-	}
-	else if (item.getType() == "Throw") {
-		m_EquippedThrow = &item;//투척류
-		m_Throw = true;
-		cout << item.getName() << "을(를) 장착했습니다." << endl;
+		cout << m_name << "이(가)" << potion.getName() << "을 사용하여 HP를 " << potion.getEffectAmount() << "회복했습니다. (현재 HP: " << m_HP << " ) " << endl;
 	}
 }
-void Character::UnEquip(int slot) {
-	if (slot == 1 && m_Equippeditem != nullptr) {//무기 장착 헤제
-		/* 무기 장착 헤제시 무기 공격력 만큼 내려감 추가 예정 */
-		cout << m_Equippeditem->getName() << "을(를) 헤제했습니다." << endl;
-		m_Equippeditem = nullptr;
-		m_Wepatk = 0;
+
+void Character::manageEquipment(int action, Item* item, int slot)
+{
+	switch (action)
+	{
+	case 0:
+		cout << "[" << m_name << "]의 장비창" << endl;
+		cout << "무기: " << (m_Equippeditem ? m_Equippeditem->getName() : "착용중인 무기 없음") << endl;
+		cout << "투척류: " << (m_EquippedThrow ? m_EquippedThrow->getName() : "착용중인 투척류 없음") << endl;
+		break;
+
+	case 1:
+		if (item != nullptr)
+		{
+			if (item->getType() == "Weapon")
+			{
+				if (m_Equippeditem != nullptr) manageEquipment(2, nullptr, 1);
+				m_Equippeditem = item;
+				m_Wepatk = item->getAttack();
+				cout << item->getName() << "을(를) 장착했습니다." << endl;
+			}
+			else if (item->getType() == "Throw")
+			{
+				m_EquippedThrow = item;
+				m_Throw = true;
+				cout << item->getName() << "을(를) 장착했습니다." << endl;
+			}
+		}
+		  break;
+
+	case 2:
+		if (slot == 1 && m_Equippeditem != nullptr)
+		{
+			cout << m_Equippeditem->getName() << "을(를) 해제했습니다" << endl;
+			m_Equippeditem = nullptr;
+			m_Wepatk = 0;
+		}
+		else if (slot == 2 && m_EquippedThrow != nullptr)
+		{
+			cout << m_EquippedThrow->getName() << "을(를) 해제했습니다" << endl;
+			m_EquippedThrow = nullptr;
+			m_Throw = false;
+		}
+		break;
 	}
-	else if (slot == 2 && m_EquippedThrow != nullptr) {//투척류 장착 해제
-		cout << m_EquippedThrow->getName() << "을(를) 헤제했습니다." << endl;
-		m_EquippedThrow = nullptr;
-		m_Throw = false;
-	}
-}
-void Character::useHealItem() {
-	m_HP += 50;//Hp50회복
-	if (m_HP > m_MaxHP)m_HP = m_MaxHP;//포션 사용시 최대체력 넘지 않게 설정
 }
 
 string Character::getName()const { return m_name; }
 int Character::getHP()const { return m_HP; }
 int Character::getMaxHP()const { return m_MaxHP; }
-int Character::getATK()const { return m_ATK; }
+int Character::getATK()const { return m_ATK+m_Wepatk; }
 int Character::getEXP()const { return m_EXP; }
 int Character::getEXPToLevelUp()const { return m_EXPToLevelUp; }
 int Character::getLevel()const { return m_Level; }
@@ -87,6 +120,7 @@ void Character::setEXP(int exp) { m_EXP = exp; }
 void Character::GainEXP(int amount) {//얻는 경험치
 	m_EXP += amount;
 	cout << amount << "의 경험치를 얻었습니다. (현재: " << m_EXP << "/100)" << endl;
+	LevelUp();
 }
 void Character::setLevel(int level) { m_Level = level; }
 void Character::setGold(int gold) { m_Gold = gold; }
@@ -114,13 +148,13 @@ void Character::LevelUp() {
 void Character::Attack(Monster* target) {
 	if (m_Throw && m_EquippedThrow != nullptr) {//투적 무기 사용
 		cout << m_name << "이(가)" << m_EquippedThrow->getName() << "을(를) 던졌습니다!" << endl;
-		target->GetHit(m_ATK);
+		target->GetHit(m_ATK+m_EquippedThrow->getAttack());//투척무기 자체 피해량 적용
 		m_Throw = false;//사용후 비활성화
 		m_EquippedThrow = nullptr;
 	}
 	else {
 		cout << m_name << "이(가)" << target->getName() << "을(를) 공격합니다!" << endl;
-		target->GetHit(m_ATK);
+		target->GetHit(getATK());//캐릭터의 기본공격력 + 무기 공격력 포함
 	}
 }
 void Character::GetHit(int damage) {
