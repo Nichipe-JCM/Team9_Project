@@ -146,3 +146,21 @@ public:
 	void EventEffect(Character* character, GameManager* gm) override;
 	void EventCount() override;
 };
+
+class VSUpdateEvent : public Event {
+private:
+	int m_Count;
+public:
+	VSUpdateEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class QuestionCodeEvent : public Event {
+private:
+	int m_Count;
+public:
+	QuestionCodeEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};

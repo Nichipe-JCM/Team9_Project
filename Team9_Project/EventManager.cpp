@@ -16,6 +16,14 @@ EventManager:: EventManager() {
 	m_EventList.push_back(new SOSRequestEvent());
 	m_EventList.push_back(new YouTubeAlgorithmEvent());
 	m_EventList.push_back(new MidnightDebugEvent());
+	m_EventList.push_back(new CodeCopyEvent());
+	m_EventList.push_back(new ZepGambleEvent());
+	m_EventList.push_back(new FunctionNamingEvent());
+	m_EventList.push_back(new LegacyCodeEvent());
+	m_EventList.push_back(new NappingEvent());
+	m_EventList.push_back(new PartTimeJobEvent());
+	m_EventList.push_back(new VSUpdateEvent());
+	m_EventList.push_back(new QuestionCodeEvent());
 }
 
 EventManager :: ~EventManager(){
