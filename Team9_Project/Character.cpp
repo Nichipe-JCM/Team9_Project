@@ -1,4 +1,4 @@
-#include "Character.h"
+﻿#include "Character.h"
 #include "Item.h"
 #include "Monster.h"
 #include "Inventory.h"
@@ -9,7 +9,7 @@
 #include <string>
 using namespace std;
 Character::Character(string name, int hp, int maxHp, int atk, int level, int gold, int exp)
-	:m_name(name), m_HP(hp), m_MaxHP(maxHp), m_ATK(atk), m_Level(level), m_Gold(gold), m_EXP(exp), m_EXPToLevelUp(100), m_MaxLevel(10), m_Wepatk(0), m_Throw(false), m_Alive(true),m_Equippeditem(nullptr), m_EquippedThrow(nullptr), m_EquippedPotion(nullptr),m_HasPotion(false)
+	:m_name(name), m_HP(hp), m_MaxHP(maxHp), m_ATK(atk), m_Level(level), m_Gold(gold), m_EXP(exp), m_EXPToLevelUp(100), m_MaxLevel(10), m_Wepatk(0), m_Throw(false), m_Alive(true), m_Equippeditem(nullptr), m_EquippedThrow(nullptr), m_EquippedPotion(nullptr), m_HasPotion(false)
 {
 	m_Equippeditem = nullptr;
 	m_EquippedThrow = nullptr;
@@ -49,11 +49,11 @@ void Character::usePotion(Potion& potion)
 		if (m_HP > m_MaxHP) m_HP = m_MaxHP;
 		cout << m_name << "이(가)" << potion.getName() << "을 사용하여 HP를 " << potion.getEffectAmount() << "회복했습니다. (현재 HP: " << m_HP << " ) " << endl;
 	}
-		else if (potion.getType() == "버프포션") {
-			m_ATK += potion.getEffectAmount();
-			cout << m_name << " 이(가) " << potion.getName() << "을(를) 사용하여 코딩력이 " << potion.getEffectAmount() << "증가했습니다. (현재 코딩력: " << m_ATK << " ) " << endl;
-		}
+	else if (potion.getType() == "버프포션") {
+		m_ATK += potion.getEffectAmount();
+		cout << m_name << " 이(가) " << potion.getName() << "을(를) 사용하여 코딩력이 " << potion.getEffectAmount() << "증가했습니다. (현재 코딩력: " << m_ATK << " ) " << endl;
 	}
+}
 
 void Character::manageEquipment(int action, Item* item, int slot)
 {
@@ -111,15 +111,17 @@ void Character::manageEquipment(int action, Item* item, int slot)
 		break;
 	}
 }
-void Character::AutoUsePotion(Potion* potion) {//체력 50%이하일경우 포션 사용
+bool Character::AutoUsePotion(Potion* potion) {//체력 50%이하일경우 포션 사용
 	if (m_HP > 0 && m_HP <= m_MaxHP * 0.5 && m_HasPotion) {
 		Potion* potion = dynamic_cast<Potion*>(m_Equippeditem);
 		if (potion != nullptr && potion->getType() == "회복포션") {
-			usePotion(*potion); 
+			usePotion(*potion);
 			m_EquippedPotion = nullptr;
 			m_HasPotion = false;
+			return true;//턴 소모후 포션 사용
 		}
 	}
+	return false;//포션을 사용하지 않음
 }
 
 string Character::getName()const { return m_name; }
@@ -166,6 +168,11 @@ void Character::LevelUp() {
 	}
 }
 void Character::Attack(Monster* target) {
+	if (AutoUsePotion(dynamic_cast<Potion*>(m_EquippedPotion))) {
+		cout << m_name << "은(는) 이번 턴에 포션을 사용했습니다! " << endl;
+		return;
+	}
+
 	if (m_Throw && m_EquippedThrow != nullptr) {//투적 무기 사용
 		cout << m_name << "이(가)" << m_EquippedThrow->getName() << "을(를) 던졌습니다!" << endl;
 		target->GetHit(m_ATK + m_EquippedThrow->getAttack());//투척무기 자체 피해량 적용
@@ -184,10 +191,5 @@ void Character::GetHit(int damage) {
 	if (m_HP == 0) {
 		m_Alive = false; //사망처리
 		cout << m_name << "이(가) 사망하였습니다." << endl;
-	}
-	else {
-		Item* item = m_Inventory->GetItem(1);
-		Potion* potion = dynamic_cast<Potion*>(item);//포션 자동 사용
-		AutoUsePotion(potion);
 	}
 }

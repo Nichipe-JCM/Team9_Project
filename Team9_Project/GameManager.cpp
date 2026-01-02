@@ -102,12 +102,12 @@ void GameManager::SpawnMonster(int stage) {
 		m_CurrentMonster = new MidBoss(midBossId);
 	}
 	else if (stage < 21) { // 일반몹
-		m_CurrentMonster = Mob::createRandomMonster();
+		m_CurrentMonster = Mob::createRandomMonster(m_Player);
 	}
 	else {
 		cout << "**예상치 못한 오류가 발생하였습니다. stage를 1로 리셋하고 일반 몬스터를 소환합니다.**" << endl;
 		m_Stage = 1;
-		m_CurrentMonster = Mob::createRandomMonster();
+		m_CurrentMonster = Mob::createRandomMonster(m_Player);
 	} // stage가 범위 밖일 경우 : 치명적 오류!
 }
 
@@ -132,16 +132,17 @@ void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력
 
 void GameManager::BattleVictory() { // 전투승리시
 	cout << "\n승리!\n" << endl;
-	m_Player->setEXP(m_Player->getEXP() + m_CurrentMonster->getDropGold());
-	m_Player->setGold(m_Player->getGold() + m_CurrentMonster->getDropGold());
-	m_Player->LevelUp();
-	Item* dropitem = m_CurrentMonster->dropItem();
-	if (dropitem != nullptr) m_Player->getInventory()->AddItem(dropitem);	
-	m_SM->AddKill(m_CurrentMonster->getName());
-	delete m_CurrentMonster; // 현재 몬스터 삭제
-	m_CurrentMonster = nullptr;
-	m_AM->UpdateAchievements(m_Player, m_SM);
 	while (m_Stage < 21) { // 선택지. 최종보스 이하 스테이지일때만 나오게
+		m_Player->setEXP(m_Player->getEXP() + m_CurrentMonster->getDropEXP());
+		m_Player->setGold(m_Player->getGold() + m_CurrentMonster->getDropGold());
+		m_Player->LevelUp();
+		Item* dropitem = m_CurrentMonster->dropItem();
+		if (dropitem != nullptr) m_Player->getInventory()->AddItem(dropitem);
+		m_SM->AddKill(m_CurrentMonster->getName());
+		delete m_CurrentMonster; // 현재 몬스터 삭제
+		m_CurrentMonster = nullptr;
+		m_AM->UpdateAchievements(m_Player, m_SM);
+
 		cout << "1. 상점으로" << endl;
 		cout << "2. 무작위 이벤트" << endl;
 		int select = Utils::DefaultMenu(); // 기본 선택지 아래에 기본메뉴 표시 + 안전한 입력 받음

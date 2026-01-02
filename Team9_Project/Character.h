@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <string>
 #include <vector>
 using namespace std;
@@ -55,6 +55,6 @@ public:
 	void GetHit(int damage);
 	void showStatus();//캐릭터 스텟 보기
 	void usePotion(Potion& potion);
-	void AutoUsePotion(Potion* potion);
+	bool AutoUsePotion(Potion* potion);
 	void manageEquipment(int action, Item* item, int slot); // 무기 투척류 장비착용 해제 포함
 };

@@ -15,26 +15,23 @@
 #include <ctime>
 #include <random>
 #include <algorithm>
+
 using namespace std;
 
 void Shop::ItemSetting()
 {
 	static std::random_device rd;
 	static std::mt19937 gen(rd());
-
-	auto& allItems = ItemPool::getAllItems(); 
-
-	std::vector<Item*> candidates; 
+	auto& allItems = ItemPool::getAllItems();
+	std::vector<Item*> candidates;
 	std::vector<double> weights;
-
 	for (Item* item : allItems) {
-		
+
 		if (item->getItemType() == ItemCategory::Cash) {
 			continue;
 		}
-		
-		candidates.push_back(item);
 
+		candidates.push_back(item);
 		double w = 0;
 		switch (item->getRarity()) {
 		case Rarity::Common:    w = 100.0; break; // 흔함 (가장 높은 점수)
@@ -44,7 +41,7 @@ void Shop::ItemSetting()
 		}
 		weights.push_back(w);
 	}
-	
+
 	std::discrete_distribution<int> dist(weights.begin(), weights.end());
 	vector<int> vec;
 	for (int i = 0; i < 3; i++)
@@ -62,11 +59,10 @@ void Shop::ItemSetting()
 		vec.push_back(selectedIndex);
 	}
 }
-
 // 상점 메인 ->void VisitShop();을 통해 해당 함수 로드
 void Shop::ShopSelect(Character* player)
 {
-
+	ItemSetting();
 	while (true)
 	{
 		m_ShopMessage.clear();
@@ -78,7 +74,6 @@ void Shop::ShopSelect(Character* player)
 		for (auto& msg : m_ShopMessage) {
 			cout << msg << endl;
 		}
-
 		int select = Utils::DefaultMenu();
 		// 기본 선택지(인벤토리 확인 등) 체크
 		if (gm->DefaultMenuCheck(select)) {
@@ -101,9 +96,6 @@ void Shop::ShopSelect(Character* player)
 		}
 	}
 }
-
-
-
 static std::string rarityToString(Rarity rarity) {
 	switch (rarity) {
 	case Rarity::Common: return "Common";
@@ -113,7 +105,6 @@ static std::string rarityToString(Rarity rarity) {
 	default: return "Unknown";
 	}
 }
-
 static std::string getRarityColor(Rarity rarity) {
 	switch (rarity) {
 	case Rarity::Common:    return "\033[37m"; // 흰색
@@ -123,13 +114,11 @@ static std::string getRarityColor(Rarity rarity) {
 	default: return "\033[0m";
 	}
 }
-
 // 구매이벤트
 bool Shop::BuyItemFuntion(int NewProduct, Character* player)
 {
 	if (NewProduct < 0 || NewProduct >= m_Product.size()) return false;
-	Item* itemPtr = m_Product[NewProduct];	
-
+	Item* itemPtr = m_Product[NewProduct];
 	int price = itemPtr->getValue();
 	string RarityStr = rarityToString(itemPtr->getRarity());
 	string RarityColor = getRarityColor(itemPtr->getRarity());
@@ -141,10 +130,9 @@ bool Shop::BuyItemFuntion(int NewProduct, Character* player)
 		string color = getRarityColor(itemPtr->getRarity());
 		string rName = rarityToString(itemPtr->getRarity());
 
-		
-		cout << "[구매 성공] " << color << itemPtr->getName() << " (" << rName << ")" << "\033[0m"
+		cout << "[구매 성공] " << color << itemPtr->getName() << "[" << rName << "]" << "\033[0m"
 			<< "을(를) 구매했습니다." << endl;
-		
+
 		m_Product.erase(m_Product.begin() + NewProduct);
 		return true;
 	}
@@ -154,24 +142,21 @@ bool Shop::BuyItemFuntion(int NewProduct, Character* player)
 		return false;
 	}
 }
-
 void Shop::BuyItem(Character* player)
 {
 	while (true) {
 		m_ShopMessage.clear();
 		m_ShopMessage.push_back("구매할 아이템을 선택해주세요.");
 		m_ShopMessage.push_back("필요하시면 고민하지말고 사세요.");
-		ItemSetting();
-
 		int i = 0;
 		Item* itemPtr = m_Product[i];
 		string rarityStr = rarityToString(itemPtr->getRarity());
 		Utils::DrawLine();
 		for (auto& msg : m_ShopMessage) { cout << msg << endl; }
-		for (int i = 0; i < m_Product.size(); i++) {			
+		for (int i = 0; i < m_Product.size(); i++) {
 			string color = getRarityColor(m_Product[i]->getRarity());
 			cout << i + 1 << ". " << "품목 : "
-				<< color << m_Product[i]->getName() << "\033[0m" // 이름에 색상 입히고 다시 초기화
+				<< color << m_Product[i]->getName() << "[" << rarityToString(m_Product[i]->getRarity()) << "]" << "\033[0m" // 이름에 색상 입히고 다시 초기화
 				<< " | 가격 : " << m_Product[i]->getValue() << endl;
 		}
 		cout << "4.뒤로가기" << endl;
@@ -199,27 +184,22 @@ void Shop::BuyItem(Character* player)
 		break;
 	}
 }
-
 // 판매 이벤트 -> RemoveItem()
 void Shop::SellItemFuntion(int NewProduct, Character* player) {
-
 	vector<Item*>& items = player->getInventory()->GetInventory(); // 인벤토리 호출 부분
 	Item* itemToSell = items[NewProduct];
 	string color = getRarityColor(itemToSell->getRarity());
 	string rName = rarityToString(itemToSell->getRarity());
-
 	int sellPrice = (int)itemToSell->getValue() * 0.6;
 	player->setGold(player->getGold() + sellPrice);
-	
 
-	
-	cout << color << itemToSell->getName() << " (" << rName << ")" << "\033[0m"
+
+	cout << color << itemToSell->getName() << "[" << rName << "]" << "\033[0m"
 		<< "를 " << sellPrice << "에 판매했습니다!" << endl;
-	player->getInventory()->RemoveItemFromIndex(NewProduct+1);
+	player->getInventory()->RemoveItemFromIndex(NewProduct + 1);
 }
 // 판매 가능한 아이템 확인
 void Shop::SellItem(Character* player) {
-
 	while (true)
 	{
 		m_ShopMessage.clear();
@@ -227,8 +207,6 @@ void Shop::SellItem(Character* player) {
 		m_ShopMessage.push_back("-------- 판매 목록 ---------");
 		Utils::DrawLine();
 		m_ShopMessage.push_back("21. 뒤로가기");
-
-
 		for (auto& msg : m_ShopMessage) cout << msg << endl;
 		vector<Item*>& myItems = player->getInventory()->GetInventory();
 		if (myItems.empty()) {
@@ -237,10 +215,9 @@ void Shop::SellItem(Character* player) {
 		}
 		for (int i = 0; i < myItems.size(); ++i) {
 			string color = getRarityColor(myItems[i]->getRarity());
-			cout << i + 1 << ". " << color << myItems[i]->getName() << "\033[0m"
+			cout << i + 1 << ". " << color << myItems[i]->getName() << "[" << rarityToString(myItems[i]->getRarity()) << "]" << "\033[0m"
 				<< " (판매가: " << (int)(myItems[i]->getValue() * 0.6) << "G)" << endl;
 		}
-
 		int select = Utils::DefaultMenu();
 		if (gm->DefaultMenuCheck(select)) {
 			continue;
@@ -254,7 +231,6 @@ void Shop::SellItem(Character* player) {
 		if (select == 21) {
 			break;
 		}
-
 		m_ShopMessage.clear();
 	}
 }
