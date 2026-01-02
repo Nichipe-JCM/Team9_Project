@@ -23,7 +23,7 @@ private:
 	bool m_Alive; //생존여부
 	Item* m_EquippedThrow;//장착중인 투척류
 	Item* m_Equippeditem;//무기
-	Item* m_EqiuppedPotion;
+	Item* m_EquippedPotion;
 	bool m_HasPotion;
 	Inventory* m_Inventory; // 임시로 인벤토리 추가
 
