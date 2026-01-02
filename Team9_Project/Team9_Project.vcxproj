@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AchievementManager.cpp" />
     <ClCompile Include="BuffPotion.cpp" />
     <ClCompile Include="CashableItem.cpp" />
     <ClCompile Include="Character.cpp" />
@@ -147,6 +148,7 @@
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AchievementManager.h" />
     <ClInclude Include="BuffPotion.h" />
     <ClInclude Include="CashableItem.h" />
     <ClInclude Include="Character.h" />

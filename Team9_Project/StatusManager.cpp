@@ -31,6 +31,7 @@ void StatusManager::DisplayAchievements(AchievementManager* acm) {
 void StatusManager::DisplayInventory(Inventory* inv) {
 	Utils::DrawLine();
 	const vector<Item*>& vec = inv->GetInventory();
+	int index = 1;
 	if (vec.empty()) {
 		cout << "인벤토리가 비었습니다." << endl;
 		Utils::DrawLine();
@@ -38,7 +39,9 @@ void StatusManager::DisplayInventory(Inventory* inv) {
 	}
 	else {
 		for (const Item* i : vec) {
+			cout << index << ". ";
 			i->PrintInfo();
+			index++;
 		}
 	}
 	Utils::DrawLine();

@@ -4,6 +4,7 @@
 #include "Shop.h"
 #include "EventManager.h"
 #include "StatusManager.h"
+#include "AchievementManager.h"
 
 class Inventory;
 
@@ -16,9 +17,10 @@ private:
 	EventManager* m_Event;
 	Shop* m_Shop;
 	StatusManager* m_SM;
+	AchievementManager* m_AM;
 
 public:
-	GameManager();
+	GameManager(StatusManager* sm, AchievementManager* am);
 	~GameManager();
 	bool DefaultMenuCheck(int choice);
 	void RunGame();
