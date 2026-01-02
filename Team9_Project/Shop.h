@@ -21,12 +21,12 @@ public:
 	Shop(GameManager* _gm) :m_Inventory(nullptr), gm(_gm) {}
 	~Shop(){}
 	void ItemSetting(); // 아이템 랜덤 호출	
-	void FirstProduct(Character* player);//1,2,3 아이템 배치 함수
-	void SecondProduct(Character* player);
-	void ThirdProduct(Character* player);
-	void ShopSelect(Character* player, GameManager* gm);// 상점 시작함수
+	//void FirstProduct(Character* player);//1,2,3 아이템 배치 함수
+	//void SecondProduct(Character* player);
+	//void ThirdProduct(Character* player);
+	void ShopSelect(Character* player);// 상점 시작함수
 	void BuyItem(Character* player); // 구매 이벤트
-	void BuyItemFuntion(int NewProduct, Character* player);//구매시 인벤토리에 아이템 추가
+	bool BuyItemFuntion(int NewProduct, Character* player);//구매시 인벤토리에 아이템 추가
 	void SellItem(Character* player);//  판매 이벤트
 	void SellItemFuntion(int NewProduct, Character* player);//판매 가능한 아이템 확인
 	
