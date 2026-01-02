@@ -6,14 +6,6 @@
 #include "BuffPotion.h"
 #include "HealingPotion.h"
 
-#include "Itempool.h"
-#include "Weapon.h"
-#include "Potion.h"
-#include "ThrowingWeapon.h"
-#include "CashableItem.h"
-#include "BuffPotion.h"
-#include "HealingPotion.h"
-
 
 std::vector<Item*>& ItemPool::getAllItems() {
 	static std::vector<Item*> allItems = {
