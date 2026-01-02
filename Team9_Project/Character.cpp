@@ -1,4 +1,4 @@
-﻿#include "Character.h"
+#include "Character.h"
 #include "Item.h"
 #include "Monster.h"
 #include "Inventory.h"
@@ -9,7 +9,7 @@
 #include <string>
 using namespace std;
 Character::Character(string name, int hp, int maxHp, int atk, int level, int gold, int exp)
-	:m_name(name), m_HP(hp), m_MaxHP(maxHp), m_ATK(atk), m_Level(level), m_Gold(gold), m_EXP(exp), m_EXPToLevelUp(100), m_MaxLevel(10), m_Wepatk(0), m_Throw(false), m_Alive(true)
+	:m_name(name), m_HP(hp), m_MaxHP(maxHp), m_ATK(atk), m_Level(level), m_Gold(gold), m_EXP(exp), m_EXPToLevelUp(100), m_MaxLevel(10), m_Wepatk(0), m_Throw(false), m_Alive(true),m_Equippeditem(nullptr), m_EquippedThrow(nullptr), m_EquippedPotion(nullptr),m_HasPotion(false)
 {
 	m_Equippeditem = nullptr;
 	m_EquippedThrow = nullptr;
@@ -49,7 +49,12 @@ void Character::usePotion(Potion& potion)
 		if (m_HP > m_MaxHP) m_HP = m_MaxHP;
 		cout << m_name << "이(가)" << potion.getName() << "을 사용하여 HP를 " << potion.getEffectAmount() << "회복했습니다. (현재 HP: " << m_HP << " ) " << endl;
 	}
-}
+		else if (potion.getType() == "버프포션") {
+			m_ATK += potion.getEffectAmount();
+			cout << m_name << " 이(가) " << potion.getName() << "을(를) 사용하여 코딩력이 " << potion.getEffectAmount() << "증가했습니다. (현재 코딩력: " << m_ATK << " ) " << endl;
+		}
+	}
+
 void Character::manageEquipment(int action, Item* item, int slot)
 {
 	switch (action)
@@ -58,6 +63,7 @@ void Character::manageEquipment(int action, Item* item, int slot)
 		cout << "[" << m_name << "]의 장비창" << endl;
 		cout << "무기: " << (m_Equippeditem ? m_Equippeditem->getName() : "착용중인 무기 없음") << endl;
 		cout << "투척류: " << (m_EquippedThrow ? m_EquippedThrow->getName() : "착용중인 투척류 없음") << endl;
+		cout << "포션: " << (m_EquippedPotion ? m_EquippedPotion->getName() : "착용중인 포션 없음") << endl;
 		break;
 	case 1:
 		if (item != nullptr)
@@ -67,32 +73,55 @@ void Character::manageEquipment(int action, Item* item, int slot)
 				if (m_Equippeditem != nullptr) manageEquipment(2, nullptr, 1);
 				m_Equippeditem = item;
 				m_Wepatk = item->getAttack();
-				cout << item->getName() << "을(를) 장착했습니다." << endl;
+				cout << item->getName() << "을(를) 장착했습니다." << endl;//무기장착
 			}
 			else if (item->getType() == "Throw")
 			{
 				m_EquippedThrow = item;
 				m_Throw = true;
-				cout << item->getName() << "을(를) 장착했습니다." << endl;
+				cout << item->getName() << "을(를) 장착했습니다." << endl;//투척무기장착
+			}
+			else if (item->getType() == "Potion")
+			{
+				m_EquippedPotion = item;
+				m_HasPotion = true;
+				cout << item->getName() << "을(를) 포션 슬롯에 장착했습니다. " << endl;//포션장착
 			}
 		}
 		break;
 	case 2:
 		if (slot == 1 && m_Equippeditem != nullptr)
 		{
-			cout << m_Equippeditem->getName() << "을(를) 해제했습니다" << endl;
+			cout << m_Equippeditem->getName() << "을(를) 해제했습니다" << endl;//무기장착해제
 			m_Equippeditem = nullptr;
 			m_Wepatk = 0;
 		}
 		else if (slot == 2 && m_EquippedThrow != nullptr)
 		{
-			cout << m_EquippedThrow->getName() << "을(를) 해제했습니다" << endl;
+			cout << m_EquippedThrow->getName() << "을(를) 해제했습니다" << endl;//투척무기장착해제
 			m_EquippedThrow = nullptr;
 			m_Throw = false;
+		}
+		else if (slot == 3 && m_EquippedPotion != nullptr)
+		{
+			cout << m_EquippedPotion->getName() << "을(를) 해제했습니다 " << endl;//포션창착해제
+			m_EquippedPotion = nullptr;
+			m_HasPotion = false;
 		}
 		break;
 	}
 }
+void Character::AutoUsePotion(Potion* potion) {//체력 50%이하일경우 포션 사용
+	if (m_HP > 0 && m_HP <= m_MaxHP * 0.5 && m_HasPotion) {
+		Potion* potion = dynamic_cast<Potion*>(m_Equippeditem);
+		if (potion != nullptr && potion->getType() == "회복포션") {
+			usePotion(*potion); 
+			m_EquippedPotion = nullptr;
+			m_HasPotion = false;
+		}
+	}
+}
+
 string Character::getName()const { return m_name; }
 int Character::getHP()const { return m_HP; }
 int Character::getMaxHP()const { return m_MaxHP; }
@@ -153,6 +182,12 @@ void Character::GetHit(int damage) {
 	if (m_HP < 0) m_HP = 0;//캐릭터 체력 음수 방지
 	cout << m_name << "이(가)" << damage << "의 피해를 입었습니다. (남은 HP: " << m_HP << ")" << endl;
 	if (m_HP == 0) {
+		m_Alive = false; //사망처리
 		cout << m_name << "이(가) 사망하였습니다." << endl;
+	}
+	else {
+		Item* item = m_Inventory->GetItem(1);
+		Potion* potion = dynamic_cast<Potion*>(item);//포션 자동 사용
+		AutoUsePotion(potion);
 	}
 }

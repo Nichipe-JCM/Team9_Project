@@ -23,6 +23,8 @@ private:
 	bool m_Alive; //생존여부
 	Item* m_EquippedThrow;//장착중인 투척류
 	Item* m_Equippeditem;//무기
+	Item* m_EquippedPotion;
+	bool m_HasPotion;
 	Inventory* m_Inventory; // 임시로 인벤토리 추가
 
 public:
@@ -53,5 +55,6 @@ public:
 	void GetHit(int damage);
 	void showStatus();//캐릭터 스텟 보기
 	void usePotion(Potion& potion);
+	void AutoUsePotion(Potion* potion);
 	void manageEquipment(int action, Item* item, int slot); // 무기 투척류 장비착용 해제 포함
 };
