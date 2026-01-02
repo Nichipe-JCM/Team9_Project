@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <string>
 #include <vector>
 #include <memory>
@@ -24,7 +24,7 @@ class Monster
 public:
 	// 레벨 기반 생성자
 	Monster(const std::string& name, int level, int gold, int exp);
-	virtual ~Monster() = default;
+	virtual ~Monster() = default; // 임시 가상 소멸자
 
 	virtual void attack(Character* target);
 	virtual void GetHit(int damage);

@@ -95,8 +95,9 @@ void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력
 }
 void GameManager::BattleVictory() { // 전투승리시
 	cout << "승리어쩌고저쩌고" << endl;
-	m_Player->setEXP(m_CurrentMonster->getDropGold());
-	m_Player->setGold(m_CurrentMonster->getDropGold());
+	m_Player->setEXP(m_Player->getEXP() + m_CurrentMonster->getDropGold());
+	m_Player->setGold(m_Player->getGold() + m_CurrentMonster->getDropGold());
+	m_Player->LevelUp();
 	// m_Player->Additem(); // 아마도 드랍템 체크. stage 체크 if문 필요할지도?
 	m_SM->AddKill(m_CurrentMonster->getName());
 	delete m_CurrentMonster; // 현재 몬스터 삭제
