@@ -4,6 +4,7 @@
 
 class Event;
 class Character;
+class GameManager;
 
 using namespace std;
 class EventManager {
@@ -16,7 +17,7 @@ public:
 
 	~EventManager();
 
-	void StartEvent(Character* character);
+	void StartEvent(Character* character,GameManager* gm);
 
 };
 
