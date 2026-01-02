@@ -1,4 +1,4 @@
-#include "Shop.h"
+﻿#include "Shop.h"
 #include "Item.h"
 #include "Inventory.h"
 #include "Character.h"
@@ -42,19 +42,23 @@ void Shop::ItemSetting()
 
 }
 // 상점 메인 ->void VisitShop();을 통해 해당 함수 로드 
-void Shop::ShopSelect(Character* player, GameManager* gm)
+void Shop::ShopSelect(Character* player)
 {
-	m_ShopMessage.clear();
-	m_ShopMessage.push_back("=============================================.");	
-	m_ShopMessage.push_back("상점에 오신것을 환영합니다. 나는 튜터 박은일.");
-	m_ShopMessage.push_back("원하시는것을 선택해주세요.");
-	m_ShopMessage.push_back("1. 구매  2. 판매  0. 다음 스테이지로 이동 ");
-	m_ShopMessage.push_back("=============================================.");
-	
 	
 	while (true)
 	{
-		// 지시사항대로 Utils::DefaultMenu() 사용
+		m_ShopMessage.clear();
+		m_ShopMessage.push_back("----------------------------------------------");
+		m_ShopMessage.push_back("상점에 오신것을 환영합니다. 나는 튜터 박은일.");
+		m_ShopMessage.push_back("원하시는것을 선택해주세요.");
+		m_ShopMessage.push_back("1. 구매  2. 판매  3. 다음 스테이지로 이동 ");
+		m_ShopMessage.push_back("----------------------------------------------");
+
+
+
+		for (auto& msg : m_ShopMessage) {cout << msg << endl;
+		}
+		
 		int select = Utils::DefaultMenu();
 
 		// 기본 선택지(인벤토리 확인 등) 체크
@@ -68,9 +72,9 @@ void Shop::ShopSelect(Character* player, GameManager* gm)
 		else if (select == 2) {
 			SellItem(player);
 		}
-		else if (select == 0) {
+		else if (select == 3) {
 			cout << "상점을 떠나 다음 스테이지로 향합니다." << endl;
-			cout << "======================================" << endl;
+			Utils::DrawLine;
 			NextStage(gm);
 			break; 
 		}
@@ -81,8 +85,10 @@ void Shop::ShopSelect(Character* player, GameManager* gm)
 
 }
 // 구매이벤트
-void Shop::BuyItemFuntion(int NewProduct, Character* player)
+bool Shop::BuyItemFuntion(int NewProduct, Character* player)
 {
+	if (NewProduct < 0 || NewProduct >= m_Product.size()) return false;
+
 	Item* itemPtr = m_Product[NewProduct];
 	int price = itemPtr->getValue();
 	
@@ -92,57 +98,57 @@ void Shop::BuyItemFuntion(int NewProduct, Character* player)
 		// 골드 차감
 		player->setGold(player->getGold() - price);
 		m_Inventory->AddItem(itemPtr);
+		cout << "[구매 성공] " << itemPtr->getName() << "을(를) 구매했습니다." << endl;
+		cout << "잔액: " << player->getGold() <<  endl;
+
 		m_Product.erase(m_Product.begin() + NewProduct);
+		return true;
 	}
 	else
 	{
 		cout << "골드가 부족합니다." << endl;
+		return false;
 	}
 }
 
 // 1,2,3 상품구매 함수
-void Shop::FirstProduct(Character* player)
-{
-	BuyItemFuntion(0,player);
-	cout << "1." << "품목 : " << m_Product[0]->getName() << "가격 : " << m_Product[0]->getValue() <<"구매했습니다." << endl;
-}
-void Shop::SecondProduct(Character* player)
-{
-	BuyItemFuntion(1,player);
-	cout << "2." << "품목 : " << m_Product[1]->getName() << "가격 : " << m_Product[1]->getValue() <<"구매했습니다." << endl;
-}
-void Shop::ThirdProduct(Character* player)
-{
-	BuyItemFuntion(2,player);
-	cout << "1." << "품목 : " << m_Product[2]->getName() << "가격 : " << m_Product[2]->getValue() <<"구매했습니다." << endl;
-}
+//void Shop::FirstProduct(Character* player)
+//{
+//	if (BuyItemFuntion(0, player)) {
+//		
+//	}
+//}
+//void Shop::SecondProduct(Character* player)
+//{
+//	if (BuyItemFuntion(1, player)) {
+//		cout << "2." << "품목 : " << m_Product[1]->getName() << "가격 : " << m_Product[1]->getValue() << "구매했습니다." << endl;
+//	}
+//}
+//void Shop::ThirdProduct(Character* player)
+//{
+//	if (BuyItemFuntion(2, player)) {
+//		cout << "3." << "품목 : " << m_Product[2]->getName() << "가격 : " << m_Product[2]->getValue() << "구매했습니다." << endl;
+//	}
+//}
 
 
 // 상품 구매창 함수 -> 상점 메인에서 이동 
 void Shop::BuyItem(Character* player)
-{	
-	
+{		
+
+	while (true) {
+
 	m_ShopMessage.clear();
 	m_ShopMessage.push_back("구매할 아이템을 선택해주세요.");
-	m_ShopMessage.push_back("필요하시면 고민하지말고 사세요.");
-	
-	
+	m_ShopMessage.push_back("필요하시면 고민하지말고 사세요.");	
 	ItemSetting();
 
-	for (auto& text : m_ShopMessage) {
-		cout << text << endl;
-	}
-	for (int i = 0; i < 3; i++) {
-		cout << i+1 << "." << "품목 : " << m_Product[i]->getName() << "가격 : " << m_Product[i]->getValue() << endl;
-	}
-	
-	while (true) {
-		for (auto& text : m_ShopMessage) {
-			cout << text << endl;
-		}
+		Utils::DrawLine;
+		for (auto& msg : m_ShopMessage) {cout << msg << endl;}
 		for (int i = 0; i < 3; i++) {
 			cout << i + 1 << "." << "품목 : " << m_Product[i]->getName() << "가격 : " << m_Product[i]->getValue() << endl;
 		}
+		cout << "4.뒤로가기"<<endl;
 		int select = Utils::DefaultMenu();
 
 		if (gm->DefaultMenuCheck(select)) {
@@ -150,21 +156,18 @@ void Shop::BuyItem(Character* player)
 		}
 		if (select == 1) 
 		{
-			FirstProduct(player);
-			break;
+			BuyItemFuntion(0, player);			
 		}
 		else if (select == 2) 
 		{
-			SecondProduct(player);
-			break;
+			BuyItemFuntion(1, player);			
 		}
 		else if (select == 3)
 		{
-			ThirdProduct(player);
-			break;
+			BuyItemFuntion(2, player);			
 		}
-		else if (select == 0) {
-			ShopSelect(player, gm);
+		else if (select == 4) {
+			ShopSelect(player);
 			return;
 		}else		
 			cout << "잘못된 번호를 선택했습니다." << endl;
@@ -177,68 +180,65 @@ void Shop::BuyItem(Character* player)
 // 판매 이벤트 -> RemoveItem()
 
 void Shop::SellItemFuntion(int NewProduct, Character* player) {
-	vector<Item*> items = player->getInventory()->GetInventory(); // 인벤토리 호출 부분
+	
+	vector<Item*>& items = player->getInventory()->GetInventory(); // 인벤토리 호출 부분
 	Item* itemToSell = items[NewProduct];
 	
-	int sellPrice = itemToSell->getValue() * 0.6;
+	int sellPrice = (int)itemToSell->getValue() * 0.6;
 
-	player->setGold(player->getGold() + sellPrice);
-	
-	m_Inventory->RemoveItemFromIndex(NewProduct);
+	player->setGold(player->getGold() + sellPrice);	
 
 	cout << itemToSell->getName() << "를" << sellPrice
 		<< " 에 판매했습니다!" << endl;
+	player->getInventory()->RemoveItemFromIndex(NewProduct);
 }
 
 
 // 판매 가능한 아이템 확인
 void Shop::SellItem(Character* player) {
 
-	m_ShopMessage.clear();
-	m_ShopMessage.push_back("판매할 아이템을 선택해주세요.");
-	m_ShopMessage.push_back("필요하시면 고민하지말고 파세요.");
-	m_ShopMessage.push_back("판매할 아이템이 없습니다.");
-	m_ShopMessage.push_back("-------내 인벤토리 / 판매-------");
-	m_ShopMessage.push_back("판매할 아이템 번호를 선택하세요: ");
-	m_ShopMessage.push_back("0. 뒤로가기");	
+	
+	player->getInventory()->AddItem(new ThrowingWeapon("aaa", 10, 10, 10));
+	player->getInventory()->AddItem(new ThrowingWeapon("bbb", 10, 10, 10));
+	player->getInventory()->AddItem(new ThrowingWeapon("ccc", 10, 10, 10));
+
 
 	while (true)
 	{
-		for (auto& text : m_ShopMessage)
-		{
-			cout << text << endl;
-		}
-
-		if (m_MyItem.empty()) {
-			cout << m_ShopMessage[3] << endl;
+		m_ShopMessage.clear();
+		m_ShopMessage.push_back("판매할 아이템을 선택해주세요.");
+		m_ShopMessage.push_back("-------- 판매 목록 ---------");
+		Utils::DrawLine();
+		m_ShopMessage.push_back("0. 뒤로가기");
+		
+	
+		for (auto& msg : m_ShopMessage) cout << msg << endl;
+		vector<Item*>& myItems = player->getInventory()->GetInventory();
+		if (myItems.empty()) {
+			cout << "판매할 아이템이 없습니다." << endl;
 			return;
 		}
-
-		cout << m_ShopMessage[4] << endl;
-		for (int i = 0; i < m_MyItem.size(); ++i) {
-			cout << i + 1 << ". " << m_Product[i]->getName()
-				<< " , 가격: " << m_Product[i]->getValue() << endl;
+		for (int i = 0; i < myItems.size(); ++i) {
+			cout << i + 1 << ". " << myItems[i]->getName()
+				<< " (판매가: " << (int)(myItems[i]->getValue() * 0.6) << ")" << endl;
 		}
-		for (int j = 4; j < 6; j++)
-		{
-			cout << m_ShopMessage[j] << endl;
-		}
-
+				
 		int select = Utils::DefaultMenu();
 
 		if (gm->DefaultMenuCheck(select)) {
 			continue;
 		}
 
-		if (select >= 1 && select <= m_MyItem.size()) {
+		if (select >= 1 && select <= myItems.size()) {
 			SellItemFuntion(select - 1, player);
-		}
-		else if (select == 0) {
-			break;
-		}
-		else {
+		}else {
 			cout << "잘못된 입력입니다." << endl;
 		}
+		if (select == 21) {			
+			break;
+		}
+		
+		m_ShopMessage.clear();
 	}
 }
 
