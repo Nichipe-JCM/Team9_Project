@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Event.h"
 
+class Character;
 
 class BuyBookEvent : public Event {
 private:
