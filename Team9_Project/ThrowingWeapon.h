@@ -5,7 +5,7 @@ using namespace std;
 class ThrowingWeapon : public Item
 {
 public:
-	ThrowingWeapon(const string& m_name, int m_value, int m_damage, int m_quantity);
+	ThrowingWeapon(const string& m_name, int m_value, int m_damage, int m_quantity, ItemCategory type, Rarity rarity);
 	int getDamage() const;
 	int getQuantity() const;
 	bool use();

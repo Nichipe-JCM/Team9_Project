@@ -1,8 +1,8 @@
-﻿#include "CashableItem.h"
+#include "CashableItem.h"
 #include <iostream>
 
-CashableItem::CashableItem(const string& m_name, int value)
-	: Item(m_name, value, 0, 0, 0, ItemCategory::Cash, Rarity::Common)
+CashableItem::CashableItem(const string& m_name, int value, ItemCategory type, Rarity rarity)
+	: Item(m_name, value, 0, 0, 0, ItemCategory::Cash, rarity)
 {}
 	void CashableItem::PrintInfo() const {
 		Item::PrintInfo();
