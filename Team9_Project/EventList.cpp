@@ -1,6 +1,7 @@
 ﻿#include "EventList.h"
 #include "Utils.h"
 #include "GameManager.h"
+#include "Character.h"
 #include <iostream>
 #include <random>
 

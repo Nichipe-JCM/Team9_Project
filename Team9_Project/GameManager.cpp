@@ -4,12 +4,12 @@
 #include "FinalBoss.h"
 #include "Utils.h"
 #include "Inventory.h"
+#include "Windows.h"
 #include <iostream>
 #include <cctype>
 
-
-
 using namespace std;
+
 GameManager::GameManager(StatusManager* sm, AchievementManager* am): m_SM(sm), m_AM(am),
 m_Stage(0), m_Player(nullptr), m_CurrentMonster(nullptr) {
 
@@ -67,17 +67,25 @@ void GameManager::RunGame() { // 게임의 전체적인 프로세스 진행
 	while (true) {
 		SpawnMonster(m_Stage); // 스테이지 기준 몬스터 생성
 		cout << "현재 스테이지: " << m_Stage << endl;
+		Sleep(1000);
 		Battle(); // 전투
 		if (m_Player->getHP() <= 0) { // 플레이어 사망시 게임오버 출력 후 RunGame 종료
+			Sleep(1000);
 			GameOver();
+			Sleep(1000);
 			return;
 		}
 		BattleVictory(); // 전투 승리시 보상 지급 및 상점 or 이벤트
+		Sleep(1000);
 		m_AM->UpdateAchievements(m_Player, m_SM);
 		m_Stage++;
+		Sleep(1000);
 		if (m_Stage > 21) { // 스테이지가 22이상일 경우(최종보스를 잡았을 경우) 엔딩 출력 후 처음으로
+			Sleep(1000);
 			Ending();
+			Sleep(1000);
 			m_AM->UpdateAchievements(m_Player, m_SM);
+			Sleep(1000);
 			return;
 		}
 	}
@@ -106,11 +114,16 @@ void GameManager::SpawnMonster(int stage) {
 
 
 void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력이 0이 될때까지 반복 루프
+	system("cls");
+	cout << "앗! 당신의 앞길을 " << m_CurrentMonster->getName() << "이(가) 가로막았다!" << endl;
+	Sleep(1000);
 	while (true) { // 둘중 하나의 체력이 0이 될때까지 반복
 		if (m_Player->getHP() <= 0) break;
 		m_Player->Attack(m_CurrentMonster);
+		Sleep(1000);
 		if (m_CurrentMonster->getHP() <= 0) break;
 		m_CurrentMonster->attack(m_Player);
+		Sleep(1000);
 	}
 
 }
@@ -118,7 +131,7 @@ void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력
 
 
 void GameManager::BattleVictory() { // 전투승리시
-	cout << "승리어쩌고저쩌고" << endl;
+	cout << "\n승리!\n" << endl;
 	m_Player->setEXP(m_Player->getEXP() + m_CurrentMonster->getDropGold());
 	m_Player->setGold(m_Player->getGold() + m_CurrentMonster->getDropGold());
 	m_Player->LevelUp();
@@ -173,7 +186,7 @@ void GameManager::Opening() {
 	string name;
 	while (true) { // 이름 유효성 검사 프로세스
 		cout << ">> 이름을 입력하세요 (특수문자/공백 불가, 12글자 이내): ";
-		cin >> name;
+		getline(cin, name);
 		if (cin.fail()) { // 모종의 사유로 cin이 fail했을 때
 			cin.clear();
 			cin.ignore(10000, '\n');
@@ -182,7 +195,6 @@ void GameManager::Opening() {
 		}
 		if (name.length() > 12) { // 길이가 너무 길 때
 			cout << "이름이 너무 깁니다. 12글자 이내로 해주세요." << endl;
-			cin.ignore(10000, '\n');
 			continue;
 		}
 		bool isValid = true;
@@ -198,16 +210,15 @@ void GameManager::Opening() {
 			}
 		}
 		if (!isValid) { // 위에서 한 특문검사 체크
-			cout << "특수문자는 사용할 수 없습니다." << endl;
-			cin.ignore(10000, '\n');
+			cout << "특수문자 또는 공백은 사용할 수 없습니다." << endl;
 		}
 		else {
-			cin.ignore(10000, '\n');
 			break;
 		}
 	}
 	m_Player = new Character(name); // 캐릭터 생성
 	cout << "당신의 캐릭터 " << name << "이(가) 생성되었습니다!" << endl;
+	Sleep(1000);
 }
 
 
@@ -239,3 +250,6 @@ void GameManager::ViewAchievements(StatusManager* sm) {
 void GameManager::ViewInventory(StatusManager* sm, Inventory* Inv) {
 	Inv->ManageInventory(sm, m_Player);
 }
+
+
+
