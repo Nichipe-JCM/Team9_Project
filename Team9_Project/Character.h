@@ -1,16 +1,11 @@
 ﻿#pragma once
 #include <string>
 #include <vector>
-
-
 using namespace std;
-
+class Potion;
 class Item;
-
 class Monster;
-
 class Inventory;
-
 class Character//캐릭터 클래스
 {
 private:
@@ -24,18 +19,17 @@ private:
 	int m_Level;//현재 레벨
 	int m_MaxLevel;//최대 레벨
 	int m_Gold;//현재 보유 골드
-	bool m_Throw;
-	
-
+	bool m_Throw;//투척무기
+	bool m_Alive; //생존여부
 	Item* m_EquippedThrow;//장착중인 투척류
 	Item* m_Equippeditem;//무기
-
+	Item* m_EquippedPotion;
+	bool m_HasPotion;
 	Inventory* m_Inventory; // 임시로 인벤토리 추가
 
-
-
 public:
-	Character(string name, int hp=200, int maxHp=200, int atk=9999, int level=1,int gold=0, int exp=0);//캐릭터의 초기값
+	Character(string name, int hp = 200, int maxHp = 200, int atk = 9999, int level = 1, int gold = 0, int exp = 0);//캐릭터의 초기값
+	~Character();
 
 	string getName()const;
 	int getHP()const;
@@ -46,7 +40,10 @@ public:
 	int getEXPToLevelUp()const;
 	int getGold()const;
 	Inventory* getInventory()const;
-	
+	bool isAlive() const;
+	Item* getEquippeditem();
+	Item* getEquippedThrow();
+	Item* getEquippedPotion();
 
 	void setHP(int Hp);
 	void setMaxHP(int MaxHp);
@@ -56,15 +53,11 @@ public:
 	void setLevel(int level);
 	void setGold(int gold);
 	void GainGold(int amount);
-
 	void LevelUp();
 	void Attack(Monster* target);
 	void GetHit(int damage);
-
-
-	void Equip(Item& item);//아이템 장착
-	void UnEquip(int slot);//아이템 헤제
-	void showEquipment();//장비창 보기
 	void showStatus();//캐릭터 스텟 보기
-	void useHealItem();//사용포션
+	void usePotion(Potion* potion);
+	bool AutoUsePotion(Potion* potion);
+	void manageEquipment(int action, Item* item, int slot); // 무기 투척류 장비착용 해제 포함
 };

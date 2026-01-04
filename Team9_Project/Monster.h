@@ -1,7 +1,6 @@
-#pragma once
+﻿#pragma once
 #include <string>
 #include <vector>
-#include <memory>
 #include "Item.h"
 
 class Character;
@@ -11,11 +10,14 @@ class Item;
 // 아이템과 드랍확률을 그냥 묶어버리기...
 struct DropEntry
 {
-	std::shared_ptr<Item> item;
+	Item* item;
 	Rarity rarity;
-	double dropRate; // 확률 (0.0 ~ 1.0)
+	double dropRate;
 	ItemCategory category;
-};
+
+	DropEntry(Item* item, Rarity rarity, double dropRate, ItemCategory category)
+		: item(item), rarity(rarity), dropRate(dropRate), category(category) {}
+}; // 검증은 ai에게 물어봄
 
 
 class Monster
@@ -24,12 +26,12 @@ class Monster
 public:
 	// 레벨 기반 생성자
 	Monster(const std::string& name, int level, int gold, int exp);
-	virtual ~Monster() = default;
+	virtual ~Monster() = default; // 임시 가상 소멸자
 
 	virtual void attack(Character* target);
 	virtual void GetHit(int damage);
 
-	std::shared_ptr<Item> dropItem();
+	Item* dropItem();
 	bool checkDeath();
 
 	// get

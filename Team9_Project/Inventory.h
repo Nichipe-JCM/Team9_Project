@@ -19,6 +19,8 @@ public:
 	void RemoveItemFromPointer(Item* item);
 	Item* GetItem(int index);
 	vector<Item*>& GetInventory();
+	int GetMaxInventorySlot() const { return m_MaxInventorySlot; }
+	int GetCurrentInventorySize() const { return m_Inventory.size(); }
 	void ManageInventory(StatusManager* sm, Character* ch);
 };
 

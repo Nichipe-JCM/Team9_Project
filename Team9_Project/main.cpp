@@ -1,4 +1,6 @@
 ﻿#include "GameManager.h"
+#include "StatusManager.h"
+#include "AchievementManager.h"
 #include "Utils.h"
 #include <iostream>
 #include <Windows.h>
@@ -7,8 +9,10 @@ using namespace std;
 
 int main() {
 	SetConsoleOutputCP(65001);
+	StatusManager* SM = new StatusManager();
+	AchievementManager* AM = new AchievementManager();
 	while (true) {
-		GameManager GM;
+		GameManager GM(SM,AM);
 		GM.Opening();
 		GM.RunGame();
 		int choice = 0;
@@ -31,4 +35,7 @@ int main() {
 			return 0;
 		}
 	}
+	delete SM;
+	delete AM;
+	return 0;
 }

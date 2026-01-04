@@ -1,4 +1,4 @@
-#include "Item.h"
+﻿#include "Item.h"
 #include <iostream>
 
 Item::Item(const std::string& name, int value, int attack, int heal, int buff,
@@ -15,7 +15,17 @@ int Item::getBuff() const { return m_buff; }
 ItemCategory Item::getItemType() const { return m_itemType; }
 Rarity Item::getRarity() const { return m_rarity; }
 
-static std::string rarityToString(Rarity rarity) {
+std::string Item::getRarityColor(Rarity rarity) const{
+	switch (rarity) {
+	case Rarity::Common:    return "\033[37m"; // 흰색
+	case Rarity::Rare:      return "\033[34m"; // 파란색
+	case Rarity::Epic:      return "\033[35m"; // 보라색
+	case Rarity::Legendary: return "\033[33m"; // 노란색
+	}
+	return "\033[0m"; // 기본색
+}
+
+std::string Item::rarityToString(Rarity rarity) const{
 	switch (rarity) {
 	case Rarity::Common: return "Common";
 	case Rarity::Rare: return "Rare";
@@ -26,11 +36,6 @@ static std::string rarityToString(Rarity rarity) {
 }
 
 void Item::PrintInfo() const {
-	std::cout << "[" << getName() << "]("
-		<< rarityToString(getRarity()) << ") "
-		<< "Value: " << getValue()
-		<< " ATK: " << getAttack()
-		<< " Heal: " << getHeal()
-		<< " Buff: " << getBuff()
-		<< std::endl;
+	std::cout << "[" << getName() << "]" << getRarityColor(getRarity()) << "(" << rarityToString(getRarity()) << ") " << "\033[0m" << std::endl;
 }
+

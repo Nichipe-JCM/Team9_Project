@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AchievementManager.cpp" />
     <ClCompile Include="BuffPotion.cpp" />
     <ClCompile Include="CashableItem.cpp" />
     <ClCompile Include="Character.cpp" />
@@ -143,10 +144,12 @@
     <ClCompile Include="Shop.cpp" />
     <ClCompile Include="StatusManager.cpp" />
     <ClCompile Include="ThrowingWeapon.cpp" />
+    <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AchievementManager.h" />
     <ClInclude Include="BuffPotion.h" />
     <ClInclude Include="CashableItem.h" />
     <ClInclude Include="Character.h" />
@@ -166,6 +169,7 @@
     <ClInclude Include="Shop.h" />
     <ClInclude Include="StatusManager.h" />
     <ClInclude Include="ThrowingWeapon.h" />
+    <ClInclude Include="UIManager.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Weapon.h" />
   </ItemGroup>

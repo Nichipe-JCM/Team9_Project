@@ -1,14 +1,15 @@
 #pragma once
 #include "Event.h"
 
+class Character;
 
-class BuyBookEvent : public Event{
+class BuyBookEvent : public Event {
 private:
 	int m_Count;
 public:
 	BuyBookEvent() :m_Count(0) {}
 
-	void EventEffect(Character* character) override;
+	void EventEffect(Character* character, GameManager* gm) override;
 
 	void EventCount() override;
 
@@ -20,7 +21,7 @@ private:
 public:
 	SurpriseSessionEvent() : m_Count(0) {}
 
-	void EventEffect(Character* character) override;
+	void EventEffect(Character* character, GameManager* gm) override;
 
 	void EventCount() override;
 };
@@ -31,7 +32,7 @@ private:
 public:
 	TILIsImportantEvent() : m_Count(0) {}
 
-	void EventEffect(Character* character) override;
+	void EventEffect(Character* character, GameManager* gm) override;
 
 	void EventCount() override;
 };
@@ -42,7 +43,7 @@ private:
 public:
 	DrinkCaffeineEvent() : m_Count(0) {}
 
-	void EventEffect(Character* character) override;
+	void EventEffect(Character* character, GameManager* gm) override;
 
 	void EventCount() override;
 };
@@ -53,7 +54,114 @@ private:
 public:
 	FixCodeEvent() : m_Count(0) {}
 
-	void EventEffect(Character* character) override;
+	void EventEffect(Character* character, GameManager* gm) override;
 
+	void EventCount() override;
+};
+
+class SOSRequestEvent : public Event {
+private:
+	int m_Count;
+public:
+	SOSRequestEvent() : m_Count(0) {}
+
+	void EventEffect(Character* character, GameManager* gm) override;
+
+	void EventCount() override;
+};
+
+class YouTubeAlgorithmEvent : public Event {
+private:
+	int m_Count;
+public:
+	YouTubeAlgorithmEvent() : m_Count(0) {}
+
+	void EventEffect(Character* character, GameManager* gm) override;
+
+	void EventCount() override;
+};
+
+class MidnightDebugEvent : public Event {
+private:
+	int m_Count;
+public:
+	MidnightDebugEvent() : m_Count(0) {}
+
+	void EventEffect(Character* character, GameManager* gm) override;
+
+	void EventCount() override;
+};
+
+class CodeCopyEvent : public Event {
+private:
+	int m_Count;
+public:
+	CodeCopyEvent() : m_Count(0) {}
+
+	void EventEffect(Character* character, GameManager* gm) override;
+
+	void EventCount() override;
+};
+
+class ZepGambleEvent : public Event {
+private:
+	int m_Count;
+public:
+	ZepGambleEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class FunctionNamingEvent : public Event {
+private:
+	int m_Count;
+public:
+	FunctionNamingEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class LegacyCodeEvent : public Event {
+private:
+	int m_Count;
+public:
+	LegacyCodeEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class NappingEvent : public Event {
+private:
+	int m_Count;
+public:
+	NappingEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class PartTimeJobEvent : public Event {
+private:
+	int m_Count;
+public:
+	PartTimeJobEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class VSUpdateEvent : public Event {
+private:
+	int m_Count;
+public:
+	VSUpdateEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class QuestionCodeEvent : public Event {
+private:
+	int m_Count;
+public:
+	QuestionCodeEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
 	void EventCount() override;
 };
