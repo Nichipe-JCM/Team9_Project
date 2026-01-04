@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Item.h"
 using namespace std;
 
@@ -11,8 +11,13 @@ public:
 	bool use();
 	string getType() const override { return "투척무기"; }
 	void PrintInfo() const override;
+	Item* clone() const override {
+		return new ThrowingWeapon(*this); // 복사 생성자 호출 (내용을 그대로 베낌)
+	}
+	void setEquipped(bool status) { m_isEquipped = status; }
 
 private:
 	int m_damage;
 	int m_quantity;
+	bool m_isEquipped;
 };

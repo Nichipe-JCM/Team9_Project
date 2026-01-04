@@ -144,6 +144,7 @@
     <ClCompile Include="Shop.cpp" />
     <ClCompile Include="StatusManager.cpp" />
     <ClCompile Include="ThrowingWeapon.cpp" />
+    <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
@@ -168,6 +169,7 @@
     <ClInclude Include="Shop.h" />
     <ClInclude Include="StatusManager.h" />
     <ClInclude Include="ThrowingWeapon.h" />
+    <ClInclude Include="UIManager.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Weapon.h" />
   </ItemGroup>

@@ -35,6 +35,6 @@ public:
 	void ViewCharacterStatus(StatusManager* sm);
 	void ViewBattleStatus(StatusManager* sm);
 	void ViewAchievements(StatusManager* sm);
-	void ViewInventory(StatusManager* sm, Inventory* inv);
+	void OpenManageInventory(StatusManager* sm, Inventory* inv);
 };
 

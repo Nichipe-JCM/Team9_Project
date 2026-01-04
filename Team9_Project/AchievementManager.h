@@ -16,5 +16,4 @@ public:
     ~AchievementManager();
     void Init();
     void UpdateAchievements(Character* player, StatusManager* sm);
-    void ShowAchievements();
 };

@@ -1,6 +1,7 @@
 #include "EventList.h"
 #include "Utils.h"
 #include "GameManager.h"
+#include "Character.h"
 #include <iostream>
 #include <random>
 
@@ -48,7 +49,7 @@ void BuyBookEvent::EventEffect(Character* character, GameManager* gm) {
 				break;
 			}
 		}
-		else if(select == 2){		// 2번 선택지 선택 시 작동
+		else if (select == 2) {		// 2번 선택지 선택 시 작동
 			cout << "\"저 가격에 올라올 수가 없는데... 사기인가?\"" << endl;
 			cout << "\"불안하니 사지 말아야지\"" << endl;
 			cout << "책을 구매하지 않았다." << endl;
@@ -67,7 +68,7 @@ void BuyBookEvent::EventCount() {
 
 
 
-void SurpriseSessionEvent::EventEffect(Character* character,GameManager* gm) {
+void SurpriseSessionEvent::EventEffect(Character* character, GameManager* gm) {
 	static random_device rd;
 	static mt19937 gen(rd());
 	uniform_int_distribution<int> dis(0, 2);
@@ -104,7 +105,7 @@ void SurpriseSessionEvent::EventEffect(Character* character,GameManager* gm) {
 			}
 
 		}
-		else if(select == 2){
+		else if (select == 2) {
 			cout << "\"과제 제출이 얼마 남지 않았으니까 지금은 과제에 집중하자.\"" << endl;
 			cout << "깜짝 세션에 참여하지 않았다." << endl;
 			break;
@@ -122,7 +123,7 @@ void SurpriseSessionEvent::EventCount() {
 
 
 
-void TILIsImportantEvent::EventEffect(Character* character,GameManager* gm) {
+void TILIsImportantEvent::EventEffect(Character* character, GameManager* gm) {
 
 
 	cout << "====================TIL 작성 이벤트 발생!!!====================" << endl;
@@ -133,7 +134,7 @@ void TILIsImportantEvent::EventEffect(Character* character,GameManager* gm) {
 	while (true) {
 		cout << "1. TIL을 작성한다  2. 작성하지 않는다" << endl;
 		int select = Utils::DefaultMenu();
-		if (gm->DefaultMenuCheck(select)) {	
+		if (gm->DefaultMenuCheck(select)) {
 			continue;
 		}
 
@@ -146,7 +147,7 @@ void TILIsImportantEvent::EventEffect(Character* character,GameManager* gm) {
 			character->setGold(character->getGold() + 1000);
 			break;
 		}
-		else if(select == 2){
+		else if (select == 2) {
 			cout << "\"너무 힘들어서 일어날 수가 없다...\"" << endl;
 			cout << "\"그래 하루만 쉬자... 하루 쉬는 건데 별일이야 있겠어?\"" << endl;
 			cout << "TIL을 작성하지 않았다." << endl;
@@ -167,7 +168,7 @@ void TILIsImportantEvent::EventCount() {
 
 
 
-void DrinkCaffeineEvent::EventEffect(Character* character,GameManager* gm) {
+void DrinkCaffeineEvent::EventEffect(Character* character, GameManager* gm) {
 	double health = static_cast<double>(character->getHP()) / character->getMaxHP();	// 현재 체력 상태 체크를 위한 변수 만들기
 
 	cout << "====================카페인 섭취 이벤트 발생!!!====================" << endl;
@@ -202,7 +203,7 @@ void DrinkCaffeineEvent::EventEffect(Character* character,GameManager* gm) {
 				break;
 			}
 		}
-		else if(select == 2){
+		else if (select == 2) {
 			cout << "\"최근에 너무 많이 마셨으니까 오늘은 마시지 말자.\"" << endl;
 			cout << "\"잠도 깰겸 물 마시고 산책이나 하고 와야지.\"" << endl;
 			cout << "에너지 드링크를 마시지 않았다." << endl;
@@ -224,7 +225,7 @@ void DrinkCaffeineEvent::EventCount() {
 
 
 
-void FixCodeEvent::EventEffect(Character* character,GameManager* gm) {
+void FixCodeEvent::EventEffect(Character* character, GameManager* gm) {
 	static random_device rd;
 	static mt19937 gen(rd());
 	uniform_int_distribution<int> dis(0, 2);
@@ -263,7 +264,7 @@ void FixCodeEvent::EventEffect(Character* character,GameManager* gm) {
 				break;
 			}
 		}
-		else if(select == 2){
+		else if (select == 2) {
 			cout << "\"과제를 완성한게 어디냐\"" << endl;
 			cout << "일단 이 상태로 제출하고 나중에 궁금한 점이 생기면 인터넷을 찾아보자." << endl;
 			cout << "\"오랜만에 게임이나 해볼까?\"" << endl;
@@ -321,7 +322,7 @@ void SOSRequestEvent::EventEffect(Character* character, GameManager* gm) {
 			cout << "수정하지 못한 오류가 남아서 결과물을 제출하지 못했다." << endl;
 			cout << "코딩력이 20 하락했다." << endl;
 			character->setATK(character->getATK() - 20);
-			break; 
+			break;
 		}
 		else {
 			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
@@ -337,7 +338,7 @@ void SOSRequestEvent::EventCount() {
 
 
 
-void YouTubeAlgorithmEvent::EventEffect(Character* character,GameManager* gm) {
+void YouTubeAlgorithmEvent::EventEffect(Character* character, GameManager* gm) {
 
 	cout << "====================알고리즘의 유혹 이벤트 발생!!!====================" << endl;
 	cout << "잠깐 쉬려고 유튜브를 켰다." << endl;
@@ -389,8 +390,8 @@ void MidnightDebugEvent::EventEffect(Character* character, GameManager* gm) {
 
 	cout << "====================새벽 버그 수정 이벤트 발생!!!====================" << endl;
 	cout << "\"어라 벌써 새벽 1시네. 언제 시간이 이렇게 지나간거지.\"" << endl;
-	cout << "'조금만 더 해보면 오류를 고칠 수 있을 거 같은데.'" << endl;
-	cout << "'하지만 내일도 일정이 있는데 어떻게하지?'" << endl;
+	cout << "\n조금만 더 해보면 오류를 고칠 수 있을 거 같은데.\n" << endl;
+	cout << "\n하지만 내일도 일정이 있는데 어떻게하지?\n" << endl;
 	while (true) {
 		cout << "1. 오류를 고쳐본다  2. 자러간다" << endl;
 		int select = Utils::DefaultMenu();
@@ -400,9 +401,9 @@ void MidnightDebugEvent::EventEffect(Character* character, GameManager* gm) {
 
 		if (select == 1) {
 			if (RandNum == 0 || RandNum == 1) {
-				cout << "'휴.. 시간이 좀 걸리기는 했지만 결국 고쳤다!'" << endl;
-				cout << "'오류를 수정하면서 잘못 알고있던 개념도 제대로 알게됐네.'" << endl;
-				cout << "'고쳐보기를 잘했다!!'" << endl;
+				cout << "\n휴.. 시간이 좀 걸리기는 했지만 결국 고쳤다!\n" << endl;
+				cout << "\n오류를 수정하면서 잘못 알고있던 개념도 제대로 알게됐네.\n" << endl;
+				cout << "\n고쳐보기를 잘했다!!\n" << endl;
 				cout << "오류를 성공적으로 수정했다." << endl;
 				cout << "코딩력이 20 증가했다! 체력이 10 감소했다." << endl;
 				character->setATK(character->getATK() + 20);
@@ -410,17 +411,17 @@ void MidnightDebugEvent::EventEffect(Character* character, GameManager* gm) {
 				break;
 			}
 			else {
-				cout << "'벌써 새벽 3시라고?? 금방 끝날 줄 알았는데 언제 끝나는거지...'" << endl;
-				cout << "'그냥 자고 일어나서 할껄 망했다...'" << endl;
+				cout << "\n벌써 새벽 3시라고?? 금방 끝날 줄 알았는데 언제 끝나는거지...\n" << endl;
+				cout << "\n그냥 자고 일어나서 할껄 망했다...\n" << endl;
 				cout << "오류를 수정하지 못했다." << endl;
 				cout << "체력이 20 감소했다." << endl;
 				character->setHP(character->getHP() - 20);
 				break;
 			}
-		
+
 		}
 		else if (select == 2) {
-			cout << "'무리하지말고 자자. 일어나서 하는게 집중이 더 잘될꺼야.'" << endl;
+			cout << "\n무리하지말고 자자. 일어나서 하는게 집중이 더 잘될꺼야.\n" << endl;
 			cout << "오류를 수정하지 않고 잠을 잤다." << endl;
 			cout << "체력이 10 증가했다!" << endl;
 			character->setHP(character->getHP() + 10);
@@ -430,9 +431,444 @@ void MidnightDebugEvent::EventEffect(Character* character, GameManager* gm) {
 			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
 		}
 	}
-	
+
 	m_Count++;
 }
 void MidnightDebugEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void CodeCopyEvent::EventEffect(Character* character, GameManager* gm) {
+	cout << "====================코드 카피 이벤트 발생!!!====================" << endl;
+	cout << "\"벌써 10시라고?! 과제 제출 시간이 2시간 밖에 안남았네..\"" << endl;
+	cout << "'시간 안에 못끝낼거 같은데 어떻게하지...'" << endl;
+	cout << "고민하고 있던 당신의 눈 앞에 아까검색해뒀던 제미나이의 코드가 보인다." << endl;
+	while (true) {
+		cout << "1. 복사해서 제출한다  2. 작성한만큼 제출한다" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+		if (select == 1) {
+			cout << "'그래 일단 과제 제출이 먼저지.'" << endl;
+			cout << "'일단 제출하고 나중에 복습해봐야겠다.'" << endl;
+			cout << "과제 제출을 완료했다." << endl;
+			cout << "하지만 후에 본 테스트에서 같은 문제를 똑같이 틀렸다." << endl;
+			cout << "코딩력이 10 감소했다." << endl;
+			character->setATK(character->getATK() - 10);
+			break;
+		}
+		else if (select == 2) {
+			cout << "'제미나이의 코드를 베껴서 제출하면 실력이 늘지 않을꺼야.'" << endl;
+			cout << "'지금 작성한 것까지만 제출하고 개념을 다시 정리해보자.'" << endl;
+			cout << "작성한만큼만 과제를 제출했다." << endl;
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+	m_Count++;
+}
+void CodeCopyEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void ZepGambleEvent::EventEffect(Character* character, GameManager* gm) {
+	int Choice;
+	static random_device rd;
+	static mt19937 gen(rd());
+	uniform_int_distribution<int> dis(0, 1); // 0 = 짝, 1 = 홀
+	int result = dis(gen);
+	cout << "====================ZEP코인 겜블링 이벤트 발생!!!====================" << endl;
+	cout << "쉬는 시간, ZEP에서 담임 매니저님이 이상한 사이트를 추천했다." << endl;
+	cout << "\"ZEP 코인 홀짝 맞추기!\"" << endl;
+	cout << "\n성공시 200 ZEP코인 획득! 시도 비용 100 ZEP코인\n" << endl;
+	cout << "\n재밌어 보이는데... 한 번만 해볼까?\n" << endl;
+	while (true) {
+		cout << "1. 해본다  2. 안한다" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+		if (select == 1) {
+			if (character->getGold() >= 100) {			// 현재 가진 돈이 100원 이상일 때 진행
+				while (true) {
+					cout << "\n1. 홀  2. 짝  당신의 선택은??\n" << endl;
+					cin >> Choice;
+					if (cin.fail()) {
+						cin.clear();
+						cin.ignore(10000, '\n');
+						cout << "잘못된 값을 입력하셨습니다. 숫자만 입력해주세요." << endl;
+						continue;
+					}
+					if (Choice == 1 || Choice == 2) {
+						break;
+					}
+					else {
+						cout << "1번 또는 2번을 선택해주세요." << endl;
+					}
+				}
+				int userPick = (Choice == 1) ? 1 : 0;
+				cout << "결과는..." << endl;
+				if (userPick == result) {
+					cout << "정답이다!" << endl;
+					cout << "운이 따랐다! 도파민과 함께 코인이 들어온다." << endl;
+					cout << "200 ZEP코인을 획득했다!" << endl;
+					character->setGold(character->getGold() + 200);
+					break;
+				}
+				else {
+					cout << "틀렸다..." << endl;
+					cout << "순식간에 코인이 사라졌다." << endl;
+					cout << "\n역시 도박에 손을 대는게 아니였어...\n" << endl;
+					cout << "100 ZEP코인을 잃었다." << endl;
+					character->setGold(character->getGold() - 100);
+					break;
+				}
+			}
+			else {			// 100원이 없다면 이벤트 참여 실패
+				cout << "\n보유하고 있는 ZEP코인이 모자라군요!\n" << endl;
+				cout << "\n아쉽지만 다음 기회에 참여해야겠네요!\n" << endl;
+				cout << "ZEP코인이 모자라서 겜블링에 참여하지 못했다." << endl;
+				break;
+			}
+		}
+		else if (select == 2) {			// 안한다 선택지 선택시 해당 과정 진행
+			cout << "\"그래 어떻게 모은 돈인데 잃는다면 내가 어떻게 변할지 몰라..\"" << endl;
+			cout << "\"건실하게 모아서 빨리 오토바이를 사야해.\"" << endl;
+			cout << "겜블링에 참여하지 않았다." << endl;
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+	m_Count++;
+}
+void ZepGambleEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+void FunctionNamingEvent::EventEffect(Character* character, GameManager* gm) {
+	static random_device rd;
+	static mt19937 gen(rd());
+	uniform_int_distribution<int> dis(0, 3);
+	int RandNum = dis(gen);
+
+	cout << "====================함수 이름짓기 이벤트 발생!!!====================" << endl;
+	cout << "\n계속 반복되는 이 부분을 함수로 만들면 코드가 짧아지겠는데?\n" << endl;
+	cout << "\n새로 함수를 하나 만들어야겠다.\n" << endl;
+	cout << "\n흠.. 함수 이름은 뭘로 하지.\n" << endl;
+	cout << "\n뭘로 정할지 고민이 되네. 귀찮은데 대충 지어두고 나중에 수정할까?\n" << endl;
+	while (true) {
+		cout << "1. 고민해서 정하기  2. 대충짓기" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+		if (select == 1) {
+			if (RandNum != 3) {
+				cout << "\n저번에 적어뒀던 함수를 수정해야 하는데 어디에 있더라..\n" << endl;
+				cout << "\n아 찾았다! 역시 이름을 잘 지어두니까 찾기 편하네.\n" << endl;
+				cout << "이름 짓기를 잘해둔 덕분에 코드의 가독성이 좋아졌다." << endl;
+				cout << "코딩력이 30 증가했다!" << endl;
+				character->setATK(character->getATK() + 30);
+				break;
+			}
+			else {
+				cout << "\n휴 드디어 함수 이름을 정했다.\n" << endl;
+				cout << "\n헉! 뭐야 벌써 1시간이나 지났잖아!\n" << endl;
+				cout << "\n작성해야할 부분이 아직 산더미인데 망했다...\n" << endl;
+				cout << "함수 이름을 짓는데 시간을 많이 사용해 코딩할 시간이 적어졌다." << endl;
+				cout << "코딩력이 10 감소했다." << endl;
+				character->setATK(character->getATK() - 10);
+				break;
+			}
+
+		}
+		else if (select == 2) {
+			cout << "\n어라 저번에 만들어뒀던 함수를 어디에 넣어놨었지??\n" << endl;
+			cout << "\n프로젝트 내용이 너무 많아져서 찾을 수가 없잖아.\n" << endl;
+			cout << "\n다음에는 만들 때 기능에 맞춰 이름을 지어야겠다...\n" << endl;
+			cout << "만들어뒀던 함수를 찾는데 시간을 날려 코딩할 시간이 적어졌다." << endl;
+			cout << "코딩력이 20 감소했다." << endl;
+			character->setATK(character->getATK() - 20);
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+
+	m_Count++;
+}
+void FunctionNamingEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void LegacyCodeEvent::EventEffect(Character* character, GameManager* gm) {
+	static random_device rd;
+	static mt19937 gen(rd());
+	uniform_int_distribution<int> dis(0, 3);
+	int RandNum = dis(gen);
+
+	cout << "====================누군가의 코드 이벤트 발생!!!====================" << endl;
+	cout << "'이 프로젝트... 예전에 다른 사람이 만들다가 그만둔건가?'" << endl;
+	cout << "'코드에 주석도 하나도 없고 변수 이름이 a, b, c밖에 없네..'" << endl;
+	cout << "'공부하던 것도 끝나서 마침 시간도 남는데 한 번 분석해볼까?'" << endl;
+	while (true) {
+		cout << "1. 분석해보기  2. 못 본 척 지나가기" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+		if (select == 1) {
+			if (RandNum != 3) { 
+				cout << "'아하! 이래서 이 부분을 이렇게 작성한거구나!'" << endl;
+				cout << "'확실히 남이 작성해둔 코드를 분석하는 것도 큰 도움이 되는구나.'" << endl;
+				cout << "코드를 분석하는데 성공했습니다! 코드를 보는 눈이 좋아집니다." << endl;
+				cout << "코딩력이 40 증가했다!" << endl;
+				character->setATK(character->getATK() + 40);
+				break;
+			}
+			else { 
+				cout << "'어... 이게 여기서 왜 호출되지?'" << endl;
+				cout << "'어라?? 이건 왜 실행이 안되지??'" << endl;
+				cout << "'건드리지말껄.. 머리가 너무 아프다...'" << endl;
+				cout << "코드를 분석하는데 실패했습니다. 머릿속이 복잡해집니다." << endl;
+				cout << "코딩력이 15 감소했다." << endl;
+				character->setATK(character->getATK() - 15);
+				break;
+			}
+		}
+		else if (select == 2) {
+			cout << "'얼마만의 자유시간인데 오늘은 좀 쉬자'" << endl;
+			cout << "'오랜만에 친구들이랑 게임이나 해볼까'" << endl;
+			cout << "'친구들은 지금 뭐하려나. 연락해보자.'" << endl;
+			cout << "친구들과 놀며 휴식을 취했다." << endl;
+			cout << "체력이 20 증가했다!" << endl;
+			character->setHP(character->getHP() + 20);
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+
+	m_Count++;
+}
+void LegacyCodeEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void NappingEvent::EventEffect(Character* character, GameManager* gm) {
+	static random_device rd;
+	static mt19937 gen(rd());
+	uniform_int_distribution<int> dis(0, 3);
+	int RandNum = dis(gen);
+
+	cout << "====================낮잠 이벤트 발생!!!====================" << endl;
+	cout << "'아... 점심 먹고 나니까 계속 잠이 오네.'" << endl;
+	cout << "'모니터에 있는 내용이 머릿속에 제대로 들어오지가 않는다.'" << endl;
+	cout << "'딱 15분만 자고 일어나면 잠이 깰 것 같은데...'" << endl;
+	cout << "'잠깐만 자고 올까? 아니면 세수를 하고 올까?'" << endl;
+
+	while (true) {
+		cout << "1. 잠깐 낮잠자기  2. 세수하고 오기" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+		if (select == 1) {
+			if (RandNum != 3) { 
+				cout << "'낮잠 자고 일어나니까 너무 개운하다.'" << endl;
+				cout << "'역시 너무 피곤하면 해소를 해줘야하는구나.'" << endl;
+				cout << "'좋아. 아까 하던 공부를 마저해볼까!'" << endl;
+				cout << "낮잠으로 컨디션이 회복됐다! 집중력이 올라갔다!" << endl;
+				cout << "코딩력이 20 증가했다! 체력이 20 증가했다!" << endl;
+				character->setATK(character->getATK() + 20);
+				character->setHP(character->getHP() + 20);
+				break;
+			}
+			else { 
+				cout << "'어우 잘잤다. 너무 상쾌하네.'" << endl;
+				cout << "'뭐지? 불안하다... 왜 이렇게 상쾌한거지?'" << endl;
+				cout << "'뭐야! 2시간이나 자버렸잖아! 공부하던 것도 안끝났는데 망했다...'" << endl;
+				cout << "알람 소리를 듣지 못해 숙면을 취했다. 오늘치 공부를 망쳤다." << endl;
+				cout << "코딩력이 20 감소했다." << endl;
+				character->setATK(character->getATK() - 20);
+				break;
+			}
+		}
+		else if (select == 2) {
+			cout << "'세수하니까 그래도 잠이 깨네.'" << endl;
+			cout << "'집중해서 빨리 끝내고 쉬러 가야겠다.'" << endl;
+			cout << "'내가 어디까지 했더라..'" << endl;
+			cout << "세수로 잠을 깨고 공부를 진행했다." << endl;
+			cout << "코딩력이 10 증가했다." << endl;
+			character->setATK(character->getATK() + 10);
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+
+	m_Count++;
+}
+void NappingEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void PartTimeJobEvent::EventEffect(Character* character, GameManager* gm) {
+	cout << "====================야간 알바 이벤트 발생!!!====================" << endl;
+	cout << "'ZEP에서 오토바이 깜짝 할인을 시작했잖아!'" << endl;
+	cout << "'지금 가지고 있는 코인이 모자란데.. 야간 알바를 잠깐 해볼까?'" << endl;
+	cout << "'야간 알바를 하게 되면 내일 공부를 못할텐데 어떻게 하지...'" << endl;
+
+	while (true) {
+		cout << "1. 야간 알바 가기  2. 잠자기" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) continue;
+
+		if (select == 1) {
+			cout << "'아... 죽을 것 같다... 그래도 오토바이를 살 수 있는 돈을 모았다.'" << endl;
+			cout << "'원하던 걸 살 수 있어서 다행이다..'" << endl;
+			cout << "'공부는 어쩔 수 없지만 하루만 쉬어야겠다.. 너무 힘들어..'" << endl;
+			cout << "코인을 얻었지만 공부를 하지 못했다." << endl;
+			cout << "200 ZEP코인을 획득했다! 코딩력이 20 감소했다." << endl;
+			character->setGold(character->getGold() + 200);
+			character->setATK(character->getATK() - 20);
+			break;
+		}
+		else if (select == 2) {
+			cout << "'그래 아무리 오토바이가 가지고 싶어도 컨디션 관리가 우선이지.'" << endl;
+			cout << "'지금은 자고 다음에 코인을 더 모아서 구매하자'" << endl;
+			cout << "컨디션 관리를 위해 야간 알바를 하지 않았다." << endl;
+			cout << "체력이 20 증가했다!" << endl;
+			character->setHP(character->getHP() + 20);
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+
+	m_Count++;
+}
+void PartTimeJobEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void VSUpdateEvent::EventEffect(Character* character, GameManager* gm) {
+	static random_device rd;
+	static mt19937 gen(rd());
+	uniform_int_distribution<int> dis(0, 2);
+	int RandNum = dis(gen);
+
+	cout << "====================VS 업데이트 이벤트 발생!!!====================" << endl;
+	cout << "'어 비주얼 스튜디오 버전 업데이트가 생겼네?'" << endl;
+	cout << "'흠... 보안 패치도 있고 빌드 속도도 개선된다라... 해볼까?'" << endl;
+	cout << "'근데 업데이트했다가 오류나면 큰일 나는데 어떻게 하지...'" << endl;
+	while (true) {
+		cout << "1. 업데이트한다  2. 현재버전으로 한다" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+		if (select == 1) {
+			if (RandNum != 2) {
+				cout << "'와! 업데이트하니까 획실히 쾌적하다.'" << endl;
+				cout << "'빌드 시간도 확실히 줄어든 것 같아. 업데이트 하기를 잘했다!'" << endl;
+				cout << "업데이트 후 코딩 효율이 상승했다!" << endl;
+				cout << "코딩력이 40 증가했다!" << endl;
+				character->setATK(character->getATK() + 40);
+				break;
+			}
+			else {
+				cout << "'안돼!! 재부팅도 해봤는데 설치 오류가 계속 나오잖아...'" << endl;
+				cout << "'망했다... 오늘 하루종일 비주얼 스튜디오 재설치만 하겠네.'" << endl;
+				cout << "'이럴 줄 알았으면 그냥 쓸 걸 ㅠㅜ'" << endl;
+				cout << "업데이트 중 오류로 인해 개발 환경이 망가졌다." << endl;
+				cout << "코딩력이 20 감소했다." << endl;
+				character->setHP(character->getHP() - 20);
+				break;
+			}
+			
+		}
+		else if (select == 2) {
+			cout << "'지금 괜히 건드렸다가 오류라도 나면 큰일나니까 일단 두자.'" << endl;
+			cout << "'지금은 업데이트보다는 작성하던 코드를 완성하는게 더 중요해.'" << endl;
+			cout << "비주얼 스튜디오 업데이트를 진행하지 않았다." << endl;
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+	m_Count++;
+}
+void VSUpdateEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void QuestionCodeEvent::EventEffect(Character* character, GameManager* gm) {
+	cout << "====================튜터님께 질문 이벤트 발생!!!====================" << endl;
+	cout << "'여기서 도대체 왜 에러가 발생하는거지...'" << endl;
+	cout << "'2시간째 보고 있는데 도저히 이유를 모르겠다... 튜터님께 질문드려볼까?'" << endl;
+	cout << "'스스로 해결하는 능력을 키우는 것도 중요하다고 하셨는데 어떻게 해야하지..'" << endl;
+	while (true) {
+		cout << "1. 질문드리러 간다  2. 스스로 해결해본다" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+		if (select == 1) {
+			cout << "'아하! 이렇게 해결하면 되는 거였군요! 감사합니다 튜터님!'" << endl;
+			cout << "'튜터님의 설명덕분에 막힌 부분이 뚫렸다. 이제 다음 내용을 작성해볼까.'" << endl;
+			cout << "튜터님의 설명덕분에 막혀있던 문제를 해결했다." << endl;
+			cout << "코딩력이 20 증가했다!" << endl;
+			character->setATK(character->getATK() + 20);
+			break;
+		}
+		else if (select == 2) {
+			cout << "'... 드디어 찾았다!! 여기 문장 때문에 오류가 발생하고 있었구나.'" << endl;
+			cout << "'이 오류 해결하는데만 몇시간을 사용했지만  덕분에 많이 성장한 것 같아.'" << endl;
+			cout << "'근데 너무 힘들다... 조금만 쉬자'" << endl;
+			cout << "오류를 해결하는데 시간이 오래걸렸지만 실력이 크게 상승했다!" << endl;
+			cout << "코딩력이 30 증가했다! 체력이 10 감소했다." << endl;
+			character->setATK(character->getATK() + 30);
+			character->setHP(character->getHP() - 10);
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+
+	m_Count++;
+}
+void QuestionCodeEvent::EventCount() {
 	cout << "이벤트 조우 횟수: " << m_Count << endl;
 }

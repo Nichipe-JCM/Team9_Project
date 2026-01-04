@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <string>
 
 enum class ItemCategory { Weapon, Throwing, HPotion, BPotion, Cash };
@@ -26,8 +26,13 @@ public:
 	ItemCategory getItemType() const;
 	Rarity getRarity() const;
 
+	std::string getRarityColor(Rarity rarity) const;
+	std::string rarityToString(Rarity rarity) const;
+
 	virtual std::string getType() const { return "아이템"; }
 	virtual void PrintInfo() const;
+	virtual void setEquipped(bool equipped) {}
 
 	virtual ~Item() = default;
+	virtual Item* clone() const = 0;
 };
