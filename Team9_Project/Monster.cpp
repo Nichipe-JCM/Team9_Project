@@ -65,18 +65,6 @@ bool Monster::checkDeath() {
 
 
 
-
-// 콘솔 글씨색 변경
-string getRarityColor(Rarity rarity) {
-	switch (rarity) {
-	case Rarity::Common:    return "\033[37m"; // 흰색
-	case Rarity::Rare:      return "\033[34m"; // 파란색
-	case Rarity::Epic:      return "\033[35m"; // 보라색
-	case Rarity::Legendary: return "\033[33m"; // 노란색
-	}
-	return "\033[0m"; // 기본색
-}
-
 // 레어리티에 따른 드랍확률
 double getDefaultDropRate(Rarity rarity)
 {
@@ -528,7 +516,7 @@ void printDropsByCategory(const string& monsterName, ItemCategory category)
 	{
 		if (drop->item->getItemType() == category)
 		{
-			cout << " - " << getRarityColor(drop->item->getRarity())
+			cout << " - " << drop->item->getRarityColor(drop->item->getRarity())
 				<< drop->item->getName()
 				<< "\033[0m" << endl;
 		}
@@ -583,7 +571,7 @@ Item* Monster::dropItem() {
 		acc += d->dropRate;
 		if (roll <= acc) {
 			cout << name << "이(가) "
-				<< getRarityColor(d->rarity)
+				<< d->item->getRarityColor(d->rarity)
 				<< d->item->getName()
 				<< "\033[0m 을 드랍했다!\n";
 			return d->item;

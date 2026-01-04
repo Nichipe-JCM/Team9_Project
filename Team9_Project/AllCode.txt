@@ -1,0 +1,3755 @@
+﻿=========================================
+FILE: AchievementManager.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\AchievementManager.cpp
+=========================================
+#include "AchievementManager.h"
+#include "Character.h"
+#include "StatusManager.h"
+#include "Utils.h"
+#include <iostream>
+AchievementManager::AchievementManager() {
+    Init();
+}
+AchievementManager::~AchievementManager() {}
+void AchievementManager::Init() {
+    // m_Achievements["업적 이름"] = false; 양식으로 추가
+    m_Achievements["첫걸음"] = false;
+    m_Achievements["레벨10달성"] = false;
+    m_Achievements["이제나도부자"] = false;
+    m_Achievements["진짜개발자"] = false;
+    m_Achievements["내배캠지배자"] = false;
+}
+void AchievementManager::UpdateAchievements(Character* player, StatusManager* sm) {
+    //if (!m_Achievements["업적 이름"] && 업적 조건) {} 양식으로 작성
+    if (!m_Achievements["첫걸음"] && player->getATK() >= 100) {
+        m_Achievements["첫걸음"] = true;
+        cout << endl;
+        Utils::DrawLine();
+        cout << "[업적 달성!] '첫걸음' - 코딩력 100 달성!" << endl;
+        Utils::DrawLine();
+        cout << endl;
+    }
+    if (!m_Achievements["레벨10달성"] && player->getLevel() >= 10) {
+        m_Achievements["레벨10달성"] = true;
+        cout << endl;
+        Utils::DrawLine();
+        cout << "[업적 달성!] 레벨 10 달성!" << endl;
+        Utils::DrawLine();
+        cout << endl;
+    }
+    if (!m_Achievements["이제나도부자"] && player->getGold() >= 1000) {
+        m_Achievements["이제나도부자"] = true;
+        cout << endl;
+        Utils::DrawLine();
+        cout << "[업적 달성!] 1000 Zep 수집!" << endl;
+        Utils::DrawLine();
+        cout << endl;
+    }
+    if (!m_Achievements["진짜개발자"]
+        && player->getATK() >= 300
+        && player->getHP() >= 400
+        && player->getGold() >= 500) {
+        m_Achievements["진짜개발자"] = true;
+        cout << endl;
+        Utils::DrawLine();
+        cout << "[업적 달성!] '진짜 개발자' - 코딩력, 체력, Zep 모두 증명!" << endl;
+        Utils::DrawLine();
+        cout << endl;
+    }
+    if (!m_Achievements["내배캠지배자"] && sm->m_KillCounts["강창민 튜터님"] >= 1) {
+        m_Achievements["내배캠지배자"] = true;
+        cout << endl;
+        Utils::DrawLine();
+        cout << "[업적 달성!] 강창민 튜터님 격파!" << endl;
+        Utils::DrawLine();
+        cout << endl;
+    }
+}
+
+
+=========================================
+FILE: AchievementManager.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\AchievementManager.h
+=========================================
+#pragma once
+#include <map>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+class StatusManager; 
+class Character;  
+
+class AchievementManager
+{
+public:
+    map<string, bool> m_Achievements;
+    AchievementManager();
+    ~AchievementManager();
+    void Init();
+    void UpdateAchievements(Character* player, StatusManager* sm);
+};
+
+
+
+=========================================
+FILE: BuffPotion.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\BuffPotion.cpp
+=========================================
+#include "BuffPotion.h"
+#include <iostream>
+
+BuffPotion::BuffPotion(const string& name, int value, int buffAmount, ItemCategory type, Rarity rarity)
+	: Potion(name, value, 0, buffAmount, ItemCategory(type), Rarity(rarity)), m_buffAmount(buffAmount) {
+}
+void BuffPotion::PrintInfo() const {
+	Item::PrintInfo();
+	cout << "타입: 코딩력 상승, 증가량: " << getBuff() << ", 판매 가격: " << getValue()*0.6 << "코인" << endl;
+}
+
+
+=========================================
+FILE: BuffPotion.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\BuffPotion.h
+=========================================
+#pragma once
+#include "Potion.h"
+
+class BuffPotion : public Potion
+{
+public:
+	BuffPotion(const string& m_name,
+		int m_value,
+		int m_buffAmount,
+		ItemCategory type,
+		Rarity rarity);
+
+	int getEffectAmount() const override { return m_buffAmount; }
+	string getType() const override { return "버프아이템"; }
+	void PrintInfo() const override;
+	Item* clone() const override {
+		return new BuffPotion(*this); // 복사 생성자 호출 (내용을 그대로 베낌)
+	}
+
+private:
+	int m_buffAmount;
+};
+
+
+
+=========================================
+FILE: CashableItem.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\CashableItem.cpp
+=========================================
+#include "CashableItem.h"
+#include <iostream>
+
+CashableItem::CashableItem(const string& m_name, int value, ItemCategory type, Rarity rarity)
+	: Item(m_name, value, 0, 0, 0, ItemCategory::Cash, rarity)
+{}
+	void CashableItem::PrintInfo() const {
+		Item::PrintInfo();
+		cout << "타입: 환금 아이템, 판매 가격: " << getValue()*0.6 << "코인" << endl;
+	}
+
+
+=========================================
+FILE: CashableItem.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\CashableItem.h
+=========================================
+#pragma once
+#include "Item.h"
+using namespace std;
+
+class CashableItem : public Item
+{
+public:
+	CashableItem(const string& m_name, int value, ItemCategory type, Rarity rarity);
+	string getType() const override { return "환금아이템"; }
+	void PrintInfo() const override;
+	Item* clone() const override {
+		return new CashableItem(*this); // 복사 생성자 호출 (내용을 그대로 베낌)
+	}
+};
+
+
+=========================================
+FILE: Character.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\Character.cpp
+=========================================
+#include "Character.h"
+#include "Item.h"
+#include "Monster.h"
+#include "Inventory.h"
+#include "HealingPotion.h"
+#include "Potion.h"
+#include "BuffPotion.h"
+#include <iostream>
+#include <string>
+using namespace std;
+Character::Character(string name, int hp, int maxHp, int atk, int level, int gold, int exp)
+	:m_name(name), m_HP(hp), m_MaxHP(maxHp), m_ATK(atk), m_Level(level), m_Gold(gold), m_EXP(exp), m_EXPToLevelUp(100), m_MaxLevel(10), m_Wepatk(0), m_Throw(false), m_Alive(true), m_Equippeditem(nullptr), m_EquippedThrow(nullptr), m_EquippedPotion(nullptr), m_HasPotion(false)
+{
+	m_Equippeditem = nullptr;
+	m_EquippedThrow = nullptr;
+	m_Inventory = new Inventory(20); // 임시로 생성자에 20칸의 인벤토리를 넣었습니다
+
+	m_Wepatk = 0;
+	m_Throw = false;
+	cout << "캐릭터 [" << m_name << "]이(가) 생성되었습니다." << endl;
+	if (name.length() < 2) {
+	}
+	else if (name.length() > 12) {
+		m_name = name.substr(0, 12);
+	}//닉네임의 글자수 2글자 이상 12글자 이하
+}
+Character::~Character() {
+	if (m_Inventory != nullptr) {
+		delete m_Inventory;
+		m_Inventory = nullptr;
+	}
+}//동적할당 메모리누수 방지
+bool Character::isAlive() const {
+	return m_Alive;
+}
+void Character::showStatus() {
+	cout << "--- " << m_name << " (Lv." << m_Level << ") ---" << endl;
+	cout << "HP: " << m_HP << " / " << m_MaxHP << endl;
+	cout << "코딩력: " << getATK() << " (기본 " << m_ATK << " + 무기 " << m_Wepatk << ")" << endl;
+	cout << "경험치: " << m_EXP << " / 100" << endl;
+	cout << "보유 골드: " << m_Gold << " G" << endl;
+	cout << "-----------------------" << endl;
+}
+void Character::usePotion(Potion& potion)
+{
+	if (potion.getType() == "회복포션")
+	{
+		m_HP += potion.getEffectAmount();
+		if (m_HP > m_MaxHP) m_HP = m_MaxHP;
+		cout << m_name << "이(가)" << potion.getName() << "을 사용하여 HP를 " << potion.getEffectAmount() << "회복했습니다. (현재 HP: " << m_HP << " ) " << endl;
+	}
+	else if (potion.getType() == "버프포션") {
+		m_ATK += potion.getEffectAmount();
+		cout << m_name << " 이(가) " << potion.getName() << "을(를) 사용하여 코딩력이 " << potion.getEffectAmount() << "증가했습니다. (현재 코딩력: " << m_ATK << " ) " << endl;
+	}
+}
+
+void Character::manageEquipment(int action, Item* item, int slot)
+{
+	switch (action)
+	{
+	case 0:
+		cout << "[" << m_name << "]의 장비창" << endl;
+		cout << "무기: " << (m_Equippeditem ? m_Equippeditem->getName() : "착용중인 무기 없음") << endl;
+		cout << "투척류: " << (m_EquippedThrow ? m_EquippedThrow->getName() : "착용중인 투척류 없음") << endl;
+		cout << "포션: " << (m_EquippedPotion ? m_EquippedPotion->getName() : "착용중인 포션 없음") << endl;
+		break;
+	case 1:
+		if (item != nullptr)
+		{
+			if (item->getType() == "Weapon")
+			{
+				if (m_Equippeditem != nullptr) manageEquipment(2, nullptr, 1);
+				m_Equippeditem = item;
+				m_Wepatk = item->getAttack();
+				cout << item->getName() << "을(를) 장착했습니다." << endl;//무기장착
+			}
+			else if (item->getType() == "Throw")
+			{
+				m_EquippedThrow = item;
+				m_Throw = true;
+				cout << item->getName() << "을(를) 장착했습니다." << endl;//투척무기장착
+			}
+			else if (item->getType() == "Potion")
+			{
+				m_EquippedPotion = item;
+				m_HasPotion = true;
+				cout << item->getName() << "을(를) 포션 슬롯에 장착했습니다. " << endl;//포션장착
+			}
+		}
+		break;
+	case 2:
+		if (slot == 1 && m_Equippeditem != nullptr)
+		{
+			cout << m_Equippeditem->getName() << "을(를) 해제했습니다" << endl;//무기장착해제
+			m_Equippeditem = nullptr;
+			m_Wepatk = 0;
+		}
+		else if (slot == 2 && m_EquippedThrow != nullptr)
+		{
+			cout << m_EquippedThrow->getName() << "을(를) 해제했습니다" << endl;//투척무기장착해제
+			m_EquippedThrow = nullptr;
+			m_Throw = false;
+		}
+		else if (slot == 3 && m_EquippedPotion != nullptr)
+		{
+			cout << m_EquippedPotion->getName() << "을(를) 해제했습니다 " << endl;//포션창착해제
+			m_EquippedPotion = nullptr;
+			m_HasPotion = false;
+		}
+		break;
+	}
+}
+bool Character::AutoUsePotion(Potion* potion) {//체력 50%이하일경우 포션 사용
+	if (m_HP > 0 && m_HP <= m_MaxHP * 0.5 && m_HasPotion) {
+		Potion* potion = dynamic_cast<Potion*>(m_Equippeditem);
+		if (potion != nullptr && potion->getType() == "회복포션") {
+			usePotion(*potion);
+			m_EquippedPotion = nullptr;
+			m_HasPotion = false;
+			return true;//턴 소모후 포션 사용
+		}
+	}
+	return false;//포션을 사용하지 않음
+}
+
+string Character::getName()const { return m_name; }
+int Character::getHP()const { return m_HP; }
+int Character::getMaxHP()const { return m_MaxHP; }
+int Character::getATK()const { return m_ATK + m_Wepatk; }
+int Character::getEXP()const { return m_EXP; }
+int Character::getEXPToLevelUp()const { return m_EXPToLevelUp; }
+int Character::getLevel()const { return m_Level; }
+int Character::getGold()const { return m_Gold; }
+Inventory* Character::getInventory()const { return m_Inventory; } // 신규 함수
+void Character::setHP(int hp) { m_HP = hp; }
+void Character::setMaxHP(int maxHp) { m_MaxHP = maxHp; }
+void Character::setATK(int atk) { m_ATK = atk; }
+void Character::setEXP(int exp) { m_EXP = exp; }
+void Character::GainEXP(int amount) {//얻는 경험치
+	m_EXP += amount;
+	cout << amount << "의 경험치를 얻었습니다. (현재: " << m_EXP << "/100)" << endl;
+	LevelUp();
+}
+void Character::setLevel(int level) { m_Level = level; }
+void Character::setGold(int gold) { m_Gold = gold; }
+void Character::GainGold(int amount) {//얻는 골드
+	m_Gold += amount;
+	if (m_Gold < 0) {
+		m_Gold = 0;//zep코인 음수 방지
+	}
+	cout << "Zep코인을" << amount << "획득했습니다!(보유 Zep코인: " << m_Gold << "Zep 코인)" << endl;
+}
+void Character::LevelUp() {
+	if (m_Level < m_MaxLevel && m_EXP >= m_EXPToLevelUp) {
+		m_Level++;
+		m_MaxHP += m_Level * 20;//체력 레벨 x 20
+		m_ATK += m_Level * 5;//공격력 레벨 x 5
+		m_HP = m_MaxHP;//레벨업시 풀피
+		m_EXP = 0;
+		m_EXPToLevelUp = 100;
+		if (m_Level == m_MaxLevel) {
+			cout << "이제 일반 몬스터는 상대도 안된다." << endl;//만렙 달성시 대사
+		}
+		else {
+			cout << "레벨 업! 현재 레벨:" << m_Level << endl;//레벨업시 대사
+		}
+	}
+}
+void Character::Attack(Monster* target) {
+	if (AutoUsePotion(dynamic_cast<Potion*>(m_EquippedPotion))) {
+		cout << m_name << "은(는) 이번 턴에 포션을 사용했습니다! " << endl;
+		return;
+	}
+
+	if (m_Throw && m_EquippedThrow != nullptr) {//투적 무기 사용
+		cout << m_name << "이(가)" << m_EquippedThrow->getName() << "을(를) 던졌습니다!" << endl;
+		target->GetHit(m_ATK + m_EquippedThrow->getAttack());//투척무기 자체 피해량 적용
+		m_Throw = false;//사용후 비활성화
+		m_EquippedThrow = nullptr;
+	}
+	else {
+		cout << m_name << "이(가)" << target->getName() << "을(를) 공격합니다!" << endl;
+		target->GetHit(getATK());//캐릭터의 기본공격력 + 무기 공격력 포함
+	}
+}
+void Character::GetHit(int damage) {
+	m_HP -= damage;
+	if (m_HP < 0) m_HP = 0;//캐릭터 체력 음수 방지
+	cout << m_name << "이(가)" << damage << "의 피해를 입었습니다. (남은 HP: " << m_HP << ")" << endl;
+	if (m_HP == 0) {
+		m_Alive = false; //사망처리
+		cout << m_name << "이(가) 사망하였습니다." << endl;
+	}
+}
+
+
+=========================================
+FILE: Character.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\Character.h
+=========================================
+#pragma once
+#include <string>
+#include <vector>
+using namespace std;
+class Potion;
+class Item;
+class Monster;
+class Inventory;
+class Character//캐릭터 클래스
+{
+private:
+	string m_name;//유저의 닉네임
+	int m_HP;//현재 체력
+	int m_MaxHP;//최대 체력
+	int m_ATK;//공격력
+	int m_Wepatk;//무기 공격력
+	int m_EXP;//현재 보유 경험치
+	int m_EXPToLevelUp;//경험치통
+	int m_Level;//현재 레벨
+	int m_MaxLevel;//최대 레벨
+	int m_Gold;//현재 보유 골드
+	bool m_Throw;//투척무기
+	bool m_Alive; //생존여부
+	Item* m_EquippedThrow;//장착중인 투척류
+	Item* m_Equippeditem;//무기
+	Item* m_EquippedPotion;
+	bool m_HasPotion;
+	Inventory* m_Inventory; // 임시로 인벤토리 추가
+
+public:
+	Character(string name, int hp = 200, int maxHp = 200, int atk = 9999, int level = 1, int gold = 0, int exp = 0);//캐릭터의 초기값
+	~Character();
+
+	string getName()const;
+	int getHP()const;
+	int getMaxHP()const;
+	int getATK() const;
+	int getEXP()const;
+	int getLevel()const;
+	int getEXPToLevelUp()const;
+	int getGold()const;
+	Inventory* getInventory()const;
+	bool isAlive() const;
+
+	void setHP(int Hp);
+	void setMaxHP(int MaxHp);
+	void setATK(int atk);
+	void setEXP(int exp);
+	void GainEXP(int amount);
+	void setLevel(int level);
+	void setGold(int gold);
+	void GainGold(int amount);
+	void LevelUp();
+	void Attack(Monster* target);
+	void GetHit(int damage);
+	void showStatus();//캐릭터 스텟 보기
+	void usePotion(Potion& potion);
+	bool AutoUsePotion(Potion* potion);
+	void manageEquipment(int action, Item* item, int slot); // 무기 투척류 장비착용 해제 포함
+};
+
+
+=========================================
+FILE: Event.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\Event.cpp
+=========================================
+
+#include "Event.h"
+
+
+
+
+
+
+=========================================
+FILE: Event.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\Event.h
+=========================================
+#pragma once
+#include "Character.h"
+
+class GameManager;
+
+class Event
+{
+public:
+	virtual void EventEffect(Character* character,GameManager* gm) = 0;
+	virtual void EventCount() = 0;
+	virtual ~Event(){}
+};
+
+
+
+
+=========================================
+FILE: EventList.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\EventList.cpp
+=========================================
+#include "EventList.h"
+#include "Utils.h"
+#include "GameManager.h"
+#include "Character.h"
+#include <iostream>
+#include <random>
+
+using namespace std;
+
+void BuyBookEvent::EventEffect(Character* character, GameManager* gm) {
+	static random_device rd;
+	static mt19937 gen(rd());
+	uniform_int_distribution<int> dis(0, 2);
+	int RandNum = dis(gen);
+
+	cout << "====================서적 할인 이벤트 발생!!!====================" << endl;
+	cout << "인터넷 서칭을 하던 중 원하던 C++ 강의 서적을 발견했다!" << endl;
+	cout << "\"평소보다 저렴한 가격이잖아? 구매할까?\" (구매 시 100 ZEP코인이 소모됩니다.)" << endl;		// 가격 팀원들과 상의 후 필요시 조정
+	while (true) {
+		cout << "1. 구매한다  2. 구매하지 않는다" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+
+		if (select == 1) {
+			if (character->getGold() >= 100) {			//소지한 골드가 책 가격보다 크거나 같을때만 작동
+				character->setGold(character->getGold() - 100);
+				cout << "100 ZEP코인을 지불했습니다." << endl;
+				if (RandNum == 0 || RandNum == 1) {		// 66% 확률의 긍정 이벤트
+					cout << "원하던 책이 잘 도착했습니다!" << endl;
+					cout << "배송받은 책을 읽고 지식이 늘었습니다!" << endl;
+					cout << "코딩력이 50만큼 상승했다!" << endl;				// 후에 팀원들과 상의해서 수치 조정 필요
+					character->setATK(character->getATK() + 50);				// 현재 코딩력에 정해진 수치만큼 상승
+					break;
+				}
+				else {									// 33% 확률 부정 이벤트
+					cout << "\"배송된 박스가 생각보다 무겁다?!\"" << endl;
+					cout << "박스 안에는 묵직한 벽돌 뿐이였다..." << endl;
+					cout << "\"안돼... 내 돈....\"" << endl;
+					cout << "사기를 당해버렸다." << endl;
+					break;
+				}
+			}
+			else {				// 돈 없을 때 작동
+				cout << "\"생각해보니 탈 것을 산다고 ZEP코인을 썼었지..\"" << endl;
+				cout << "\"나중에 돈이 생기면 사야겠다..\"" << endl;
+				break;
+			}
+		}
+		else if (select == 2) {		// 2번 선택지 선택 시 작동
+			cout << "\"저 가격에 올라올 수가 없는데... 사기인가?\"" << endl;
+			cout << "\"불안하니 사지 말아야지\"" << endl;
+			cout << "책을 구매하지 않았다." << endl;
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+
+	m_Count++;
+}
+void BuyBookEvent::EventCount() {
+	cout << "이벤트 조우 횟수 : " << m_Count << endl;
+}
+
+
+
+void SurpriseSessionEvent::EventEffect(Character* character, GameManager* gm) {
+	static random_device rd;
+	static mt19937 gen(rd());
+	uniform_int_distribution<int> dis(0, 2);
+	int RandNum = dis(gen);
+
+	cout << "====================깜짝 세션 이벤트 발생!!!====================" << endl;
+	cout << "과제를 하던 중 슬랙에 알림이 울린다." << endl;
+	cout << "\"튜터님의 깜짝세션 개최!\" 참여하시겠습니까?" << endl;
+	while (true) {
+		cout << "1. 참여한다  2. 참여하지 않는다" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+
+		if (select == 1) {
+			if (RandNum == 0 || RandNum == 1) {
+				cout << "튜터님의 명강의를 들었더니 개념이 확실히 잡혔다." << endl;
+				cout << "헷갈리던 개념이 잡히고 머리가 맑아진다." << endl;
+				cout << "코딩력이 30만큼 상승했다!" << endl;		// 후에 수치조정 필요
+				character->setATK(character->getATK() + 30);
+				break;
+			}
+			else {
+				cout << "\"실력향상에는 반복학습이 최고죠!\"" << endl;
+				cout << "튜터님께서 추가과제를 주셨다...." << endl;
+				cout << "\"안... 안돼! 이건 꿈이야!!\"" << endl;
+				cout << "코딩력이 10 상승했다!" << endl;
+				cout << "체력이 40 감소했다." << endl;
+				character->setATK(character->getATK() + 10);
+				character->setHP(character->getHP() - 40);			// 이 이벤트로 사망할 수도 있어서 후에 조정 필요
+				break;
+			}
+
+		}
+		else if (select == 2) {
+			cout << "\"과제 제출이 얼마 남지 않았으니까 지금은 과제에 집중하자.\"" << endl;
+			cout << "깜짝 세션에 참여하지 않았다." << endl;
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+
+	m_Count++;
+}
+void SurpriseSessionEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void TILIsImportantEvent::EventEffect(Character* character, GameManager* gm) {
+
+
+	cout << "====================TIL 작성 이벤트 발생!!!====================" << endl;
+	cout << "\"드디어 공부가 끝났다 이제 쉬어야지...\"" << endl;
+	cout << "\"인생이 별거 있나 침대에 누워서 핸드폰 보는 이게 인생이지.\"" << endl;
+	cout << "\"아 맞다! 오늘 TIL을 안썼네.\"" << endl;
+	cout << "\"다시 일어나기 너무 귀찮은데...\"" << endl;
+	while (true) {
+		cout << "1. TIL을 작성한다  2. 작성하지 않는다" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+		if (select == 1) {
+			cout << "\"그래도 TIL 작성은 중요하지. 오늘 공부를 복습할겸 작성해보자\"" << endl;
+			cout << "\"휴 다 작성했다. 이젠 진짜 자야지...\"" << endl;
+			cout << "TIL을 작성하고 제출을 완료했다." << endl;
+			cout << "제출한 TIL이 우수 TIL로 선정되었다!" << endl;
+			cout << "1000 ZEP코인을 획득했다!" << endl;				// 수치 팀 상의 필요
+			character->setGold(character->getGold() + 1000);
+			break;
+		}
+		else if (select == 2) {
+			cout << "\"너무 힘들어서 일어날 수가 없다...\"" << endl;
+			cout << "\"그래 하루만 쉬자... 하루 쉬는 건데 별일이야 있겠어?\"" << endl;
+			cout << "TIL을 작성하지 않았다." << endl;
+			cout << "적당한 휴식으로 HP가 10 상승했다." << endl;
+			character->setHP(character->getHP() + 10);				// 수치 팀 상의 필요
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+
+	m_Count++;
+}
+void TILIsImportantEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void DrinkCaffeineEvent::EventEffect(Character* character, GameManager* gm) {
+	double health = static_cast<double>(character->getHP()) / character->getMaxHP();	// 현재 체력 상태 체크를 위한 변수 만들기
+
+	cout << "====================카페인 섭취 이벤트 발생!!!====================" << endl;
+	cout << "\"오늘도 해야할 공부가 많아서 일찍 자기는 틀렸구나...\"" << endl;
+	cout << "\"그런데 너무 졸려서 집중이 안되네...\"" << endl;
+	cout << "\"최근에 많이 먹었는데 오늘도 에너지드링크를 마셔야하나?\"" << endl;
+	while (true) {
+		cout << "1. 마신다  2. 마시지 않는다" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+
+		if (select == 1) {
+			if (health >= 0.5) {		// 현재체력이 최대체력의 절반보다 높거나 같을 때
+				cout << "\"역시 에너지 드링크야. 먹으니까 눈이 확 떠지네.\"" << endl;
+				cout << "\"조금만 더 힘내서 해보자!\"" << endl;
+				cout << "에너지 드링크 덕분에 집중력이 올라서 성공적으로 공부를 끝마쳤다!" << endl;
+				cout << "코딩력이 40만큼 상승했다!" << endl;				// 후에 수치조정 필요
+				character->setATK(character->getATK() + 40);
+				break;
+			}
+			else {						// 현재 체력이 최대체력의 절반이 안될 때
+				cout << "에너지 드링크 덕분에 오늘 공부를 다했다." << endl;
+				cout << "\"이제 자러가야지.\"" << endl;
+				cout << "\"어라? 잠이 오지 않는다. 내일 아침 일찍 일어나야하는데 큰일났다!\"" << endl;
+				cout << "다음날 생활패턴이 망가져 공부를 망쳤다." << endl;
+				cout << "\"적당히 마실껄...\"" << endl;
+				cout << "코딩력이 20 하락했다." << endl;					// 후에 수치조정 필요
+				character->setATK(character->getATK() - 20);
+				break;
+			}
+		}
+		else if (select == 2) {
+			cout << "\"최근에 너무 많이 마셨으니까 오늘은 마시지 말자.\"" << endl;
+			cout << "\"잠도 깰겸 물 마시고 산책이나 하고 와야지.\"" << endl;
+			cout << "에너지 드링크를 마시지 않았다." << endl;
+			cout << "체력과 최대체력이 10만큼 증가했다." << endl;			// 후에 수치조정 필요
+			character->setMaxHP(character->getMaxHP() + 10);
+			character->setHP(character->getHP() + 10);
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+
+	m_Count++;
+}
+void DrinkCaffeineEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void FixCodeEvent::EventEffect(Character* character, GameManager* gm) {
+	static random_device rd;
+	static mt19937 gen(rd());
+	uniform_int_distribution<int> dis(0, 2);
+	int RandNum = dis(gen);
+
+	cout << "====================과제 수정 이벤트 발생!!!====================" << endl;
+	cout << "과제 제출 마감 하루 전" << endl;
+	cout << "휴 드디어 끝냈다. 제출하기 전에 오타는 없는지 다시 확인해봐야지" << endl;
+	cout << "어우 내가 짠 코드가 이렇게 더러웠었나.. 심각하네." << endl;
+	cout << "다시보니까 다시 수정하면 훨씬 간단하게 바꿀 수 있겠는데?" << endl;
+	cout << "하루 정도 시간도 남았는데 수정해볼까?" << endl;
+	while (true) {
+		cout << "1. 수정한다  2. 수정하지 않는다" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+		if (select == 1) {
+			if (RandNum == 0 || RandNum == 1) {
+				cout << "역시 함수와 클래스를 잘 활용하니까 코드가 훨씬 짧아지네" << endl;
+				cout << "\"수정하면서 배웠던 내용 활용도 해보고 복습도 됐네. 수정하기를 잘했다!\"" << endl;
+				cout << "과제를 성공적으로 수정해서 제출했다." << endl;
+				cout << "코딩력이 40 상승했다!" << endl;							// 후에 수치조정 필요
+				character->setATK(character->getATK() + 40);
+				break;
+			}
+			else {
+				cout << "수정하기 시작한지 어언 몇시간째... 오류가 멈추지 않는다..." << endl;
+				cout << "\"어디서부터 잘못된걸까... 여기까지 왔는데 과제 제출을 못할 수는 없어...\"" << endl;
+				cout << "\"오늘도 놀기는 글렀구나...\"" << endl;
+				cout << "아슬아슬하게 수정해서 과제를 제출했다." << endl;
+				cout << "코딩력이 40 상승했다! 체력이 20 하락했다." << endl;		// 후에 수치조정 필요
+				character->setATK(character->getATK() + 40);
+				character->setHP(character->getHP() - 20);
+				break;
+			}
+		}
+		else if (select == 2) {
+			cout << "\"과제를 완성한게 어디냐\"" << endl;
+			cout << "일단 이 상태로 제출하고 나중에 궁금한 점이 생기면 인터넷을 찾아보자." << endl;
+			cout << "\"오랜만에 게임이나 해볼까?\"" << endl;
+			cout << "과제를 수정하지 않았다." << endl;
+			cout << "휴식을 취해서 건강이 좋아졌다." << endl;
+			cout << "체력이 10 증가했다! 최대체력이 10 증가했다!" << endl;			// 후에 수치조정 필요
+			character->setMaxHP(character->getMaxHP() + 10);
+			character->setHP(character->getHP() + 10);
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+
+	m_Count++;
+}
+void FixCodeEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void SOSRequestEvent::EventEffect(Character* character, GameManager* gm) {
+	cout << "====================팀원의 SOS요청 이벤트 발생!!!====================" << endl;
+	cout << "\"띠링!\" 팀프로젝트 맡은 파트의 코드를 작성하던 중 슬랙의 알림이 울린다." << endl;
+	cout << "팀원: 팀장님 지금 작성한 코드에서 오류가 너무 많이나와요.. 도와주세요 ㅜㅜ " << endl;
+	cout << "확인해보니 에러가 발생하는 곳이 전체 코드의 절반 이상이다." << endl;
+	cout << "\"지금 내가 맡은 파트도 마무리해야하는데...\"" << endl;
+	cout << "팀원을 도와줄까?" << endl;
+	while (true) {
+		cout << "1. 팀원을 도와준다  2. 내 할 일을 한다" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+		if (select == 1) {
+			cout << "\"그래 결국 팀 프로젝트니까 도와주자.\"" << endl;
+			cout << "팀원과 코드를 수정해본다." << endl;
+			cout << "예상했던 시간보다 더 거리긴 했지만 오류를 전부 수정했다." << endl;
+			cout << "\"늦게 발견해서 나중에 수정했으면 큰일날 뻔 했다. 도와주길 잘했다.\"" << endl;
+			cout << "조금 힘들긴했지만 결과물을 완성했다!" << endl;
+			cout << "체력이 10 하락했다. 코딩력이 20 증가했다!" << endl;
+			character->setHP(character->getHP() - 10);
+			character->setATK(character->getATK() + 20);
+			break;
+		}
+		else if (select == 2) {
+			cout << "지금은 내 코가 석자다.. 미안하지만 거절해야겠다." << endl;
+			cout << "나: 지금은 제 파트도 못 끝내서 나중에 도와드릴께요 죄송합니다." << endl;
+			cout << "팀원: 아 네 알겠습니다... 제가 한번 수정해볼께요." << endl;
+			cout << "그렇게 문제가 일단락되는 줄 알았다." << endl;
+			cout << "하지만 나중에 내가 마주하게 된 것은 감당할 수 없이 늘어나버린 오류였다." << endl;
+			cout << "수정하지 못한 오류가 남아서 결과물을 제출하지 못했다." << endl;
+			cout << "코딩력이 20 하락했다." << endl;
+			character->setATK(character->getATK() - 20);
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+
+	m_Count++;
+
+}
+void SOSRequestEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void YouTubeAlgorithmEvent::EventEffect(Character* character, GameManager* gm) {
+
+	cout << "====================알고리즘의 유혹 이벤트 발생!!!====================" << endl;
+	cout << "잠깐 쉬려고 유튜브를 켰다." << endl;
+	cout << "\"어라?\"" << endl;
+	cout << "\"귀여운 강아지 영상이 추천에 떠 있다.\"" << endl;
+	cout << "\"해야할 일이 아직 남았는데... 이것만 보고 할까?\"" << endl;
+	while (true) {
+		cout << "1. 강아지 영상을 본다  2. 남은 할 일을 한다" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+		if (select == 1) {
+			cout << "\"강아지가 너무 귀엽다... 하나만 더 보자.\"" << endl;
+			cout << "\"어라? 언제 이렇게 시간이 지났지?\"" << endl;
+			cout << "머리는 식었지만 집중력이 완전히 깨져버렸다." << endl;
+			cout << "체력이 20 증가했다! 코딩력이 20 감소했다." << endl;
+			character->setHP(character->getHP() + 20);
+			character->setATK(character->getATK() - 20);
+			break;
+		}
+		else if (select == 2) {
+			cout << "지금은 참아야 한다." << endl;
+			cout << "유튜브를 끄고 다시 작성하던 코드로 돌아간다." << endl;
+			cout << "집중한 덕분에 작업이 생각보다 빨리 끝났다." << endl;
+			cout << "평소보다 집중력이 좋았던 것 같다." << endl;
+			cout << "코딩력이 10 증가했다!" << endl;
+			character->setATK(character->getATK() + 10);
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+	m_Count++;
+}
+void YouTubeAlgorithmEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void MidnightDebugEvent::EventEffect(Character* character, GameManager* gm) {
+	static random_device rd;
+	static mt19937 gen(rd());
+	uniform_int_distribution<int> dis(0, 2);
+	int RandNum = dis(gen);
+
+	cout << "====================새벽 버그 수정 이벤트 발생!!!====================" << endl;
+	cout << "\"어라 벌써 새벽 1시네. 언제 시간이 이렇게 지나간거지.\"" << endl;
+	cout << "\n조금만 더 해보면 오류를 고칠 수 있을 거 같은데.\n" << endl;
+	cout << "\n하지만 내일도 일정이 있는데 어떻게하지?\n" << endl;
+	while (true) {
+		cout << "1. 오류를 고쳐본다  2. 자러간다" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+		if (select == 1) {
+			if (RandNum == 0 || RandNum == 1) {
+				cout << "\n휴.. 시간이 좀 걸리기는 했지만 결국 고쳤다!\n" << endl;
+				cout << "\n오류를 수정하면서 잘못 알고있던 개념도 제대로 알게됐네.\n" << endl;
+				cout << "\n고쳐보기를 잘했다!!\n" << endl;
+				cout << "오류를 성공적으로 수정했다." << endl;
+				cout << "코딩력이 20 증가했다! 체력이 10 감소했다." << endl;
+				character->setATK(character->getATK() + 20);
+				character->setHP(character->getHP() - 10);
+				break;
+			}
+			else {
+				cout << "\n벌써 새벽 3시라고?? 금방 끝날 줄 알았는데 언제 끝나는거지...\n" << endl;
+				cout << "\n그냥 자고 일어나서 할껄 망했다...\n" << endl;
+				cout << "오류를 수정하지 못했다." << endl;
+				cout << "체력이 20 감소했다." << endl;
+				character->setHP(character->getHP() - 20);
+				break;
+			}
+
+		}
+		else if (select == 2) {
+			cout << "\n무리하지말고 자자. 일어나서 하는게 집중이 더 잘될꺼야.\n" << endl;
+			cout << "오류를 수정하지 않고 잠을 잤다." << endl;
+			cout << "체력이 10 증가했다!" << endl;
+			character->setHP(character->getHP() + 10);
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+
+	m_Count++;
+}
+void MidnightDebugEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void CodeCopyEvent::EventEffect(Character* character, GameManager* gm) {
+	cout << "====================코드 카피 이벤트 발생!!!====================" << endl;
+	cout << "\"벌써 10시라고?! 과제 제출 시간이 2시간 밖에 안남았네..\"" << endl;
+	cout << "'시간 안에 못끝낼거 같은데 어떻게하지...'" << endl;
+	cout << "고민하고 있던 당신의 눈 앞에 아까검색해뒀던 제미나이의 코드가 보인다." << endl;
+	while (true) {
+		cout << "1. 복사해서 제출한다  2. 작성한만큼 제출한다" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+		if (select == 1) {
+			cout << "'그래 일단 과제 제출이 먼저지.'" << endl;
+			cout << "'일단 제출하고 나중에 복습해봐야겠다.'" << endl;
+			cout << "과제 제출을 완료했다." << endl;
+			cout << "하지만 후에 본 테스트에서 같은 문제를 똑같이 틀렸다." << endl;
+			cout << "코딩력이 10 감소했다." << endl;
+			character->setATK(character->getATK() - 10);
+			break;
+		}
+		else if (select == 2) {
+			cout << "'제미나이의 코드를 베껴서 제출하면 실력이 늘지 않을꺼야.'" << endl;
+			cout << "'지금 작성한 것까지만 제출하고 개념을 다시 정리해보자.'" << endl;
+			cout << "작성한만큼만 과제를 제출했다." << endl;
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+	m_Count++;
+}
+void CodeCopyEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void ZepGambleEvent::EventEffect(Character* character, GameManager* gm) {
+	int Choice;
+	static random_device rd;
+	static mt19937 gen(rd());
+	uniform_int_distribution<int> dis(0, 1); // 0 = 짝, 1 = 홀
+	int result = dis(gen);
+	cout << "====================ZEP코인 겜블링 이벤트 발생!!!====================" << endl;
+	cout << "쉬는 시간, ZEP에서 담임 매니저님이 이상한 사이트를 추천했다." << endl;
+	cout << "\"ZEP 코인 홀짝 맞추기!\"" << endl;
+	cout << "\n성공시 200 ZEP코인 획득! 시도 비용 100 ZEP코인\n" << endl;
+	cout << "\n재밌어 보이는데... 한 번만 해볼까?\n" << endl;
+	while (true) {
+		cout << "1. 해본다  2. 안한다" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+		if (select == 1) {
+			if (character->getGold() >= 100) {			// 현재 가진 돈이 100원 이상일 때 진행
+				while (true) {
+					cout << "\n1. 홀  2. 짝  당신의 선택은??\n" << endl;
+					cin >> Choice;
+					if (cin.fail()) {
+						cin.clear();
+						cin.ignore(10000, '\n');
+						cout << "잘못된 값을 입력하셨습니다. 숫자만 입력해주세요." << endl;
+						continue;
+					}
+					if (Choice == 1 || Choice == 2) {
+						break;
+					}
+					else {
+						cout << "1번 또는 2번을 선택해주세요." << endl;
+					}
+				}
+				int userPick = (Choice == 1) ? 1 : 0;
+				cout << "결과는..." << endl;
+				if (userPick == result) {
+					cout << "정답이다!" << endl;
+					cout << "운이 따랐다! 도파민과 함께 코인이 들어온다." << endl;
+					cout << "200 ZEP코인을 획득했다!" << endl;
+					character->setGold(character->getGold() + 200);
+					break;
+				}
+				else {
+					cout << "틀렸다..." << endl;
+					cout << "순식간에 코인이 사라졌다." << endl;
+					cout << "\n역시 도박에 손을 대는게 아니였어...\n" << endl;
+					cout << "100 ZEP코인을 잃었다." << endl;
+					character->setGold(character->getGold() - 100);
+					break;
+				}
+			}
+			else {			// 100원이 없다면 이벤트 참여 실패
+				cout << "\n보유하고 있는 ZEP코인이 모자라군요!\n" << endl;
+				cout << "\n아쉽지만 다음 기회에 참여해야겠네요!\n" << endl;
+				cout << "ZEP코인이 모자라서 겜블링에 참여하지 못했다." << endl;
+				break;
+			}
+		}
+		else if (select == 2) {			// 안한다 선택지 선택시 해당 과정 진행
+			cout << "\"그래 어떻게 모은 돈인데 잃는다면 내가 어떻게 변할지 몰라..\"" << endl;
+			cout << "\"건실하게 모아서 빨리 오토바이를 사야해.\"" << endl;
+			cout << "겜블링에 참여하지 않았다." << endl;
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+	m_Count++;
+}
+void ZepGambleEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+void FunctionNamingEvent::EventEffect(Character* character, GameManager* gm) {
+	static random_device rd;
+	static mt19937 gen(rd());
+	uniform_int_distribution<int> dis(0, 3);
+	int RandNum = dis(gen);
+
+	cout << "====================함수 이름짓기 이벤트 발생!!!====================" << endl;
+	cout << "\n계속 반복되는 이 부분을 함수로 만들면 코드가 짧아지겠는데?\n" << endl;
+	cout << "\n새로 함수를 하나 만들어야겠다.\n" << endl;
+	cout << "\n흠.. 함수 이름은 뭘로 하지.\n" << endl;
+	cout << "\n뭘로 정할지 고민이 되네. 귀찮은데 대충 지어두고 나중에 수정할까?\n" << endl;
+	while (true) {
+		cout << "1. 고민해서 정하기  2. 대충짓기" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+		if (select == 1) {
+			if (RandNum != 3) {
+				cout << "\n저번에 적어뒀던 함수를 수정해야 하는데 어디에 있더라..\n" << endl;
+				cout << "\n아 찾았다! 역시 이름을 잘 지어두니까 찾기 편하네.\n" << endl;
+				cout << "이름 짓기를 잘해둔 덕분에 코드의 가독성이 좋아졌다." << endl;
+				cout << "코딩력이 30 증가했다!" << endl;
+				character->setATK(character->getATK() + 30);
+				break;
+			}
+			else {
+				cout << "\n휴 드디어 함수 이름을 정했다.\n" << endl;
+				cout << "\n헉! 뭐야 벌써 1시간이나 지났잖아!\n" << endl;
+				cout << "\n작성해야할 부분이 아직 산더미인데 망했다...\n" << endl;
+				cout << "함수 이름을 짓는데 시간을 많이 사용해 코딩할 시간이 적어졌다." << endl;
+				cout << "코딩력이 10 감소했다." << endl;
+				character->setATK(character->getATK() - 10);
+				break;
+			}
+
+		}
+		else if (select == 2) {
+			cout << "\n어라 저번에 만들어뒀던 함수를 어디에 넣어놨었지??\n" << endl;
+			cout << "\n프로젝트 내용이 너무 많아져서 찾을 수가 없잖아.\n" << endl;
+			cout << "\n다음에는 만들 때 기능에 맞춰 이름을 지어야겠다...\n" << endl;
+			cout << "만들어뒀던 함수를 찾는데 시간을 날려 코딩할 시간이 적어졌다." << endl;
+			cout << "코딩력이 20 감소했다." << endl;
+			character->setATK(character->getATK() - 20);
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+
+	m_Count++;
+}
+void FunctionNamingEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void LegacyCodeEvent::EventEffect(Character* character, GameManager* gm) {
+	static random_device rd;
+	static mt19937 gen(rd());
+	uniform_int_distribution<int> dis(0, 3);
+	int RandNum = dis(gen);
+
+	cout << "====================누군가의 코드 이벤트 발생!!!====================" << endl;
+	cout << "'이 프로젝트... 예전에 다른 사람이 만들다가 그만둔건가?'" << endl;
+	cout << "'코드에 주석도 하나도 없고 변수 이름이 a, b, c밖에 없네..'" << endl;
+	cout << "'공부하던 것도 끝나서 마침 시간도 남는데 한 번 분석해볼까?'" << endl;
+	while (true) {
+		cout << "1. 분석해보기  2. 못 본 척 지나가기" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+		if (select == 1) {
+			if (RandNum != 3) { 
+				cout << "'아하! 이래서 이 부분을 이렇게 작성한거구나!'" << endl;
+				cout << "'확실히 남이 작성해둔 코드를 분석하는 것도 큰 도움이 되는구나.'" << endl;
+				cout << "코드를 분석하는데 성공했습니다! 코드를 보는 눈이 좋아집니다." << endl;
+				cout << "코딩력이 40 증가했다!" << endl;
+				character->setATK(character->getATK() + 40);
+				break;
+			}
+			else { 
+				cout << "'어... 이게 여기서 왜 호출되지?'" << endl;
+				cout << "'어라?? 이건 왜 실행이 안되지??'" << endl;
+				cout << "'건드리지말껄.. 머리가 너무 아프다...'" << endl;
+				cout << "코드를 분석하는데 실패했습니다. 머릿속이 복잡해집니다." << endl;
+				cout << "코딩력이 15 감소했다." << endl;
+				character->setATK(character->getATK() - 15);
+				break;
+			}
+		}
+		else if (select == 2) {
+			cout << "'얼마만의 자유시간인데 오늘은 좀 쉬자'" << endl;
+			cout << "'오랜만에 친구들이랑 게임이나 해볼까'" << endl;
+			cout << "'친구들은 지금 뭐하려나. 연락해보자.'" << endl;
+			cout << "친구들과 놀며 휴식을 취했다." << endl;
+			cout << "체력이 20 증가했다!" << endl;
+			character->setHP(character->getHP() + 20);
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+
+	m_Count++;
+}
+void LegacyCodeEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void NappingEvent::EventEffect(Character* character, GameManager* gm) {
+	static random_device rd;
+	static mt19937 gen(rd());
+	uniform_int_distribution<int> dis(0, 3);
+	int RandNum = dis(gen);
+
+	cout << "====================낮잠 이벤트 발생!!!====================" << endl;
+	cout << "'아... 점심 먹고 나니까 계속 잠이 오네.'" << endl;
+	cout << "'모니터에 있는 내용이 머릿속에 제대로 들어오지가 않는다.'" << endl;
+	cout << "'딱 15분만 자고 일어나면 잠이 깰 것 같은데...'" << endl;
+	cout << "'잠깐만 자고 올까? 아니면 세수를 하고 올까?'" << endl;
+
+	while (true) {
+		cout << "1. 잠깐 낮잠자기  2. 세수하고 오기" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+		if (select == 1) {
+			if (RandNum != 3) { 
+				cout << "'낮잠 자고 일어나니까 너무 개운하다.'" << endl;
+				cout << "'역시 너무 피곤하면 해소를 해줘야하는구나.'" << endl;
+				cout << "'좋아. 아까 하던 공부를 마저해볼까!'" << endl;
+				cout << "낮잠으로 컨디션이 회복됐다! 집중력이 올라갔다!" << endl;
+				cout << "코딩력이 20 증가했다! 체력이 20 증가했다!" << endl;
+				character->setATK(character->getATK() + 20);
+				character->setHP(character->getHP() + 20);
+				break;
+			}
+			else { 
+				cout << "'어우 잘잤다. 너무 상쾌하네.'" << endl;
+				cout << "'뭐지? 불안하다... 왜 이렇게 상쾌한거지?'" << endl;
+				cout << "'뭐야! 2시간이나 자버렸잖아! 공부하던 것도 안끝났는데 망했다...'" << endl;
+				cout << "알람 소리를 듣지 못해 숙면을 취했다. 오늘치 공부를 망쳤다." << endl;
+				cout << "코딩력이 20 감소했다." << endl;
+				character->setATK(character->getATK() - 20);
+				break;
+			}
+		}
+		else if (select == 2) {
+			cout << "'세수하니까 그래도 잠이 깨네.'" << endl;
+			cout << "'집중해서 빨리 끝내고 쉬러 가야겠다.'" << endl;
+			cout << "'내가 어디까지 했더라..'" << endl;
+			cout << "세수로 잠을 깨고 공부를 진행했다." << endl;
+			cout << "코딩력이 10 증가했다." << endl;
+			character->setATK(character->getATK() + 10);
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+
+	m_Count++;
+}
+void NappingEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void PartTimeJobEvent::EventEffect(Character* character, GameManager* gm) {
+	cout << "====================야간 알바 이벤트 발생!!!====================" << endl;
+	cout << "'ZEP에서 오토바이 깜짝 할인을 시작했잖아!'" << endl;
+	cout << "'지금 가지고 있는 코인이 모자란데.. 야간 알바를 잠깐 해볼까?'" << endl;
+	cout << "'야간 알바를 하게 되면 내일 공부를 못할텐데 어떻게 하지...'" << endl;
+
+	while (true) {
+		cout << "1. 야간 알바 가기  2. 잠자기" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) continue;
+
+		if (select == 1) {
+			cout << "'아... 죽을 것 같다... 그래도 오토바이를 살 수 있는 돈을 모았다.'" << endl;
+			cout << "'원하던 걸 살 수 있어서 다행이다..'" << endl;
+			cout << "'공부는 어쩔 수 없지만 하루만 쉬어야겠다.. 너무 힘들어..'" << endl;
+			cout << "코인을 얻었지만 공부를 하지 못했다." << endl;
+			cout << "200 ZEP코인을 획득했다! 코딩력이 20 감소했다." << endl;
+			character->setGold(character->getGold() + 200);
+			character->setATK(character->getATK() - 20);
+			break;
+		}
+		else if (select == 2) {
+			cout << "'그래 아무리 오토바이가 가지고 싶어도 컨디션 관리가 우선이지.'" << endl;
+			cout << "'지금은 자고 다음에 코인을 더 모아서 구매하자'" << endl;
+			cout << "컨디션 관리를 위해 야간 알바를 하지 않았다." << endl;
+			cout << "체력이 20 증가했다!" << endl;
+			character->setHP(character->getHP() + 20);
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+
+	m_Count++;
+}
+void PartTimeJobEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void VSUpdateEvent::EventEffect(Character* character, GameManager* gm) {
+	static random_device rd;
+	static mt19937 gen(rd());
+	uniform_int_distribution<int> dis(0, 2);
+	int RandNum = dis(gen);
+
+	cout << "====================VS 업데이트 이벤트 발생!!!====================" << endl;
+	cout << "'어 비주얼 스튜디오 버전 업데이트가 생겼네?'" << endl;
+	cout << "'흠... 보안 패치도 있고 빌드 속도도 개선된다라... 해볼까?'" << endl;
+	cout << "'근데 업데이트했다가 오류나면 큰일 나는데 어떻게 하지...'" << endl;
+	while (true) {
+		cout << "1. 업데이트한다  2. 현재버전으로 한다" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+		if (select == 1) {
+			if (RandNum != 2) {
+				cout << "'와! 업데이트하니까 획실히 쾌적하다.'" << endl;
+				cout << "'빌드 시간도 확실히 줄어든 것 같아. 업데이트 하기를 잘했다!'" << endl;
+				cout << "업데이트 후 코딩 효율이 상승했다!" << endl;
+				cout << "코딩력이 40 증가했다!" << endl;
+				character->setATK(character->getATK() + 40);
+				break;
+			}
+			else {
+				cout << "'안돼!! 재부팅도 해봤는데 설치 오류가 계속 나오잖아...'" << endl;
+				cout << "'망했다... 오늘 하루종일 비주얼 스튜디오 재설치만 하겠네.'" << endl;
+				cout << "'이럴 줄 알았으면 그냥 쓸 걸 ㅠㅜ'" << endl;
+				cout << "업데이트 중 오류로 인해 개발 환경이 망가졌다." << endl;
+				cout << "코딩력이 20 감소했다." << endl;
+				character->setHP(character->getHP() - 20);
+				break;
+			}
+			
+		}
+		else if (select == 2) {
+			cout << "'지금 괜히 건드렸다가 오류라도 나면 큰일나니까 일단 두자.'" << endl;
+			cout << "'지금은 업데이트보다는 작성하던 코드를 완성하는게 더 중요해.'" << endl;
+			cout << "비주얼 스튜디오 업데이트를 진행하지 않았다." << endl;
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+	m_Count++;
+}
+void VSUpdateEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+
+void QuestionCodeEvent::EventEffect(Character* character, GameManager* gm) {
+	cout << "====================튜터님께 질문 이벤트 발생!!!====================" << endl;
+	cout << "'여기서 도대체 왜 에러가 발생하는거지...'" << endl;
+	cout << "'2시간째 보고 있는데 도저히 이유를 모르겠다... 튜터님께 질문드려볼까?'" << endl;
+	cout << "'스스로 해결하는 능력을 키우는 것도 중요하다고 하셨는데 어떻게 해야하지..'" << endl;
+	while (true) {
+		cout << "1. 질문드리러 간다  2. 스스로 해결해본다" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+
+		if (select == 1) {
+			cout << "'아하! 이렇게 해결하면 되는 거였군요! 감사합니다 튜터님!'" << endl;
+			cout << "'튜터님의 설명덕분에 막힌 부분이 뚫렸다. 이제 다음 내용을 작성해볼까.'" << endl;
+			cout << "튜터님의 설명덕분에 막혀있던 문제를 해결했다." << endl;
+			cout << "코딩력이 20 증가했다!" << endl;
+			character->setATK(character->getATK() + 20);
+			break;
+		}
+		else if (select == 2) {
+			cout << "'... 드디어 찾았다!! 여기 문장 때문에 오류가 발생하고 있었구나.'" << endl;
+			cout << "'이 오류 해결하는데만 몇시간을 사용했지만  덕분에 많이 성장한 것 같아.'" << endl;
+			cout << "'근데 너무 힘들다... 조금만 쉬자'" << endl;
+			cout << "오류를 해결하는데 시간이 오래걸렸지만 실력이 크게 상승했다!" << endl;
+			cout << "코딩력이 30 증가했다! 체력이 10 감소했다." << endl;
+			character->setATK(character->getATK() + 30);
+			character->setHP(character->getHP() - 10);
+			break;
+		}
+		else {
+			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
+		}
+	}
+
+	m_Count++;
+}
+void QuestionCodeEvent::EventCount() {
+	cout << "이벤트 조우 횟수: " << m_Count << endl;
+}
+
+
+=========================================
+FILE: EventList.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\EventList.h
+=========================================
+#pragma once
+#include "Event.h"
+
+class Character;
+
+class BuyBookEvent : public Event {
+private:
+	int m_Count;
+public:
+	BuyBookEvent() :m_Count(0) {}
+
+	void EventEffect(Character* character, GameManager* gm) override;
+
+	void EventCount() override;
+
+};
+
+class SurpriseSessionEvent : public Event {
+private:
+	int m_Count;
+public:
+	SurpriseSessionEvent() : m_Count(0) {}
+
+	void EventEffect(Character* character, GameManager* gm) override;
+
+	void EventCount() override;
+};
+
+class TILIsImportantEvent : public Event {
+private:
+	int m_Count;
+public:
+	TILIsImportantEvent() : m_Count(0) {}
+
+	void EventEffect(Character* character, GameManager* gm) override;
+
+	void EventCount() override;
+};
+
+class DrinkCaffeineEvent : public Event {
+private:
+	int m_Count;
+public:
+	DrinkCaffeineEvent() : m_Count(0) {}
+
+	void EventEffect(Character* character, GameManager* gm) override;
+
+	void EventCount() override;
+};
+
+class FixCodeEvent : public Event {
+private:
+	int m_Count;
+public:
+	FixCodeEvent() : m_Count(0) {}
+
+	void EventEffect(Character* character, GameManager* gm) override;
+
+	void EventCount() override;
+};
+
+class SOSRequestEvent : public Event {
+private:
+	int m_Count;
+public:
+	SOSRequestEvent() : m_Count(0) {}
+
+	void EventEffect(Character* character, GameManager* gm) override;
+
+	void EventCount() override;
+};
+
+class YouTubeAlgorithmEvent : public Event {
+private:
+	int m_Count;
+public:
+	YouTubeAlgorithmEvent() : m_Count(0) {}
+
+	void EventEffect(Character* character, GameManager* gm) override;
+
+	void EventCount() override;
+};
+
+class MidnightDebugEvent : public Event {
+private:
+	int m_Count;
+public:
+	MidnightDebugEvent() : m_Count(0) {}
+
+	void EventEffect(Character* character, GameManager* gm) override;
+
+	void EventCount() override;
+};
+
+class CodeCopyEvent : public Event {
+private:
+	int m_Count;
+public:
+	CodeCopyEvent() : m_Count(0) {}
+
+	void EventEffect(Character* character, GameManager* gm) override;
+
+	void EventCount() override;
+};
+
+class ZepGambleEvent : public Event {
+private:
+	int m_Count;
+public:
+	ZepGambleEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class FunctionNamingEvent : public Event {
+private:
+	int m_Count;
+public:
+	FunctionNamingEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class LegacyCodeEvent : public Event {
+private:
+	int m_Count;
+public:
+	LegacyCodeEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class NappingEvent : public Event {
+private:
+	int m_Count;
+public:
+	NappingEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class PartTimeJobEvent : public Event {
+private:
+	int m_Count;
+public:
+	PartTimeJobEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class VSUpdateEvent : public Event {
+private:
+	int m_Count;
+public:
+	VSUpdateEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class QuestionCodeEvent : public Event {
+private:
+	int m_Count;
+public:
+	QuestionCodeEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+
+=========================================
+FILE: EventManager.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\EventManager.cpp
+=========================================
+#include "EventManager.h"
+#include "Event.h"
+#include "EventList.h"
+#include <vector>
+#include <random>
+#include <iostream>
+
+using namespace std;
+
+EventManager:: EventManager() {
+	m_EventList.push_back(new BuyBookEvent());
+	m_EventList.push_back(new SurpriseSessionEvent());
+	m_EventList.push_back(new TILIsImportantEvent());
+	m_EventList.push_back(new DrinkCaffeineEvent());
+	m_EventList.push_back(new FixCodeEvent());
+	m_EventList.push_back(new SOSRequestEvent());
+	m_EventList.push_back(new YouTubeAlgorithmEvent());
+	m_EventList.push_back(new MidnightDebugEvent());
+	m_EventList.push_back(new CodeCopyEvent());
+	m_EventList.push_back(new ZepGambleEvent());
+	m_EventList.push_back(new FunctionNamingEvent());
+	m_EventList.push_back(new LegacyCodeEvent());
+	m_EventList.push_back(new NappingEvent());
+	m_EventList.push_back(new PartTimeJobEvent());
+	m_EventList.push_back(new VSUpdateEvent());
+	m_EventList.push_back(new QuestionCodeEvent());
+}
+
+EventManager :: ~EventManager(){
+		for (size_t i = 0; i < m_EventList.size(); i++) {
+			delete m_EventList[i];
+		}
+
+}
+void EventManager:: StartEvent(Character* character,GameManager* gm) {	
+	if (m_EventList.empty()) {						//	벡터가 비어있을 때는 함수 실행 X
+		cout << "호출될 이벤트가 없습니다!" << endl;
+		return;
+	}
+	static random_device rd;
+	static mt19937 gen(rd());											// 난수 생성을 위한 준비
+	uniform_int_distribution<int> dis(0, m_EventList.size() - 1);		// 난수 범위 지정
+	int EventNum = dis(gen);	// 만들어진 난수 변수에 대입		
+	m_EventList[EventNum]->EventEffect(character,gm);			//해당 되는 index에 있는 Event의 EventEffect 함수 실행 
+
+	delete m_EventList[EventNum];				// 이벤트 삭제전 객체 파괴
+
+	m_EventList.erase(m_EventList.begin() + EventNum);			// 해당 벡터의 이벤트 삭제
+}
+
+
+=========================================
+FILE: EventManager.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\EventManager.h
+=========================================
+#pragma once
+#include <vector>
+
+
+class Event;
+class Character;
+class GameManager;
+
+using namespace std;
+class EventManager {
+private:
+	vector<Event*> m_EventList;
+
+public:
+	EventManager();
+	
+
+	~EventManager();
+
+	void StartEvent(Character* character,GameManager* gm);
+
+};
+
+
+
+
+=========================================
+FILE: FinalBoss.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\FinalBoss.cpp
+=========================================
+#include "FinalBoss.h"
+#include <iostream>
+
+using namespace std;
+
+// FinalBoss 생성자
+// Monster 생성자에 직접 값 전달
+FinalBoss::FinalBoss()
+    : Monster(
+        "강창민 튜터님",  // [1] 이름 (스토리상 최종 보스)
+        25,            // [2] 레벨 (MidBoss 최대가 20이므로 그보다 높게 설정)
+        3000,          // [3] 드랍 골드 (최종 보스 보상)
+        2000           // [4] 드랍 경험치
+    )
+{
+    // [5] 최종 보스 등장 연출
+    cout << "===================================" << endl;
+    cout << " [FINAL BOSS] 강창민 튜터님 등장!" << endl;
+    cout << "===================================" << endl;
+}
+
+// FinalBoss 공격
+void FinalBoss::attack(Character* player)
+{
+    // [6] 최종 보스 전용 공격 메시지
+    cout << "강창민 튜터님의 압도적인 C++ 전체 복습 공격!" << endl;
+
+    // [7] 실제 데미지 계산은 Monster에게 위임
+    Monster::attack(player);
+}
+
+// FinalBoss 피격 처리
+void FinalBoss::GetHit(int damage)
+{
+    // [8] 최종 보스 전용 피격 연출
+    cout << "강창민 튜터님은 아직 쓰러지지 않았다!" << endl;
+
+    // [9] HP 감소 및 사망 판정은 Monster 로직 사용
+    Monster::GetHit(damage);
+
+    // [10] 체력이 0이 되었을 때 최종 메시지 출력
+    if (m_HP <= 0)
+    {
+        cout << endl;
+        cout << "===================================" << endl;
+        cout << " [FINAL BOSS DEFEATED]" << endl;
+        cout << " 강창민 튜터님을 쓰러뜨렸다!" << endl;
+        cout << "===================================" << endl;
+    }
+}
+
+
+
+=========================================
+FILE: FinalBoss.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\FinalBoss.h
+=========================================
+#pragma once
+#include "Monster.h"
+#include <string>
+
+// FinalBoss 클래스
+// - 게임에서 단 1번 등장하는 최종 보스
+// - Stage 21에서만 출현
+class FinalBoss : public Monster
+{
+public:
+    // 기본 생성자
+    // GameManager에서 new FinalBoss() 형태로 생성되기 때문에
+    // 반드시 인자를 받지 않는 생성자가 필요함
+    FinalBoss();
+
+    // 최종 보스 전용 공격 연출
+    void attack(Character* player) override;
+
+    // 최종 보스 전용 피격 연출
+    void GetHit(int damage) override;
+};
+
+
+
+=========================================
+FILE: GameManager.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\GameManager.cpp
+=========================================
+#include "GameManager.h"
+#include "MidBoss.h"
+#include "Mob.h"
+#include "FinalBoss.h"
+#include "Utils.h"
+#include "Inventory.h"
+#include "Windows.h"
+#include <iostream>
+#include <cctype>
+
+using namespace std;
+
+GameManager::GameManager(StatusManager* sm, AchievementManager* am): m_SM(sm), m_AM(am),
+m_Stage(0), m_Player(nullptr), m_CurrentMonster(nullptr) {
+
+	m_Event = new EventManager();
+	m_Shop = new Shop(this);
+
+}
+
+
+
+GameManager::~GameManager() {
+	if (m_Player != nullptr) {
+		delete m_Player;
+		m_Player = nullptr;
+	}
+	if (m_CurrentMonster != nullptr) {
+		delete m_CurrentMonster;
+		m_CurrentMonster = nullptr;
+	}
+	if (m_Event != nullptr) {
+		delete m_Event;
+		m_Event = nullptr;
+	}
+	if (m_Shop != nullptr) {
+		delete m_Shop;
+		m_Shop = nullptr;
+	}
+}
+
+
+
+bool GameManager::DefaultMenuCheck(int choice) { //기본메뉴 체크. 기본메뉴에 대해서는 Utils.cpp 확인
+	switch (choice) {
+	case 7:
+		ViewInventory(m_SM, m_Player->getInventory());
+		return true;
+	case 8:
+		ViewCharacterStatus(m_SM);
+		return true;
+	case 9:
+		ViewBattleStatus(m_SM);
+		return true;
+	case 0:
+		ViewAchievements(m_SM);
+		return true;
+	default:
+		return false; // "7,8,9,0 아님
+	}
+}
+
+
+
+void GameManager::RunGame() { // 게임의 전체적인 프로세스 진행
+	m_Stage = 1; // 스테이지 초기화
+	while (true) {
+		SpawnMonster(m_Stage); // 스테이지 기준 몬스터 생성
+		cout << "현재 스테이지: " << m_Stage << endl;
+		Sleep(1000);
+		Battle(); // 전투
+		if (m_Player->getHP() <= 0) { // 플레이어 사망시 게임오버 출력 후 RunGame 종료
+			Sleep(1000);
+			GameOver();
+			Sleep(1000);
+			return;
+		}
+		BattleVictory(); // 전투 승리시 보상 지급 및 상점 or 이벤트
+		Sleep(1000);
+		m_AM->UpdateAchievements(m_Player, m_SM);
+		m_Stage++;
+		Sleep(1000);
+		if (m_Stage > 21) { // 스테이지가 22이상일 경우(최종보스를 잡았을 경우) 엔딩 출력 후 처음으로
+			Sleep(1000);
+			Ending();
+			Sleep(1000);
+			m_AM->UpdateAchievements(m_Player, m_SM);
+			Sleep(1000);
+			return;
+		}
+	}
+}
+
+
+
+void GameManager::SpawnMonster(int stage) {
+	if (stage == 21) { // 최종보스
+		m_CurrentMonster = new FinalBoss();
+	}
+	else if (stage % 5 == 0) { // 중간보스
+		int midBossId = stage / 5;
+		m_CurrentMonster = new MidBoss(midBossId);
+	}
+	else if (stage < 21) { // 일반몹
+		m_CurrentMonster = Mob::createRandomMonster(m_Player);
+	}
+	else {
+		cout << "**예상치 못한 오류가 발생하였습니다. stage를 1로 리셋하고 일반 몬스터를 소환합니다.**" << endl;
+		m_Stage = 1;
+		m_CurrentMonster = Mob::createRandomMonster(m_Player);
+	} // stage가 범위 밖일 경우 : 치명적 오류!
+}
+
+
+
+void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력이 0이 될때까지 반복 루프
+	system("cls");
+	cout << "앗! 당신의 앞길을 " << m_CurrentMonster->getName() << "이(가) 가로막았다!" << endl;
+	Sleep(1000);
+	while (true) { // 둘중 하나의 체력이 0이 될때까지 반복
+		if (m_Player->getHP() <= 0) break;
+		m_Player->Attack(m_CurrentMonster);
+		Sleep(1000);
+		if (m_CurrentMonster->getHP() <= 0) break;
+		m_CurrentMonster->attack(m_Player);
+		Sleep(1000);
+	}
+
+}
+
+
+
+void GameManager::BattleVictory() { // 전투승리시
+	cout << "\n승리!\n" << endl;
+	while (m_Stage < 21) { // 선택지. 최종보스 이하 스테이지일때만 나오게
+		m_Player->setEXP(m_Player->getEXP() + m_CurrentMonster->getDropEXP());
+		m_Player->setGold(m_Player->getGold() + m_CurrentMonster->getDropGold());
+		m_Player->LevelUp();
+		Item* dropitem = m_CurrentMonster->dropItem();
+		if (dropitem != nullptr) m_Player->getInventory()->AddItem(dropitem);
+		m_SM->AddKill(m_CurrentMonster->getName());
+		delete m_CurrentMonster; // 현재 몬스터 삭제
+		m_CurrentMonster = nullptr;
+		m_AM->UpdateAchievements(m_Player, m_SM);
+
+		cout << "1. 상점으로" << endl;
+		cout << "2. 무작위 이벤트" << endl;
+		int select = Utils::DefaultMenu(); // 기본 선택지 아래에 기본메뉴 표시 + 안전한 입력 받음
+		if (GameManager::DefaultMenuCheck(select)) { // 기본 선택지를 골랐으면 while문 반복
+			continue;
+		}
+		if (select == 1) { // 상점이나 이벤트 골라서 진행
+			VisitShop();
+			break;
+		}
+		else if (select == 2) {
+			VisitEvent();
+			break;
+		}
+		else { // 범위 외 입력 감지시 다시
+			cout << "잘못된 입력입니다." << endl;
+		}
+	}
+}
+
+
+
+void GameManager::GameOver() {
+	cout << "당신은 주겄슴다 ㅡㅡ;" << endl;
+}
+
+
+
+void GameManager::VisitShop() {
+	m_Shop->ShopSelect(m_Player);
+}
+
+
+
+void GameManager::VisitEvent() {
+	m_Event->StartEvent(m_Player, this);
+}
+
+
+
+void GameManager::Opening() {
+	string name;
+	while (true) { // 이름 유효성 검사 프로세스
+		cout << ">> 이름을 입력하세요 (특수문자/공백 불가, 12글자 이내): ";
+		getline(cin, name);
+		if (cin.fail()) { // 모종의 사유로 cin이 fail했을 때
+			cin.clear();
+			cin.ignore(10000, '\n');
+			cout << "잘못된 입력입니다." << endl;
+			continue;
+		}
+		if (name.length() > 12) { // 길이가 너무 길 때
+			cout << "이름이 너무 깁니다. 12글자 이내로 해주세요." << endl;
+			continue;
+		}
+		bool isValid = true;
+		for (char c : name) {
+			if ((unsigned char)c < 128) { // char를 unsigned char로 변환했을때 128 이하면 숫자, 영어, 특문 중 하나임
+				if (isalnum(c) == 0) { // cctype 라이브러리의 isalnum(알파벳이나 숫자인지) 확인
+					isValid = false;
+					break;
+				}
+			}
+			else {
+				continue;
+			}
+		}
+		if (!isValid) { // 위에서 한 특문검사 체크
+			cout << "특수문자 또는 공백은 사용할 수 없습니다." << endl;
+		}
+		else {
+			break;
+		}
+	}
+	m_Player = new Character(name); // 캐릭터 생성
+	cout << "당신의 캐릭터 " << name << "이(가) 생성되었습니다!" << endl;
+	Sleep(1000);
+}
+
+
+
+void GameManager::Ending() {
+	cout << "YOU WIN!" << endl; // 임시
+}
+
+
+
+void GameManager::ViewCharacterStatus(StatusManager* sm) {
+	sm->DisplayCharacterStatus(m_Player);
+}
+
+
+
+void GameManager::ViewBattleStatus(StatusManager* sm) {
+	sm->DisplayBattleStatus();
+}
+
+
+
+void GameManager::ViewAchievements(StatusManager* sm) {
+	sm->DisplayAchievements(m_AM);
+}
+
+
+
+void GameManager::ViewInventory(StatusManager* sm, Inventory* Inv) {
+	Inv->ManageInventory(sm, m_Player);
+}
+
+
+
+
+
+
+=========================================
+FILE: GameManager.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\GameManager.h
+=========================================
+#pragma once
+#include "Character.h"
+#include "Monster.h"
+#include "Shop.h"
+#include "EventManager.h"
+#include "StatusManager.h"
+#include "AchievementManager.h"
+
+class Inventory;
+
+class GameManager
+{
+private:
+	int m_Stage;
+	Character* m_Player;
+	Monster* m_CurrentMonster;
+	EventManager* m_Event;
+	Shop* m_Shop;
+	StatusManager* m_SM;
+	AchievementManager* m_AM;
+
+public:
+	GameManager(StatusManager* sm, AchievementManager* am);
+	~GameManager();
+	bool DefaultMenuCheck(int choice);
+	void RunGame();
+	void SpawnMonster(int stage);
+	void Battle();
+	void BattleVictory();
+	void GameOver();
+	void VisitShop();
+	void VisitEvent();
+	void Opening();
+	void Ending();
+	void ViewCharacterStatus(StatusManager* sm);
+	void ViewBattleStatus(StatusManager* sm);
+	void ViewAchievements(StatusManager* sm);
+	void ViewInventory(StatusManager* sm, Inventory* inv);
+};
+
+
+
+
+=========================================
+FILE: HealingPotion.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\HealingPotion.cpp
+=========================================
+#include "HealingPotion.h"
+#include <iostream>
+
+HealingPotion::HealingPotion(const std::string& name, int value, int healAmount, ItemCategory type, Rarity rarity)
+	: Potion(name, value, healAmount, 0, ItemCategory(type), Rarity(rarity)), m_healAmount(healAmount) { }
+
+int HealingPotion::getEffectAmount() const
+{
+	return m_healAmount;
+}
+void HealingPotion::PrintInfo() const {
+	Item::PrintInfo();
+	cout << "타입: 회복 포션, 회복량: " << getHeal() << ", 판매 가격: " << getValue()*0.6 << "코인" << endl;
+}
+
+
+=========================================
+FILE: HealingPotion.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\HealingPotion.h
+=========================================
+#pragma once
+#include "Potion.h"
+#include "Monster.h"
+
+class HealingPotion : public Potion
+{
+public:
+	HealingPotion(const string& m_name, int m_value, int m_healAmount, ItemCategory type, Rarity rarity);
+	int getEffectAmount() const override;
+	string getType() const override { return "회복포션"; }
+	void PrintInfo() const override;
+	Item* clone() const override {
+		return new HealingPotion(*this); // 복사 생성자 호출 (내용을 그대로 베낌)
+	}
+
+private:
+	int m_healAmount{ 0 }; // healamount 변수 초기화
+};
+
+
+
+=========================================
+FILE: Inventory.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\Inventory.cpp
+=========================================
+#include "Inventory.h"
+#include "StatusManager.h"
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+Inventory::Inventory(int slot) : m_MaxInventorySlot(slot) {}
+Inventory::~Inventory(){}
+bool Inventory::AddItem(Item* item) {
+	if (m_Inventory.size() >= m_MaxInventorySlot) {
+		cout << "인벤토리가 가득 찼습니다!" << endl;
+		return false;
+	}
+	m_Inventory.push_back(item);
+	return true;
+}
+void Inventory::RemoveItemFromIndex(int index) {
+    if (index < 1 || index >= m_Inventory.size()+1) {
+        return;
+    }
+    m_Inventory.erase(m_Inventory.begin() + index -1);
+}
+void Inventory::RemoveItemFromPointer(Item* item) {
+    auto it = find(m_Inventory.begin(), m_Inventory.end(), item);
+    if (it != m_Inventory.end()) {
+        m_Inventory.erase(it);
+    }
+}
+Item* Inventory::GetItem(int index) {
+    if (index < 1 || index >= m_Inventory.size()+1) {
+        return nullptr;
+    }
+    return m_Inventory[index - 1];
+}
+vector<Item*>& Inventory::GetInventory() {
+	return m_Inventory;
+}
+void Inventory::ManageInventory(StatusManager* sm, Character* ch) {
+    sm->DisplayInventory(this);
+    //이후 아이템 사용하기, 아이템 버리기 등 구현
+}
+
+
+=========================================
+FILE: Inventory.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\Inventory.h
+=========================================
+#pragma once
+#include "Item.h"
+#include <vector>
+using namespace std;
+
+class StatusManager;
+class Character;
+
+class Inventory
+{
+private:
+	vector<Item*> m_Inventory;
+	const int m_MaxInventorySlot;
+public:
+	Inventory(int slot);
+	~Inventory();
+	bool AddItem(Item* item);
+	void RemoveItemFromIndex(int index);
+	void RemoveItemFromPointer(Item* item);
+	Item* GetItem(int index);
+	vector<Item*>& GetInventory();
+	void ManageInventory(StatusManager* sm, Character* ch);
+};
+
+
+
+
+=========================================
+FILE: Item.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\Item.cpp
+=========================================
+#include "Item.h"
+#include <iostream>
+
+Item::Item(const std::string& name, int value, int attack, int heal, int buff,
+	ItemCategory itemType, Rarity rarity)
+	: m_name(name), m_value(value), m_attack(attack), m_heal(heal),
+	m_buff(buff), m_itemType(itemType), m_rarity(rarity) {
+}
+
+std::string Item::getName() const { return m_name; }
+int Item::getValue() const { return m_value; }
+int Item::getAttack() const { return m_attack; }
+int Item::getHeal() const { return m_heal; }
+int Item::getBuff() const { return m_buff; }
+ItemCategory Item::getItemType() const { return m_itemType; }
+Rarity Item::getRarity() const { return m_rarity; }
+
+static std::string rarityToString(Rarity rarity) {
+	switch (rarity) {
+	case Rarity::Common: return "Common";
+	case Rarity::Rare: return "Rare";
+	case Rarity::Epic: return "Epic";
+	case Rarity::Legendary: return "Legendary";
+	}
+	return "Unknown";
+}
+
+void Item::PrintInfo() const {
+	std::cout << "[" << getName() << "](" << rarityToString(getRarity()) << ") ";
+}
+
+
+
+
+=========================================
+FILE: Item.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\Item.h
+=========================================
+#pragma once
+#include <string>
+
+enum class ItemCategory { Weapon, Throwing, HPotion, BPotion, Cash };
+enum class Rarity { Common, Rare, Epic, Legendary };
+
+class Item {
+protected:
+	std::string m_name;
+	int m_value;
+	int m_attack;
+	int m_heal;
+	int m_buff;
+	ItemCategory m_itemType;
+	Rarity m_rarity;
+
+public:
+	Item(const std::string& name, int value, int attack, int heal, int buff,
+		ItemCategory itemType, Rarity rarity);
+
+	std::string getName() const;
+	int getValue() const;
+	int getAttack() const;
+	int getHeal() const;
+	int getBuff() const;
+	ItemCategory getItemType() const;
+	Rarity getRarity() const;
+
+	virtual std::string getType() const { return "아이템"; }
+	virtual void PrintInfo() const;
+
+	virtual ~Item() = default;
+	virtual Item* clone() const = 0;
+};
+
+
+
+=========================================
+FILE: ItemPool.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\ItemPool.cpp
+=========================================
+#include "Itempool.h"
+#include "Weapon.h"
+#include "Potion.h"
+#include "ThrowingWeapon.h"
+#include "CashableItem.h"
+#include "BuffPotion.h"
+#include "HealingPotion.h"
+
+
+std::vector<Item*>& ItemPool::getAllItems() {
+	static std::vector<Item*> allItems = {
+		// 1. 무기류 (Weapon)
+		new Weapon("키보드워리어의 너덜너덜한 키보드였던 것", 10, 10, ItemCategory::Weapon, Rarity::Common),
+		new Weapon("독거미 키보드 60% 배열", 30, 30, ItemCategory::Weapon, Rarity::Rare),
+		new Weapon("전설적인 C++ 마스터의 키보드", 500, 50, ItemCategory::Weapon, Rarity::Legendary),
+
+		// 2. 투척 무기류 (ThrowingWeapon)
+		new ThrowingWeapon("투척용 플로피디스크", 20, 10, 3, ItemCategory::Throwing, Rarity::Common),
+		new ThrowingWeapon("구겨진 음료캔", 20, 30, 2, ItemCategory::Throwing, Rarity::Common),
+		new ThrowingWeapon("분노에 찬 마우스", 40, 40, 1, ItemCategory::Throwing, Rarity::Common),
+		new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare),
+		new ThrowingWeapon("오토바이", 3000, 9999, 1, ItemCategory::Throwing, Rarity::Legendary),
+
+		// 3. 포션류 (HealingPotion / BuffPotion)
+		new HealingPotion("쓰리샷 추가한 커피", 55, 45, ItemCategory::HPotion, Rarity::Common),
+		new HealingPotion("에너지드링크", 40, 50, ItemCategory::HPotion, Rarity::Common),
+		new HealingPotion("스누피 초코우유", 50, 55, ItemCategory::HPotion, Rarity::Rare),
+		new HealingPotion("빨간 날", 1000, 100, ItemCategory::HPotion, Rarity::Legendary),
+
+		new BuffPotion("코딩애플 숏츠", 20, 10, ItemCategory::BPotion, Rarity::Common),
+		new BuffPotion("점심시간", 30, 10, ItemCategory::BPotion, Rarity::Common),
+		new BuffPotion("튜터님의 깜짝 세션", 50, 20, ItemCategory::BPotion, Rarity::Rare),
+
+		// 4. 환금 아이템류 (CashableItem)
+		new CashableItem("지폐", 77, ItemCategory::Cash, Rarity::Common),
+		new CashableItem("500원 동전", 50, ItemCategory::Cash, Rarity::Common),
+		new CashableItem("길가다 주운 복권", 10000, ItemCategory::Cash, Rarity::Legendary)
+	};
+	return allItems;
+}
+
+
+=========================================
+FILE: Itempool.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\Itempool.h
+=========================================
+#pragma once
+#include <vector>
+#include "Item.h"
+class ItemPool
+{
+public:
+	static std::vector<Item*>& getAllItems();
+
+};
+
+
+=========================================
+FILE: main.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\main.cpp
+=========================================
+#include "GameManager.h"
+#include "StatusManager.h"
+#include "AchievementManager.h"
+#include "Utils.h"
+#include <iostream>
+#include <Windows.h>
+
+using namespace std;
+
+int main() {
+	SetConsoleOutputCP(65001);
+	StatusManager* SM = new StatusManager();
+	AchievementManager* AM = new AchievementManager();
+	while (true) {
+		GameManager GM(SM,AM);
+		GM.Opening();
+		GM.RunGame();
+		int choice = 0;
+		while (true) {
+			cout << "게임을 다시 시작하시겠습니까?" << endl;
+			cout << "1. 예" << endl;
+			cout << "2. 아니오(프로그램 종료)" << endl;
+			choice = Utils::GetSafeInput();
+			if (choice == 1 || choice == 2) {
+				break;
+			}
+			else cout << "잘못된 입력입니다." << endl;
+		}
+		if (choice == 1) {
+			cout << "게임을 재시작합니다" << endl;
+			continue;
+		}
+		else {
+			cout << "게임을 종료합니다." << endl;
+			return 0;
+		}
+	}
+	delete SM;
+	delete AM;
+	return 0;
+}
+
+
+=========================================
+FILE: MidBoss.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\MidBoss.cpp
+=========================================
+#include "MidBoss.h" // MidBoss 클래스 구현을 위해 헤더 포함
+
+#include <iostream>
+
+using namespace std;
+
+
+// 미드보스 데이터 테이블 정의 // static 멤버 변수는 cpp 파일에서 반드시 한 번 정의해야 함
+map<int, MidBossData> MidBoss::midBossTable =  // key : id (1~4) // value : 해당 id에 대응하는 미드보스 정보
+//  미드보스 데이터 테이블
+{
+    { 1, { "김조은 튜터",  5,  200, 75 } },   // Stage 5
+    { 2, { "김극민 튜터",     10,  300, 100 } },   // Stage 10
+    { 3, { "김봉재 튜터",     15,  600, 150 } },   // Stage 15
+    { 4, { "손승현 튜터",     20, 1000, 175 } }   // Stage 20
+};
+
+
+// MidBoss 생성자
+MidBoss::MidBoss(int id)  // id 값에 따라 midBossTable에서 데이터를 가져와 // Monster 생성자에 전달
+    : Monster(
+        midBossTable.at(id).name,      // 몬스터 이름
+        midBossTable.at(id).level,     // 몬스터 레벨
+        midBossTable.at(id).dropGold,  // 드랍 골드
+        midBossTable.at(id).dropExp    // 드랍 경험치
+    )
+{
+
+    cout << "[MID BOSS] " << name << " 등장!" << endl; // 미드보스 등장 연출
+}
+
+
+
+
+void MidBoss::attack(Character* player) // 미드보스 공격 // Monster의 기본 공격에 미드보스 전용 메시지를 오버라이드
+{
+    cout << "[MID BOSS] " << name << "의 과제 공격!" << endl;
+
+    // 실제 공격 로직은 부모 클래스에게 맡김
+    Monster::attack(player);
+}
+
+
+
+void MidBoss::GetHit(int damage) // 미드보스 피격 시 전용 메시지를 출력한 뒤 // 실제 데미지 계산은 Monster에게 위임
+{
+    cout << "[MID BOSS] " << name << "는 쉽게 쓰러지지 않는다!" << endl;
+
+    Monster::GetHit(damage);
+}
+
+/* void MidBoss::Die() //**********************Monster의 Die() 함수를가져와야 함.
+{
+    cout << "[MID BOSS] " << name << " 격파!" << endl;
+    cout << "강력한 기운이 사라진다..." << endl;
+
+    Monster::Die();  //  핵심: 부모에게 실제 처리 위임
+}
+
+*/
+
+
+
+=========================================
+FILE: MidBoss.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\MidBoss.h
+=========================================
+#pragma once
+
+#include "Monster.h" // MidBoss는 Monster를 상속받기 때문에 부모 클래스 포함
+
+#include <map>
+#include <string>  // midBossTable(map)과 이름(string)을 사용하기 위해 포함
+
+using namespace std;
+
+// 미드보스 데이터 구조체
+// 미드보스마다 다른 고정 데이터를 묶어서 관리하기 위한 구조체
+struct MidBossData
+{
+    string name; // 미드보스 이름
+    int level;        // 미드보스 레벨 (Monster 생성자에서 HP/ATK 계산에 사용)
+    int dropGold;     // 처치 시 획득 골드
+    int dropExp;      // 처치 시 획득 경험치
+};
+
+
+// MidBoss 클래스 선언
+class MidBoss : public Monster // Monster 클래스를 상속받아 미드보스 전용 몬스터를 구현
+{
+private:     // 모든 MidBoss가 공유하는 데이터 테이블/  key : id (1~4) / value : 해당 미드보스의 고정 데이터
+    static map<int, MidBossData> midBossTable;
+
+public:
+    MidBoss(int id); // 생성자 // id : GameManager에서 stage / 5 로 계산된 값 (1~4) //id에 따라 다른 미드보스가 생성됨
+
+ 
+    void attack(Character* player) override;  // Monster의 attack 함수를 오버라이드 // 미드보스 전용 공격 메시지 출력
+
+  
+    void GetHit(int damage) override; // Monster의 GetHit 함수를 오버라이드 // 미드보스만의 피격 연출 메세지 출력
+};
+
+
+
+=========================================
+FILE: Mob.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\Mob.cpp
+=========================================
+#include "Mob.h"
+#include "Character.h"
+#include <string>
+#include <cstdlib>
+#include <ctime> 
+using namespace std;
+
+Monster* Mob::createRandomMonster(Character* Player) // 정해진 리스트에서 랜덤으로 몬스터가 등장하게 하기
+{
+	static bool seeded = false;
+	if (!seeded) {
+		srand(time(NULL));
+		seeded = true;
+	}
+
+	string names[] =
+	{ "포인터", "레퍼런스", "템플릿", "변수", "함수", "배열", "알고리즘", "객체", "부동소수점", "클래스" };
+
+	int idx = rand() % 10;
+	int level = Player->getLevel();
+	int gold = rand() % 11 + 10;
+	int exp = 25;
+	return new Monster(names[idx], level, gold, exp);
+}
+
+/*
+필요 총 경험치 900
+잡는 잡몹 16마리
+잡는 중간보스 4마리
+*/
+
+
+=========================================
+FILE: Mob.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\Mob.h
+=========================================
+#pragma once
+#include "Monster.h"
+
+class Character;
+
+class Mob :
+    public Monster
+{
+public:
+    Mob(const std::string& name, int level, int gold, int exp)
+        : Monster(name, level, gold, exp) { }
+
+    static Monster* createRandomMonster(Character* Player);
+};
+
+
+
+
+=========================================
+FILE: Monster.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\Monster.cpp
+=========================================
+#include "Monster.h"
+#include "Character.h"
+#include "Weapon.h"
+#include "ThrowingWeapon.h"
+#include "HealingPotion.h"
+#include "BuffPotion.h"
+#include "CashableItem.h"
+
+#include <iostream>
+#include <string>
+#include <random>
+#include <map>
+#include <ctime>    
+
+using namespace std;
+
+
+Monster::Monster(const string& name, int level, int gold, int exp)
+	: name(name), m_dropGold(gold), m_dropEXP(exp), isAlive(true)
+{
+
+	static random_device rd;
+	static mt19937 gen(rd());
+
+
+	uniform_int_distribution<int> hpDist(level * 20, level * 30);
+	m_HP = hpDist(gen);
+
+	uniform_int_distribution<int> atkDist(level * 5, level * 10);
+	m_ATK = atkDist(gen);
+
+}
+
+void Monster::attack(Character* target)
+{
+	cout << name << "의 공격! (공격력: " << m_ATK << ")" << endl;
+	// player->gethit(m_atk)
+	if (target != nullptr) {
+		target->GetHit(m_ATK);
+	}
+}
+
+void Monster::GetHit(int damage) // checkDeath 추가
+{
+	m_HP -= damage;
+	if (m_HP < 0) m_HP = 0;
+	cout << name << "이(가) " << damage << " 피해를 입었습니다. 남은 HP: " << m_HP << endl;
+
+	checkDeath(); // 해치웠나?
+}
+
+// 해치웠나? 의 몸통
+bool Monster::checkDeath() {
+	if (m_HP <= 0) {
+		isAlive = false;
+
+		cout << name << "이(가) 쓰러졌다!" << endl;
+
+		cout << m_dropGold << " 골드와 " << m_dropEXP << " 경험치를 획득했다!" << endl;
+
+		return true;
+	}
+	return false;
+}
+
+
+
+
+// 콘솔 글씨색 변경
+string getRarityColor(Rarity rarity) {
+	switch (rarity) {
+	case Rarity::Common:    return "\033[37m"; // 흰색
+	case Rarity::Rare:      return "\033[34m"; // 파란색
+	case Rarity::Epic:      return "\033[35m"; // 보라색
+	case Rarity::Legendary: return "\033[33m"; // 노란색
+	}
+	return "\033[0m"; // 기본색
+}
+
+// 레어리티에 따른 드랍확률
+double getDefaultDropRate(Rarity rarity)
+{
+	switch (rarity)
+	{
+	case Rarity::Common: return 0.3;   // 30%
+	case Rarity::Rare: return 0.1;     // 10%
+	case Rarity::Epic: return 0.05;    // 5%
+	case Rarity::Legendary: return 0.01; // 1%
+	}
+	return 0.0;
+}
+
+// 드랍 테이블
+// weapon - value / damage
+// throwA - value / damage / quantity
+// healing- value / healamount
+// buffing- value / buffamount
+// cashAb - value
+static map<string, vector<DropEntry*>> monsterDrops =
+{
+	{"포인터", {
+		new DropEntry(
+			new Weapon("키보드워리어의 너덜너덜한 키보드였던 것", 10, 10, ItemCategory::Weapon, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Weapon
+		),
+		new DropEntry(
+			new CashableItem("지폐", 77, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new CashableItem("500원 동전", 50, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new HealingPotion("쓰리샷 추가한 커피", 55, 45, ItemCategory::HPotion, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::HPotion
+		),
+		new DropEntry(
+			new CashableItem("길가다 주운 복권", 10000, ItemCategory::Cash, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new BuffPotion("코딩애플 숏츠", 20, 10, ItemCategory::BPotion, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::BPotion
+		),
+		new DropEntry(
+			new Weapon("전설적인 C++ 마스터의 키보드", 500, 50, ItemCategory::Weapon, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary),
+			ItemCategory::Weapon
+		),
+	}},
+
+	{"레퍼런스", {
+		new DropEntry(
+			new Weapon("키보드워리어의 너덜너덜한 키보드였던 것", 10, 10, ItemCategory::Weapon, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Weapon
+		),
+		new DropEntry(
+			new CashableItem("지폐", 77, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new CashableItem("500원 동전", 50, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new HealingPotion("쓰리샷 추가한 커피", 55, 45, ItemCategory::HPotion, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::HPotion
+		),
+		new DropEntry(
+			new BuffPotion("코딩애플 숏츠", 20, 10, ItemCategory::BPotion, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::BPotion
+		),
+		new DropEntry(
+			new CashableItem("길가다 주운 복권", 10000, ItemCategory::Cash, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new ThrowingWeapon("투척용 플로피디스크", 20, 10, 3, ItemCategory::Throwing, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Throwing
+		),
+		new DropEntry(
+			new Weapon("전설적인 C++ 마스터의 키보드", 500, 50, ItemCategory::Weapon, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary),
+			ItemCategory::Weapon
+		)
+	}},
+
+	{"템플릿", {
+		new DropEntry(
+			new Weapon("독거미 키보드 60% 배열", 30, 30, ItemCategory::Weapon, Rarity::Rare),
+			Rarity::Rare,
+			getDefaultDropRate(Rarity::Rare),
+			ItemCategory::Weapon
+		),
+		new DropEntry(
+			new CashableItem("지폐", 77, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new CashableItem("500원 동전", 50, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new HealingPotion("에너지드링크", 40, 50, ItemCategory::HPotion, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::HPotion
+		),
+		new DropEntry(
+			new ThrowingWeapon("구겨진 음료캔", 20, 30, 2, ItemCategory::Throwing, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Throwing
+		),
+		new DropEntry(
+			new CashableItem("길가다 주운 복권", 10000, ItemCategory::Cash, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new Weapon("전설적인 C++ 마스터의 키보드", 500, 50, ItemCategory::Weapon, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary),
+			ItemCategory::Weapon
+		)
+	}},
+
+	{ "변수", {
+		new DropEntry(
+			new Weapon("독거미 키보드 60% 배열", 30, 30, ItemCategory::Weapon, Rarity::Rare),
+			Rarity::Rare,
+			getDefaultDropRate(Rarity::Rare),
+			ItemCategory::Weapon
+		),
+		new DropEntry(
+			new CashableItem("지폐", 77, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new CashableItem("500원 동전", 50, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new HealingPotion("에너지드링크", 40, 50, ItemCategory::HPotion, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::HPotion
+		),
+		new DropEntry(
+			new ThrowingWeapon("구겨진 음료캔", 20, 30, 2, ItemCategory::Throwing, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Throwing
+		),
+		new DropEntry(
+			new CashableItem("길가다 주운 복권", 10000, ItemCategory::Cash, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new Weapon("전설적인 C++ 마스터의 키보드", 500, 50, ItemCategory::Weapon, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary),
+			ItemCategory::Weapon
+		)
+	} },
+
+	{ "함수", {
+		new DropEntry(
+			new Weapon("독거미 키보드 60% 배열", 30, 30, ItemCategory::Weapon, Rarity::Rare),
+			Rarity::Rare,
+			getDefaultDropRate(Rarity::Rare),
+			ItemCategory::Weapon
+		),
+		new DropEntry(
+			new CashableItem("지폐", 77, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new CashableItem("500원 동전", 50, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new ThrowingWeapon("구겨진 음료캔", 20, 30, 2, ItemCategory::Throwing, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Throwing
+		),
+		new DropEntry(
+			new CashableItem("길가다 주운 복권", 10000, ItemCategory::Cash, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new Weapon("전설적인 C++ 마스터의 키보드", 500, 50, ItemCategory::Weapon, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary),
+			ItemCategory::Weapon
+		)
+	} },
+
+
+	{ "배열", {
+		new DropEntry(
+			new Weapon("독거미 키보드 60% 배열", 30, 30, ItemCategory::Weapon, Rarity::Rare),
+			Rarity::Rare,
+			getDefaultDropRate(Rarity::Rare),
+			ItemCategory::Weapon
+		),
+		new DropEntry(
+			new CashableItem("지폐", 77, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new CashableItem("500원 동전", 50, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new ThrowingWeapon("구겨진 음료캔", 20, 30, 2, ItemCategory::Throwing, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Throwing
+		),
+		new DropEntry(
+			new CashableItem("길가다 주운 복권", 10000, ItemCategory::Cash, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new Weapon("전설적인 C++ 마스터의 키보드", 500, 50, ItemCategory::Weapon, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary),
+			ItemCategory::Weapon
+		)
+	} },
+
+	{ "알고리즘", {
+		new DropEntry(
+			new Weapon("독거미 키보드 60% 배열", 30, 30, ItemCategory::Weapon, Rarity::Rare),
+			Rarity::Rare,
+			getDefaultDropRate(Rarity::Rare),
+			ItemCategory::Weapon
+		),
+		new DropEntry(
+			new CashableItem("지폐", 77, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new CashableItem("500원 동전", 50, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new ThrowingWeapon("분노에 찬 마우스", 40, 40, 1, ItemCategory::Throwing, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common), ItemCategory::Throwing
+		),
+		new DropEntry(
+			new CashableItem("길가다 주운 복권", 10000, ItemCategory::Cash, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new Weapon("전설적인 C++ 마스터의 키보드", 500, 50, ItemCategory::Weapon, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary),
+			ItemCategory::Weapon
+		)
+	} },
+
+
+	{ "객체", {
+		new DropEntry(
+			new Weapon("독거미 키보드 60% 배열", 30, 30, ItemCategory::Weapon, Rarity::Rare),
+			Rarity::Rare,
+			getDefaultDropRate(Rarity::Rare),
+			ItemCategory::Weapon
+		),
+		new DropEntry(
+			new CashableItem("지폐", 77, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new CashableItem("500원 동전", 50, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new ThrowingWeapon("구겨진 음료캔", 20, 30, 2, ItemCategory::Throwing, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Throwing
+		),
+		new DropEntry(
+			new CashableItem("길가다 주운 복권", 10000, ItemCategory::Cash, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new Weapon("전설적인 C++ 마스터의 키보드", 500, 50, ItemCategory::Weapon, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary),
+			ItemCategory::Weapon
+		)
+	} },
+
+	{ "부동소수점", {
+		new DropEntry(
+			new Weapon("독거미 키보드 60% 배열", 30, 30, ItemCategory::Weapon, Rarity::Rare),
+			Rarity::Rare,
+			getDefaultDropRate(Rarity::Rare),
+			ItemCategory::Weapon
+		),
+		new DropEntry(
+			new CashableItem("지폐", 77, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new CashableItem("500원 동전", 50, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new ThrowingWeapon("구겨진 음료캔", 20, 30, 2, ItemCategory::Throwing, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common),
+			ItemCategory::Throwing
+		),
+		new DropEntry(
+			new CashableItem("길가다 주운 복권", 10000, ItemCategory::Cash, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary),
+			ItemCategory::Cash
+		),
+		new DropEntry(
+			new Weapon("전설적인 C++ 마스터의 키보드", 500, 50, ItemCategory::Weapon, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary),
+			ItemCategory::Weapon
+		)
+	} },
+
+	{ "클래스", {
+		new DropEntry(
+			new Weapon("독거미 키보드 60% 배열", 30, 30, ItemCategory::Weapon, Rarity::Rare),
+			Rarity::Rare,
+			getDefaultDropRate(Rarity::Rare), ItemCategory::Weapon),
+		new DropEntry(
+			new CashableItem("지폐", 77, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common), ItemCategory::Cash),
+		new DropEntry(
+			new CashableItem("500원 동전", 50, ItemCategory::Cash, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common), ItemCategory::Cash),
+		new DropEntry(
+			new ThrowingWeapon("분노에 찬 마우스", 40, 40, 1, ItemCategory::Throwing, Rarity::Common),
+			Rarity::Common,
+			getDefaultDropRate(Rarity::Common), ItemCategory::Throwing),
+		new DropEntry(
+			new CashableItem("길가다 주운 복권", 10000, ItemCategory::Cash, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary), ItemCategory::Cash),
+		new DropEntry(
+			new Weapon("전설적인 C++ 마스터의 키보드", 500, 50, ItemCategory::Weapon, Rarity::Legendary),
+			Rarity::Legendary,
+			getDefaultDropRate(Rarity::Legendary), ItemCategory::Weapon)
+	}}
+};
+
+
+
+
+// 카테고리별... 출력..
+void printDropsByCategory(const string& monsterName, ItemCategory category)
+{
+	auto it = monsterDrops.find(monsterName);
+	if (it == monsterDrops.end()) return;
+
+	cout << monsterName << "의 " << (category == ItemCategory::Weapon ? "무기" :
+		category == ItemCategory::Throwing ? "투척무기" :
+		category == ItemCategory::HPotion ? "회복포션" :
+		category == ItemCategory::BPotion ? "버프아이템" :
+		"환금아이템")
+		<< "드랍 목록 :" << endl;
+
+	for (const auto& drop : it->second)
+	{
+		if (drop->item->getItemType() == category)
+		{
+			cout << " - " << getRarityColor(drop->item->getRarity())
+				<< drop->item->getName()
+				<< "\033[0m" << endl;
+		}
+	}
+}
+
+
+
+// 드랍 아이템 결정
+Item* getRandomDrop(const string& monsterName) {
+	auto it = monsterDrops.find(monsterName);
+	if (it == monsterDrops.end()) return nullptr;
+
+	// 난수 생성기
+	static random_device rd;
+	static mt19937 gen(rd());
+	// uniform_real_distribution<> dis(0.0, 1.0);
+
+	for (const auto& drop : it->second) {
+		bernoulli_distribution dist(drop->dropRate);
+		if (dist(gen)) {
+			return drop->item;
+		}
+	}
+	return nullptr;
+}
+
+
+Item* Monster::dropItem() {
+	auto it = monsterDrops.find(name);
+	if (it == monsterDrops.end()) return nullptr;
+
+	static random_device rd;
+	static mt19937 gen(rd());
+
+	
+	uniform_int_distribution<int> out(1, 100);
+	int getout = out(gen);
+	if (getout >= 31) {
+		cout << "이겼지만 아무것도 나오지 않았다...\n";
+		return nullptr;
+	}
+
+	double total = 0.0;
+	for (auto& d : it->second) total += d->dropRate;
+
+	uniform_real_distribution<> dist(0.0, total);
+	double roll = dist(gen);
+
+	double acc = 0.0;
+	for (auto& d : it->second) {
+		acc += d->dropRate;
+		if (roll <= acc) {
+			cout << name << "이(가) "
+				<< getRarityColor(d->rarity)
+				<< d->item->getName()
+				<< "\033[0m 을 드랍했다!\n";
+			return d->item;
+		}
+	}
+	return nullptr;
+}
+
+
+
+// Getter
+string Monster::getName() const { return name; }
+int Monster::getHP() const { return m_HP; }
+int Monster::getAttack() const { return m_ATK; }
+int Monster::getDropGold() const { return m_dropGold; }
+int Monster::getDropEXP() const { return m_dropEXP; }
+
+// Setter
+void Monster::setName(const string name) { this->name = name; }
+void Monster::setHP(int m_HP) { this->m_HP = m_HP; }
+
+
+=========================================
+FILE: Monster.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\Monster.h
+=========================================
+#pragma once
+#include <string>
+#include <vector>
+#include "Item.h"
+
+class Character;
+class Item;
+
+
+// 아이템과 드랍확률을 그냥 묶어버리기...
+struct DropEntry
+{
+	Item* item;
+	Rarity rarity;
+	double dropRate;
+	ItemCategory category;
+
+	DropEntry(Item* item, Rarity rarity, double dropRate, ItemCategory category)
+		: item(item), rarity(rarity), dropRate(dropRate), category(category) {}
+}; // 검증은 ai에게 물어봄
+
+
+class Monster
+{
+
+public:
+	// 레벨 기반 생성자
+	Monster(const std::string& name, int level, int gold, int exp);
+	virtual ~Monster() = default; // 임시 가상 소멸자
+
+	virtual void attack(Character* target);
+	virtual void GetHit(int damage);
+
+	Item* dropItem();
+	bool checkDeath();
+
+	// get
+	std::string getName() const;
+	int getHP() const;
+	int getAttack() const;
+	int getDropGold() const;
+	int getDropEXP() const;
+	bool isAlive;
+
+	// set
+	void setName(const std::string name);
+	void setHP(int m_HP);
+
+protected:
+	std::string name;
+	int m_HP;
+	int m_ATK;
+	int m_dropGold;
+	int m_dropEXP;
+};
+
+
+
+=========================================
+FILE: Potion.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\Potion.cpp
+=========================================
+#include <iostream>
+
+
+=========================================
+FILE: Potion.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\Potion.h
+=========================================
+#pragma once
+#include "Item.h"
+using namespace std;
+
+class Potion : public Item
+{
+public:
+	Potion(const string& m_name, 
+		int m_value, 
+		int heal, 
+		int buff, 
+		ItemCategory type, 
+		Rarity rarity) // 레어리티 인자 추가
+		: Item(m_name, m_value, 0, heal, buff, type, rarity) {
+	}
+	// 추상으로 두고 외부에서 제작
+	virtual int getEffectAmount() const = 0;
+	virtual string getType() const override = 0;
+
+};
+
+
+
+=========================================
+FILE: Shop.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\Shop.cpp
+=========================================
+#include "Shop.h"
+#include "Item.h"
+#include "Inventory.h"
+#include "Character.h"
+#include "Utils.h"
+#include "GameManager.h"
+#include "Weapon.h"
+#include "ThrowingWeapon.h"
+#include "BuffPotion.h"
+#include "HealingPotion.h"
+#include "CashableItem.h"
+#include "Itempool.h"
+#include "Monster.h"
+#include <cstdlib>
+#include <ctime>
+#include <random>
+#include <algorithm>
+
+using namespace std;
+
+void Shop::ItemSetting()
+{
+	static std::random_device rd;
+	static std::mt19937 gen(rd());
+	auto& allItems = ItemPool::getAllItems();
+	std::vector<Item*> candidates;
+	std::vector<double> weights;
+	for (Item* item : allItems) {
+
+		if (item->getItemType() == ItemCategory::Cash) {
+			continue;
+		}
+
+		candidates.push_back(item);
+		double w = 0;
+		switch (item->getRarity()) {
+		case Rarity::Common:    w = 100.0; break; // 흔함 (가장 높은 점수)
+		case Rarity::Rare:      w = 30.0;  break; // 희귀
+		case Rarity::Legendary: w = 10.0;   break; // 전설 (가장 낮은 점수)
+		default:                w = 10.0;  break;
+		}
+		weights.push_back(w);
+	}
+
+	std::discrete_distribution<int> dist(weights.begin(), weights.end());
+	vector<int> vec;
+	for (int i = 0; i < 3; i++)
+	{
+		int selectedIndex = dist(gen);
+		if (!vec.empty()) {
+			auto it = find(vec.begin(), vec.end(), selectedIndex);
+			if (it != vec.end()) {
+				i--;
+				continue;
+			}
+		}
+		Item* chosenItem = candidates[selectedIndex]->clone();
+		m_Product.push_back(chosenItem);
+		vec.push_back(selectedIndex);
+	}
+}
+// 상점 메인 ->void VisitShop();을 통해 해당 함수 로드
+void Shop::ShopSelect(Character* player)
+{
+	ItemSetting();
+	while (true)
+	{
+		m_ShopMessage.clear();
+		m_ShopMessage.push_back("----------------------------------------------");
+		m_ShopMessage.push_back("상점에 오신것을 환영합니다. 나는 튜터 박은일.");
+		m_ShopMessage.push_back("원하시는것을 선택해주세요.");
+		m_ShopMessage.push_back("1. 구매  2. 판매  3. 다음 스테이지로 이동 ");
+		m_ShopMessage.push_back("----------------------------------------------");
+		for (auto& msg : m_ShopMessage) {
+			cout << msg << endl;
+		}
+		int select = Utils::DefaultMenu();
+		// 기본 선택지(인벤토리 확인 등) 체크
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+		if (select == 1) {
+			BuyItem(player);
+		}
+		else if (select == 2) {
+			SellItem(player);
+		}
+		else if (select == 3) {
+			cout << "상점을 떠나 다음 스테이지로 향합니다." << endl;
+			Utils::DrawLine();
+			NextStage(gm);
+			return;
+		}
+		else {
+			cout << "잘못된 번호를 선택했습니다." << endl;
+		}
+	}
+}
+static std::string rarityToString(Rarity rarity) {
+	switch (rarity) {
+	case Rarity::Common: return "Common";
+	case Rarity::Rare: return "Rare";
+	case Rarity::Epic: return "Epic";
+	case Rarity::Legendary: return "Legendary";
+	default: return "Unknown";
+	}
+}
+static std::string getRarityColor(Rarity rarity) {
+	switch (rarity) {
+	case Rarity::Common:    return "\033[37m"; // 흰색
+	case Rarity::Rare:      return "\033[34m"; // 파란색
+	case Rarity::Epic:      return "\033[35m"; // 보라색
+	case Rarity::Legendary: return "\033[33m"; // 노란색
+	default: return "\033[0m";
+	}
+}
+// 구매이벤트
+bool Shop::BuyItemFuntion(int NewProduct, Character* player)
+{
+	if (NewProduct < 0 || NewProduct >= m_Product.size()) return false;
+	Item* itemPtr = m_Product[NewProduct];
+	int price = itemPtr->getValue();
+	string RarityStr = rarityToString(itemPtr->getRarity());
+	string RarityColor = getRarityColor(itemPtr->getRarity());
+	if (player->getGold() >= price)
+	{
+		// 골드 차감
+		player->setGold(player->getGold() - price);
+		player->getInventory()->AddItem(itemPtr);
+		string color = getRarityColor(itemPtr->getRarity());
+		string rName = rarityToString(itemPtr->getRarity());
+
+		cout << "[구매 성공] " << color << itemPtr->getName() << "[" << rName << "]" << "\033[0m"
+			<< "을(를) 구매했습니다." << endl;
+
+		m_Product.erase(m_Product.begin() + NewProduct);
+		return true;
+	}
+	else
+	{
+		cout << "골드가 부족합니다." << endl;
+		return false;
+	}
+}
+void Shop::BuyItem(Character* player)
+{
+	while (true) {
+		m_ShopMessage.clear();
+		m_ShopMessage.push_back("구매할 아이템을 선택해주세요.");
+		m_ShopMessage.push_back("필요하시면 고민하지말고 사세요.");
+		int i = 0;
+		Item* itemPtr = m_Product[i];
+		string rarityStr = rarityToString(itemPtr->getRarity());
+		Utils::DrawLine();
+		for (auto& msg : m_ShopMessage) { cout << msg << endl; }
+		for (int i = 0; i < m_Product.size(); i++) {
+			string color = getRarityColor(m_Product[i]->getRarity());
+			cout << i + 1 << ". " << "품목 : "
+				<< color << m_Product[i]->getName() << "[" << rarityToString(m_Product[i]->getRarity()) << "]" << "\033[0m" // 이름에 색상 입히고 다시 초기화
+				<< " | 가격 : " << m_Product[i]->getValue() << endl;
+		}
+		cout << "4.뒤로가기" << endl;
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+		if (select == 1)
+		{
+			BuyItemFuntion(0, player);
+		}
+		else if (select == 2)
+		{
+			BuyItemFuntion(1, player);
+		}
+		else if (select == 3)
+		{
+			BuyItemFuntion(2, player);
+		}
+		else if (select == 4) {
+			return;
+		}
+		else
+			cout << "잘못된 번호를 선택했습니다." << endl;
+		break;
+	}
+}
+// 판매 이벤트 -> RemoveItem()
+void Shop::SellItemFuntion(int NewProduct, Character* player) {
+	vector<Item*>& items = player->getInventory()->GetInventory(); // 인벤토리 호출 부분
+	Item* itemToSell = items[NewProduct];
+	string color = getRarityColor(itemToSell->getRarity());
+	string rName = rarityToString(itemToSell->getRarity());
+	int sellPrice = (int)itemToSell->getValue() * 0.6;
+	player->setGold(player->getGold() + sellPrice);
+
+
+	cout << color << itemToSell->getName() << "[" << rName << "]" << "\033[0m"
+		<< "를 " << sellPrice << "에 판매했습니다!" << endl;
+	player->getInventory()->RemoveItemFromIndex(NewProduct + 1);
+}
+// 판매 가능한 아이템 확인
+void Shop::SellItem(Character* player) {
+	while (true)
+	{
+		m_ShopMessage.clear();
+		m_ShopMessage.push_back("판매할 아이템을 선택해주세요.");
+		m_ShopMessage.push_back("-------- 판매 목록 ---------");
+		Utils::DrawLine();
+		m_ShopMessage.push_back("21. 뒤로가기");
+		for (auto& msg : m_ShopMessage) cout << msg << endl;
+		vector<Item*>& myItems = player->getInventory()->GetInventory();
+		if (myItems.empty()) {
+			cout << "판매할 아이템이 없습니다." << endl;
+			return;
+		}
+		for (int i = 0; i < myItems.size(); ++i) {
+			string color = getRarityColor(myItems[i]->getRarity());
+			cout << i + 1 << ". " << color << myItems[i]->getName() << "[" << rarityToString(myItems[i]->getRarity()) << "]" << "\033[0m"
+				<< " (판매가: " << (int)(myItems[i]->getValue() * 0.6) << "G)" << endl;
+		}
+		int select = Utils::DefaultMenu();
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
+		if (select >= 1 && select <= myItems.size()) {
+			SellItemFuntion(select - 1, player);
+		}
+		else {
+			cout << "잘못된 입력입니다." << endl;
+		}
+		if (select == 21) {
+			break;
+		}
+		m_ShopMessage.clear();
+	}
+}
+void Shop::NextStage(GameManager* gm) {
+	m_ShopMessage.clear();
+	for (auto item : m_Product) delete item;
+	m_Product.clear();
+}// 다음 스테이지로 넘어감 ->
+
+
+=========================================
+FILE: Shop.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\Shop.h
+=========================================
+#pragma once
+#include <vector>
+#include<iostream>
+
+
+
+using namespace std;
+class Character;
+class Monster;
+class Item;
+class Inventory;
+class GameManager;
+class Shop 
+{
+private:
+	vector<Item*> m_Product; // 아이템 호출 
+	vector<Inventory*>m_MyItem;
+    vector<string>m_ShopMessage;
+	Inventory* m_Inventory = nullptr;
+	GameManager* gm;
+	//Rarity rarity;
+public:
+	Shop(GameManager* _gm) :m_Inventory(nullptr), gm(_gm) {}
+	~Shop(){}
+	void ItemSetting(); // 아이템 랜덤 호출		
+	void ShopSelect(Character* player);// 상점 시작함수
+	void BuyItem(Character* player); // 구매 이벤트
+	bool BuyItemFuntion(int NewProduct, Character* player);//구매시 인벤토리에 아이템 추가
+	void SellItem(Character* player);//  판매 이벤트
+	void SellItemFuntion(int NewProduct, Character* player);//판매 가능한 아이템 확인
+	
+	
+	void NextStage(GameManager* gm); // 다음 스테이지로 넘어감 -> 
+
+};
+
+
+
+
+=========================================
+FILE: StatusManager.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\StatusManager.cpp
+=========================================
+#include "StatusManager.h"
+#include "AchievementManager.h"
+#include "Character.h"
+#include "Inventory.h"
+#include "Item.h"
+#include "Utils.h"
+#include <iostream>
+using namespace std;
+
+StatusManager::StatusManager() {}
+StatusManager::~StatusManager() {}
+void StatusManager::AddKill(const string& name) {
+	m_KillCounts[name]++;
+}
+void StatusManager::DisplayCharacterStatus(Character* ch) {
+	Utils::DrawLine();
+	cout << "캐릭터 정보를 출력합니다." << endl;
+	cout << "이름: " << ch->getName() << ", 레벨: " << ch->getLevel() << ", HP: " << ch->getHP() << "/" << ch->getMaxHP() << endl;
+	cout << "코딩력: " << ch->getATK() << ", Zep 코인: " << ch->getGold() << ", 경험치: " << ch->getEXP() << "/" << ch->getEXPToLevelUp() << endl;
+	Utils::DrawLine();
+}
+void StatusManager::DisplayBattleStatus() {
+	Utils::DrawLine();
+	for (auto const& namecount : m_KillCounts) {
+		cout << "[" << namecount.first << "] 처치: " << namecount.second << "회" << endl;
+	}
+	Utils::DrawLine();
+}
+void StatusManager::DisplayAchievements(AchievementManager* am) {
+	int index = 1;
+	Utils::DrawLine();
+	cout << "[ 업적 목록 ]" << endl;
+	for (auto const& pair : am->m_Achievements) {
+		if (pair.second) {
+			cout << index << ". [V] " << pair.first << " (달성 완료)" << endl;
+		}
+		else {
+			cout << index << ". [ ] " << pair.first << " (미달성)" << endl;
+		}
+	}
+	Utils::DrawLine();
+}
+void StatusManager::DisplayInventory(Inventory* inv) {
+	Utils::DrawLine();
+	const vector<Item*>& vec = inv->GetInventory();
+	int index = 1;
+	if (vec.empty()) {
+		cout << "인벤토리가 비었습니다." << endl;
+		Utils::DrawLine();
+		return;
+	}
+	else {
+		for (const Item* i : vec) {
+			cout << index << ". ";
+			i->PrintInfo();
+			index++;
+		}
+	}
+	Utils::DrawLine();
+}
+
+
+=========================================
+FILE: StatusManager.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\StatusManager.h
+=========================================
+#pragma once
+#include <map>
+#include <string>
+using namespace std;
+class Character;
+class Inventory;
+class AchievementManager;
+
+class StatusManager
+{
+public:
+	map<string, int> m_KillCounts;
+	StatusManager();
+	~StatusManager();
+	void AddKill(const string& name);
+	void DisplayCharacterStatus(Character* ch);
+	void DisplayBattleStatus();
+    void DisplayAchievements(AchievementManager* acm);
+	void DisplayInventory(Inventory* inv);
+};
+
+
+
+
+=========================================
+FILE: ThrowingWeapon.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\ThrowingWeapon.cpp
+=========================================
+#include "ThrowingWeapon.h"
+#include <stdexcept>
+#include <iostream>
+using namespace std;
+
+ThrowingWeapon::ThrowingWeapon(const string& m_name, int m_value, int m_damage, int m_quantity, ItemCategory type, Rarity rarity)
+	: Item(m_name, m_value, m_damage, 0, 0, ItemCategory::Throwing, Rarity(rarity)), m_damage(m_damage), m_quantity(m_quantity)
+{
+}
+
+// 공격력
+int ThrowingWeapon::getDamage() const
+{
+	return m_damage;
+}
+
+// 남은 투척 횟수
+int ThrowingWeapon::getQuantity() const
+{
+	return m_quantity;
+}
+
+// 무기를 던지면 수량 감소
+bool ThrowingWeapon::use()
+{
+	if (m_quantity > 0) {
+		--m_quantity;
+		return m_damage; // 맞추면 데미지 반환
+	}
+	throw runtime_error("투척할 무기가 남아있지 않습니다!"); // 더 못 써 요 (데미지 0)
+}
+
+void ThrowingWeapon::PrintInfo() const {
+	Item::PrintInfo();
+	cout << "타입: 투척 무기, 코딩력: " << getAttack() << ", 판매 가격: " << getValue()*0.6 << "코인" << endl;
+}
+
+
+=========================================
+FILE: ThrowingWeapon.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\ThrowingWeapon.h
+=========================================
+#pragma once
+#include "Item.h"
+using namespace std;
+
+class ThrowingWeapon : public Item
+{
+public:
+	ThrowingWeapon(const string& m_name, int m_value, int m_damage, int m_quantity, ItemCategory type, Rarity rarity);
+	int getDamage() const;
+	int getQuantity() const;
+	bool use();
+	string getType() const override { return "투척무기"; }
+	void PrintInfo() const override;
+	Item* clone() const override {
+		return new ThrowingWeapon(*this); // 복사 생성자 호출 (내용을 그대로 베낌)
+	}
+
+private:
+	int m_damage;
+	int m_quantity;
+};
+
+
+
+=========================================
+FILE: Utils.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\Utils.cpp
+=========================================
+#include "Utils.h"
+#include <iostream>
+
+using namespace std;
+
+int Utils::GetSafeInput() {
+    int input;
+
+    while (true) {
+        cout << "> 입력: ";
+        cin >> input;
+
+        if (cin.fail()) {
+            cin.clear(); 
+            cin.ignore(10000, '\n');
+            cout << "잘못된 입력입니다. 숫자를 입력해주세요." << endl;
+        }
+        else {
+            cin.ignore(10000, '\n'); 
+            return input; 
+        }
+    }
+}
+
+int Utils::DefaultMenu() {
+    cout << "---------------------------------" << endl;
+    cout << "7.인벤토리  8.상태창  9.전적  0.업적" << endl;
+    cout << "---------------------------------" << endl;
+    return GetSafeInput();
+}
+
+void Utils::DrawLine() {
+    cout << "=================================" << endl;
+}
+
+
+
+=========================================
+FILE: Utils.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\Utils.h
+=========================================
+#pragma once
+class Utils
+{
+public:
+	static int GetSafeInput();
+	static int DefaultMenu();
+	static void DrawLine();
+};
+
+
+
+
+=========================================
+FILE: Weapon.cpp
+PATH: F:\vsproject\Team9_Project\Team9_Project\Weapon.cpp
+=========================================
+#include "Weapon.h"
+#include <iostream>
+using namespace std;
+
+
+Weapon::Weapon(const string& m_name, int m_value, int m_damage, ItemCategory type, Rarity rarity)
+	: Item(m_name, m_value, m_damage, 0, 0, ItemCategory::Weapon, Rarity(rarity)), m_damage(m_damage)
+{}
+
+
+int Weapon::Damage() const
+{
+	return m_damage;
+}
+
+void Weapon::PrintInfo() const {
+	Item::PrintInfo();
+	cout << "타입: 무기, 코딩력: " << getAttack() << ", 판매 가격: " << getValue()*0.6 << "코인" << endl;
+}
+
+
+
+=========================================
+FILE: Weapon.h
+PATH: F:\vsproject\Team9_Project\Team9_Project\Weapon.h
+=========================================
+#pragma once
+#include "Item.h"
+#include "Monster.h"
+class Weapon : public Item
+{
+public:
+	Weapon(const std::string& m_name, int m_value, int m_damage, ItemCategory type, Rarity rarity);
+	int Damage() const;
+	std::string getType() const override { return "무기"; }
+	void PrintInfo() const override;
+	Item* clone() const override {
+		return new Weapon(*this); // 복사 생성자 호출 (내용을 그대로 베낌)
+	}
+
+private:
+	int m_damage;
+};
+
+
+

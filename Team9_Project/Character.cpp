@@ -5,6 +5,7 @@
 #include "HealingPotion.h"
 #include "Potion.h"
 #include "BuffPotion.h"
+#include "Utils.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -13,7 +14,8 @@ Character::Character(string name, int hp, int maxHp, int atk, int level, int gol
 {
 	m_Equippeditem = nullptr;
 	m_EquippedThrow = nullptr;
-	m_Inventory = new Inventory(20); // 임시로 생성자에 20칸의 인벤토리를 넣었습니다
+	m_EquippedPotion = nullptr;
+	m_Inventory = new Inventory(20);
 
 	m_Wepatk = 0;
 	m_Throw = false;
@@ -41,17 +43,21 @@ void Character::showStatus() {
 	cout << "보유 골드: " << m_Gold << " G" << endl;
 	cout << "-----------------------" << endl;
 }
-void Character::usePotion(Potion& potion)
+void Character::usePotion(Potion* potion)
 {
-	if (potion.getType() == "회복포션")
+	if (potion->getItemType() == ItemCategory::HPotion)
 	{
-		m_HP += potion.getEffectAmount();
-		if (m_HP > m_MaxHP) m_HP = m_MaxHP;
-		cout << m_name << "이(가)" << potion.getName() << "을 사용하여 HP를 " << potion.getEffectAmount() << "회복했습니다. (현재 HP: " << m_HP << " ) " << endl;
+		m_HP += potion->getEffectAmount();
+		if (m_HP > m_MaxHP) {
+			int overheal = m_HP - m_MaxHP;
+			m_HP = m_MaxHP;
+			cout << m_name << "이(가)" << potion->getName() << "을 사용하여 HP를 " << potion->getEffectAmount() - overheal << "회복했습니다. (현재 HP: " << m_HP << " ) " << endl;
+		}
+		else cout << m_name << "이(가)" << potion->getName() << "을 사용하여 HP를 " << potion->getEffectAmount() << "회복했습니다. (현재 HP: " << m_HP << " ) " << endl;
 	}
-	else if (potion.getType() == "버프포션") {
-		m_ATK += potion.getEffectAmount();
-		cout << m_name << " 이(가) " << potion.getName() << "을(를) 사용하여 코딩력이 " << potion.getEffectAmount() << "증가했습니다. (현재 코딩력: " << m_ATK << " ) " << endl;
+	else if (potion->getItemType() == ItemCategory::BPotion) {
+		m_ATK += potion->getEffectAmount();
+		cout << m_name << "이(가) " << potion->getName() << "을(를) 사용하여 코딩력이 " << potion->getEffectAmount() << " 증가했습니다. (현재 코딩력: " << m_ATK << " ) " << endl;
 	}
 }
 
@@ -68,24 +74,56 @@ void Character::manageEquipment(int action, Item* item, int slot)
 	case 1:
 		if (item != nullptr)
 		{
-			if (item->getType() == "Weapon")
+			if (item->getItemType() == ItemCategory::Weapon)
 			{
-				if (m_Equippeditem != nullptr) manageEquipment(2, nullptr, 1);
+				if (m_Equippeditem != nullptr) {
+					cout << "장착중인 " << m_Equippeditem->getName() << "을(를) 해제했습니다." << endl;
+					m_Equippeditem->setEquipped(false);
+					m_Equippeditem = nullptr;
+					m_Wepatk = 0;
+				}
 				m_Equippeditem = item;
 				m_Wepatk = item->getAttack();
 				cout << item->getName() << "을(를) 장착했습니다." << endl;//무기장착
+				item->setEquipped(true);
 			}
-			else if (item->getType() == "Throw")
+			else if (item->getItemType() == ItemCategory::Throwing)
 			{
+				if(m_EquippedThrow != nullptr) {
+					cout << "장착중인 " << m_EquippedThrow->getName() << "을(를) 해제했습니다." << endl;
+					m_EquippedThrow->setEquipped(false);
+					m_EquippedThrow = nullptr;
+					m_Throw = false;
+				}
 				m_EquippedThrow = item;
 				m_Throw = true;
 				cout << item->getName() << "을(를) 장착했습니다." << endl;//투척무기장착
+				item->setEquipped(true);
 			}
-			else if (item->getType() == "Potion")
+			else if (item->getItemType() == ItemCategory::HPotion)
 			{
+				cout << "체력 포션을 어떻게 하시겠습니까?" << endl;
+				cout << "1. 포션 슬롯에 장착 2. 포션 즉시 사용" << endl;
+				int choice = Utils::GetSafeInput();
+				if (choice == 2) {
+					if(m_HP == m_MaxHP) {
+						cout << "체력이 가득 차 있습니다. 포션을 사용할 수 없습니다." << endl;
+						return;
+					}
+					usePotion(dynamic_cast<Potion*>(item));
+					m_Inventory->RemoveItemFromPointer(item);
+					return;
+				}
+				if(m_EquippedPotion != nullptr) {
+					cout << "장착중인 " << m_EquippedPotion->getName() << "을(를) 해제했습니다." << endl;
+					m_EquippedPotion->setEquipped(false);
+					m_EquippedPotion = nullptr;
+					m_HasPotion = false;
+				}
 				m_EquippedPotion = item;
 				m_HasPotion = true;
-				cout << item->getName() << "을(를) 포션 슬롯에 장착했습니다. " << endl;//포션장착
+				cout << item->getName() << "을(를) 포션 슬롯에 장착했습니다. 장착한 포션은 전투 중 체력이 50% 이하가 되면 자동으로 사용합니다." << endl;//포션장착
+				item->setEquipped(true);
 			}
 		}
 		break;
@@ -95,30 +133,33 @@ void Character::manageEquipment(int action, Item* item, int slot)
 			cout << m_Equippeditem->getName() << "을(를) 해제했습니다" << endl;//무기장착해제
 			m_Equippeditem = nullptr;
 			m_Wepatk = 0;
+			item->setEquipped(false);
 		}
 		else if (slot == 2 && m_EquippedThrow != nullptr)
 		{
 			cout << m_EquippedThrow->getName() << "을(를) 해제했습니다" << endl;//투척무기장착해제
 			m_EquippedThrow = nullptr;
 			m_Throw = false;
+			item->setEquipped(false);
 		}
 		else if (slot == 3 && m_EquippedPotion != nullptr)
 		{
 			cout << m_EquippedPotion->getName() << "을(를) 해제했습니다 " << endl;//포션창착해제
 			m_EquippedPotion = nullptr;
 			m_HasPotion = false;
+			item->setEquipped(false);
 		}
 		break;
 	}
 }
 bool Character::AutoUsePotion(Potion* potion) {//체력 50%이하일경우 포션 사용
-	if (m_HP > 0 && m_HP <= m_MaxHP * 0.5 && m_HasPotion) {
-		Potion* potion = dynamic_cast<Potion*>(m_Equippeditem);
+	if (m_HP > 0 && m_HP <= m_MaxHP * 0.5 && m_HasPotion ) {
+		Potion* potion = dynamic_cast<Potion*>(m_EquippedPotion);
 		if (potion != nullptr && potion->getType() == "회복포션") {
-			usePotion(*potion);
+			usePotion(potion);
 			m_EquippedPotion = nullptr;
 			m_HasPotion = false;
-			return true;//턴 소모후 포션 사용
+			return true; //턴 소모후 포션 사용
 		}
 	}
 	return false;//포션을 사용하지 않음
@@ -133,10 +174,18 @@ int Character::getEXPToLevelUp()const { return m_EXPToLevelUp; }
 int Character::getLevel()const { return m_Level; }
 int Character::getGold()const { return m_Gold; }
 Inventory* Character::getInventory()const { return m_Inventory; } // 신규 함수
+Item* Character::getEquippeditem() { return m_Equippeditem; }
+Item* Character::getEquippedThrow() { return m_EquippedThrow; }
+Item* Character::getEquippedPotion() { return m_EquippedPotion; }
+
+
 void Character::setHP(int hp) { m_HP = hp; }
 void Character::setMaxHP(int maxHp) { m_MaxHP = maxHp; }
 void Character::setATK(int atk) { m_ATK = atk; }
 void Character::setEXP(int exp) { m_EXP = exp; }
+
+
+
 void Character::GainEXP(int amount) {//얻는 경험치
 	m_EXP += amount;
 	cout << amount << "의 경험치를 얻었습니다. (현재: " << m_EXP << "/100)" << endl;

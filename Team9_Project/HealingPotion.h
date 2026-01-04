@@ -12,7 +12,9 @@ public:
 	Item* clone() const override {
 		return new HealingPotion(*this); // 복사 생성자 호출 (내용을 그대로 베낌)
 	}
+	void setEquipped(bool status) { m_isEquipped = status; }
 
 private:
 	int m_healAmount{ 0 }; // healamount 변수 초기화
+	bool m_isEquipped;
 };

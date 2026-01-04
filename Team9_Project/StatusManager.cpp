@@ -5,6 +5,7 @@
 #include "Item.h"
 #include "Utils.h"
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 StatusManager::StatusManager() {}
@@ -42,7 +43,15 @@ void StatusManager::DisplayAchievements(AchievementManager* am) {
 }
 void StatusManager::DisplayInventory(Inventory* inv) {
 	Utils::DrawLine();
-	const vector<Item*>& vec = inv->GetInventory();
+	vector<Item*>& vec = inv->GetInventory();
+	sort(vec.begin(), vec.end(), [](Item* a, Item* b) {
+		if (a == nullptr) return false;
+		if (b == nullptr) return true;
+		if (a->getItemType() != b->getItemType()) {
+			return a->getItemType() < b->getItemType();
+		}
+		return a->getName() < b->getName();
+		});
 	int index = 1;
 	if (vec.empty()) {
 		cout << "인벤토리가 비었습니다." << endl;

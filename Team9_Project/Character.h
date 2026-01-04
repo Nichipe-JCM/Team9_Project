@@ -41,6 +41,9 @@ public:
 	int getGold()const;
 	Inventory* getInventory()const;
 	bool isAlive() const;
+	Item* getEquippeditem();
+	Item* getEquippedThrow();
+	Item* getEquippedPotion();
 
 	void setHP(int Hp);
 	void setMaxHP(int MaxHp);
@@ -54,7 +57,7 @@ public:
 	void Attack(Monster* target);
 	void GetHit(int damage);
 	void showStatus();//캐릭터 스텟 보기
-	void usePotion(Potion& potion);
+	void usePotion(Potion* potion);
 	bool AutoUsePotion(Potion* potion);
 	void manageEquipment(int action, Item* item, int slot); // 무기 투척류 장비착용 해제 포함
 };

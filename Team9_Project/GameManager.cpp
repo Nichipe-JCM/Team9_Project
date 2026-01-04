@@ -5,6 +5,9 @@
 #include "Utils.h"
 #include "Inventory.h"
 #include "Windows.h"
+#include "Weapon.h"
+#include "ThrowingWeapon.h"
+#include "HealingPotion.h"
 #include <iostream>
 #include <cctype>
 
@@ -44,7 +47,7 @@ GameManager::~GameManager() {
 bool GameManager::DefaultMenuCheck(int choice) { //기본메뉴 체크. 기본메뉴에 대해서는 Utils.cpp 확인
 	switch (choice) {
 	case 7:
-		ViewInventory(m_SM, m_Player->getInventory());
+		OpenManageInventory(m_SM, m_Player->getInventory());
 		return true;
 	case 8:
 		ViewCharacterStatus(m_SM);
@@ -64,6 +67,23 @@ bool GameManager::DefaultMenuCheck(int choice) { //기본메뉴 체크. 기본�
 
 void GameManager::RunGame() { // 게임의 전체적인 프로세스 진행
 	m_Stage = 1; // 스테이지 초기화
+
+
+	//인벤토리 테스트 케이스
+	m_Player->getInventory()->AddItem(new ThrowingWeapon("오토바이", 3000, 9999, 1, ItemCategory::Throwing, Rarity::Legendary));
+	m_Player->getInventory()->AddItem(new HealingPotion("쓰리샷 추가한 커피", 55, 45, ItemCategory::HPotion, Rarity::Common));
+	m_Player->getInventory()->AddItem(new Weapon("키보드워리어의 너덜너덜한 키보드였던 것", 10, 10, ItemCategory::Weapon, Rarity::Common));
+	m_Player->getInventory()->AddItem(new HealingPotion("스누피 초코우유", 50, 55, ItemCategory::HPotion, Rarity::Rare));
+	m_Player->getInventory()->AddItem(new ThrowingWeapon("분노에 찬 마우스", 40, 40, 1, ItemCategory::Throwing, Rarity::Common));
+	m_Player->getInventory()->AddItem(new Weapon("전설적인 C++ 마스터의 키보드", 500, 50, ItemCategory::Weapon, Rarity::Legendary));
+	m_Player->getInventory()->AddItem(new ThrowingWeapon("투척용 플로피디스크", 20, 10, 3, ItemCategory::Throwing, Rarity::Common));
+	m_Player->getInventory()->AddItem(new HealingPotion("빨간 날", 1000, 100, ItemCategory::HPotion, Rarity::Legendary));
+	m_Player->getInventory()->AddItem(new Weapon("독거미 키보드 60% 배열", 30, 30, ItemCategory::Weapon, Rarity::Rare));
+	m_Player->getInventory()->AddItem(new ThrowingWeapon("구겨진 음료캔", 20, 30, 2, ItemCategory::Throwing, Rarity::Common));
+	m_Player->getInventory()->AddItem(new HealingPotion("에너지드링크", 40, 50, ItemCategory::HPotion, Rarity::Common));
+	m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+
+
 	while (true) {
 		SpawnMonster(m_Stage); // 스테이지 기준 몬스터 생성
 		cout << "현재 스테이지: " << m_Stage << endl;
@@ -132,7 +152,7 @@ void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력
 
 void GameManager::BattleVictory() { // 전투승리시
 	cout << "\n승리!\n" << endl;
-	while (m_Stage < 21) { // 선택지. 최종보스 이하 스테이지일때만 나오게
+	if (m_Stage < 21) {
 		m_Player->setEXP(m_Player->getEXP() + m_CurrentMonster->getDropEXP());
 		m_Player->setGold(m_Player->getGold() + m_CurrentMonster->getDropGold());
 		m_Player->LevelUp();
@@ -142,7 +162,8 @@ void GameManager::BattleVictory() { // 전투승리시
 		delete m_CurrentMonster; // 현재 몬스터 삭제
 		m_CurrentMonster = nullptr;
 		m_AM->UpdateAchievements(m_Player, m_SM);
-
+	}
+	while (m_Stage < 21) { // 선택지. 최종보스 이하 스테이지일때만 나오게
 		cout << "1. 상점으로" << endl;
 		cout << "2. 무작위 이벤트" << endl;
 		int select = Utils::DefaultMenu(); // 기본 선택지 아래에 기본메뉴 표시 + 안전한 입력 받음
@@ -248,7 +269,7 @@ void GameManager::ViewAchievements(StatusManager* sm) {
 
 
 
-void GameManager::ViewInventory(StatusManager* sm, Inventory* Inv) {
+void GameManager::OpenManageInventory(StatusManager* sm, Inventory* Inv) {
 	Inv->ManageInventory(sm, m_Player);
 }
 
