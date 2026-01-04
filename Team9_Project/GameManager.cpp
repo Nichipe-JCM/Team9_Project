@@ -69,19 +69,30 @@ void GameManager::RunGame() { // 게임의 전체적인 프로세스 진행
 	m_Stage = 1; // 스테이지 초기화
 
 
-	//인벤토리 테스트 케이스
-	m_Player->getInventory()->AddItem(new ThrowingWeapon("오토바이", 3000, 9999, 1, ItemCategory::Throwing, Rarity::Legendary));
-	m_Player->getInventory()->AddItem(new HealingPotion("쓰리샷 추가한 커피", 55, 45, ItemCategory::HPotion, Rarity::Common));
-	m_Player->getInventory()->AddItem(new Weapon("키보드워리어의 너덜너덜한 키보드였던 것", 10, 10, ItemCategory::Weapon, Rarity::Common));
-	m_Player->getInventory()->AddItem(new HealingPotion("스누피 초코우유", 50, 55, ItemCategory::HPotion, Rarity::Rare));
-	m_Player->getInventory()->AddItem(new ThrowingWeapon("분노에 찬 마우스", 40, 40, 1, ItemCategory::Throwing, Rarity::Common));
-	m_Player->getInventory()->AddItem(new Weapon("전설적인 C++ 마스터의 키보드", 500, 50, ItemCategory::Weapon, Rarity::Legendary));
-	m_Player->getInventory()->AddItem(new ThrowingWeapon("투척용 플로피디스크", 20, 10, 3, ItemCategory::Throwing, Rarity::Common));
-	m_Player->getInventory()->AddItem(new HealingPotion("빨간 날", 1000, 100, ItemCategory::HPotion, Rarity::Legendary));
-	m_Player->getInventory()->AddItem(new Weapon("독거미 키보드 60% 배열", 30, 30, ItemCategory::Weapon, Rarity::Rare));
-	m_Player->getInventory()->AddItem(new ThrowingWeapon("구겨진 음료캔", 20, 30, 2, ItemCategory::Throwing, Rarity::Common));
-	m_Player->getInventory()->AddItem(new HealingPotion("에너지드링크", 40, 50, ItemCategory::HPotion, Rarity::Common));
-	m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	////인벤토리 테스트 케이스
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("오토바이", 3000, 9999, 1, ItemCategory::Throwing, Rarity::Legendary));
+	//m_Player->getInventory()->AddItem(new HealingPotion("쓰리샷 추가한 커피", 55, 45, ItemCategory::HPotion, Rarity::Common));
+	//m_Player->getInventory()->AddItem(new Weapon("키보드워리어의 너덜너덜한 키보드였던 것", 10, 10, ItemCategory::Weapon, Rarity::Common));
+	//m_Player->getInventory()->AddItem(new HealingPotion("스누피 초코우유", 50, 55, ItemCategory::HPotion, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("분노에 찬 마우스", 40, 40, 1, ItemCategory::Throwing, Rarity::Common));
+	//m_Player->getInventory()->AddItem(new Weapon("전설적인 C++ 마스터의 키보드", 500, 50, ItemCategory::Weapon, Rarity::Legendary));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("투척용 플로피디스크", 20, 10, 3, ItemCategory::Throwing, Rarity::Common));
+	//m_Player->getInventory()->AddItem(new HealingPotion("빨간 날", 1000, 100, ItemCategory::HPotion, Rarity::Legendary));
+	//m_Player->getInventory()->AddItem(new Weapon("독거미 키보드 60% 배열", 30, 30, ItemCategory::Weapon, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("구겨진 음료캔", 20, 30, 2, ItemCategory::Throwing, Rarity::Common));
+	//m_Player->getInventory()->AddItem(new HealingPotion("에너지드링크", 40, 50, ItemCategory::HPotion, Rarity::Common));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
 
 
 	while (true) {

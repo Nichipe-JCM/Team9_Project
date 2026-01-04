@@ -20,30 +20,37 @@ bool Inventory::AddItem(Item* item) {
 	if (m_Inventory.size() >= m_MaxInventorySlot) {
 		cout << "인벤토리가 가득 찼습니다! 어떻게 하시겠습니까?" << endl;
 		cout << "1. 소지중인 아이템 제거 후 획득  2. 아이템 획득 포기" << endl;
-		int choice = Utils::GetSafeInput();
-        if (choice == 1) {
-            Utils::DrawLine();
-            int index = 1;
-            for (const Item* i : m_Inventory) {
-                cout << index << ". ";
-                i->PrintInfo();
-                index++;
+        while (true) {
+            int choice = Utils::GetSafeInput();
+            if (choice == 1) {
+                Utils::DrawLine();
+                int index = 1;
+                for (const Item* i : m_Inventory) {
+                    cout << index << ". ";
+                    i->PrintInfo();
+                    index++;
+                }
+                Utils::DrawLine();
+                cout << "제거할 아이템의 번호를 입력하세요: ";
+                while (true) {
+                    int itemIndex = Utils::GetSafeInput();
+                    if (itemIndex < 1 || itemIndex >= m_Inventory.size() + 1) {
+                        cout << "잘못된 아이템 번호입니다. 다시 입력하세요: ";
+                    }
+                    else {
+                        cout << GetItem(itemIndex)->getName() << "을(를) 제거하고 " << item->getName() << "을(를) 획득했습니다." << endl;
+                        RemoveItemFromIndex(itemIndex);
+                        m_Inventory.push_back(item);
+                        return true;
+                    }
+                }
             }
-			Utils::DrawLine();
-           cout << "제거할 아이템의 번호를 입력하세요: ";
-            while(true) {
-                int itemIndex = Utils::GetSafeInput();
-                if (itemIndex < 1 || itemIndex >= m_Inventory.size() + 1) {
-                    cout << "잘못된 아이템 번호입니다. 다시 입력하세요: ";
-                }
-                else {
-                    RemoveItemFromIndex(itemIndex);
-                    cout << "아이템을 제거하고 새로운 아이템을 획득했습니다." << endl;
-                    m_Inventory.push_back(item);
-                    return true;
-                    break;
-                }
+            if (choice == 2) {
+                cout << "아이템 획득을 포기했습니다. " << item->getName() << "을(를) 저 멀리 던져버렸습니다." << endl;
+                delete item;
+                return false;
 			}
+			cout << "잘못된 선택입니다." << endl;
         }
         delete item;
 		return false;
