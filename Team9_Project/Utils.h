@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <string>
+#include <conio.h>
 
 namespace Color {
     // [기본 8색]
@@ -44,6 +45,6 @@ public:
 	static int GetSafeInput();
 	static int DefaultMenu();
 	static void DrawLine();
-
+    static void WaitForKeypress(const std::string& msg = "\n▶ 계속하려면 아무 키나 누르세요...");
 };
 
