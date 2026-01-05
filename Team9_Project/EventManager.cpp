@@ -24,6 +24,10 @@ EventManager:: EventManager() {
 	m_EventList.push_back(new PartTimeJobEvent());
 	m_EventList.push_back(new VSUpdateEvent());
 	m_EventList.push_back(new QuestionCodeEvent());
+	m_EventList.push_back(new TemptationOfWeekendEvent());
+	m_EventList.push_back(new RelayQuizEvent());
+	m_EventList.push_back(new HowSuccessEvent());
+	m_EventList.push_back(new BlueScreenEvent());
 }
 
 EventManager :: ~EventManager(){

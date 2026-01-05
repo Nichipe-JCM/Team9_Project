@@ -165,3 +165,39 @@ public:
 	void EventEffect(Character* character, GameManager* gm) override;
 	void EventCount() override;
 };
+
+class TemptationOfWeekendEvent : public Event {
+private:
+	int m_Count;
+public:
+	TemptationOfWeekendEvent() : m_Count(0){}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class RelayQuizEvent : public Event {
+private:
+	int m_Count;
+public:
+	RelayQuizEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class HowSuccessEvent : public Event {
+private:
+	int m_Count;
+public:
+	HowSuccessEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
+
+class BlueScreenEvent : public Event {
+private:
+	int m_Count;
+public:
+	BlueScreenEvent() : m_Count(0) {}
+	void EventEffect(Character* character, GameManager* gm) override;
+	void EventCount() override;
+};
