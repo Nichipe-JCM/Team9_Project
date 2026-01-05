@@ -7,7 +7,6 @@ AchievementManager::AchievementManager() {
     Init();
 }
 
-static int midBossKill = 0;
 
 AchievementManager::~AchievementManager() {}
 void AchievementManager::Init() {
@@ -21,7 +20,7 @@ void AchievementManager::Init() {
     m_Achievements["레퍼런스 마스터"] = false;
     m_Achievements["템플릿 마스터"] = false;
     m_Achievements["내배캠행동대장"] = false;
-    // m_Achievements["청출어람"] = false;
+    m_Achievements["청출어람"] = false;
 
 }
 void AchievementManager::UpdateAchievements(Character* player, StatusManager* sm) {
@@ -116,15 +115,18 @@ void AchievementManager::UpdateAchievements(Character* player, StatusManager* sm
         cout << endl;
     }
 
-    /* if (!m_Achievements["청출어람"]
-        && sm->m_KillCounts["튜터"] >= 3) {
-
+    if (!m_Achievements["청출어람"]
+        && sm->m_KillCounts["김조은 튜터"] >= 1
+        && sm->m_KillCounts["김극민 튜터"] >= 1
+        && sm->m_KillCounts["김봉재 튜터"] >= 1)
+    {
         m_Achievements["청출어람"] = true;
+
         cout << endl;
         Utils::DrawLine();
-        cout << "[업적 달성!] 템플릿 처치 5회 달성!" << endl;
+        cout << "[업적 달성!] 청출어람 - 튜터 실력을 넘어섰습니다!" << endl;
         Utils::DrawLine();
         cout << endl;
     }
-    */
+
 }
