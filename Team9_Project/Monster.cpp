@@ -1,4 +1,4 @@
-﻿#include "Monster.h"
+#include "Monster.h"
 #include "Character.h"
 #include "Weapon.h"
 #include "ThrowingWeapon.h"
@@ -588,6 +588,8 @@ int Monster::getHP() const { return m_HP; }
 int Monster::getAttack() const { return m_ATK; }
 int Monster::getDropGold() const { return m_dropGold; }
 int Monster::getDropEXP() const { return m_dropEXP; }
+int Monster::getlevel() const { return m_level; }
+int Monster::getMaxHP() const { return m_maxHp; }
 
 // Setter
 void Monster::setName(const string name) { this->name = name; }

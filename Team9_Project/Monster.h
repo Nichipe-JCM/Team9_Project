@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <string>
 #include <vector>
 #include "Item.h"
@@ -32,7 +32,7 @@ public:
 	virtual void GetHit(int damage);
 
 	Item* dropItem();
-	bool checkDeath();
+	virtual bool checkDeath();
 
 	// get
 	std::string getName() const;
@@ -40,6 +40,8 @@ public:
 	int getAttack() const;
 	int getDropGold() const;
 	int getDropEXP() const;
+	int getlevel() const;
+	int getMaxHP() const;
 	bool isAlive;
 
 	// set
@@ -52,4 +54,6 @@ protected:
 	int m_ATK;
 	int m_dropGold;
 	int m_dropEXP;
+	int m_level;
+	int m_maxHp;
 };
