@@ -154,9 +154,9 @@ void Character::manageEquipment(int action, Item* item, int slot)
 }
 bool Character::AutoUsePotion(Potion* potion) {//체력 50%이하일경우 포션 사용
 	if (m_HP > 0 && m_HP <= m_MaxHP * 0.5 && m_HasPotion ) {
-		Potion* potion = dynamic_cast<Potion*>(m_EquippedPotion);
-		if (potion != nullptr && potion->getType() == "회복포션") {
-			usePotion(potion);
+		Potion* equippedPotion = dynamic_cast<Potion*>(m_EquippedPotion);
+		if (equippedPotion != nullptr && equippedPotion->getType() == "회복포션") {
+			usePotion(equippedPotion);
 			m_EquippedPotion = nullptr;
 			m_HasPotion = false;
 			return true; //턴 소모후 포션 사용
@@ -193,7 +193,7 @@ void Character::GainEXP(int amount) {//얻는 경험치
 }
 void Character::setLevel(int level) { m_Level = level; }
 void Character::setGold(int gold) { m_Gold = gold; }
-void Character::GainGold(int amount) {//얻는 골드
+void Character::GainGold(int amount) {//얻는 zep코인
 	m_Gold += amount;
 	if (m_Gold < 0) {
 		m_Gold = 0;//zep코인 음수 방지
