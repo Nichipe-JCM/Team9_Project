@@ -19,6 +19,7 @@ void StatusManager::DisplayCharacterStatus(Character* ch) {
 	cout << "이름: " << ch->getName() << ", 레벨: " << ch->getLevel() << ", HP: " << ch->getHP() << "/" << ch->getMaxHP() << endl;
 	cout << "코딩력: " << ch->getATK() << ", Zep 코인: " << ch->getGold() << ", 경험치: " << ch->getEXP() << "/" << ch->getEXPToLevelUp() << endl;
 	Utils::DrawLine();
+	Utils::WaitForKeypress();
 }
 void StatusManager::DisplayBattleStatus() {
 	Utils::DrawLine();
@@ -26,6 +27,7 @@ void StatusManager::DisplayBattleStatus() {
 		cout << "[" << namecount.first << "] 처치: " << namecount.second << "회" << endl;
 	}
 	Utils::DrawLine();
+	Utils::WaitForKeypress();
 }
 void StatusManager::DisplayAchievements(AchievementManager* am) {
 	int index = 1;
@@ -41,6 +43,7 @@ void StatusManager::DisplayAchievements(AchievementManager* am) {
 		index++;
 	}
 	Utils::DrawLine();
+	Utils::WaitForKeypress();
 }
 void StatusManager::DisplayInventory(Inventory* inv) {
 	Utils::DrawLine();
