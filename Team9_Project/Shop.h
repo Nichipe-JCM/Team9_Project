@@ -10,6 +10,8 @@ class Monster;
 class Item;
 class Inventory;
 class GameManager;
+class Utils;
+
 class Shop 
 {
 private:
@@ -28,7 +30,7 @@ public:
 	bool BuyItemFuntion(int NewProduct, Character* player);//구매시 인벤토리에 아이템 추가
 	void SellItem(Character* player);//  판매 이벤트
 	void SellItemFuntion(int NewProduct, Character* player);//판매 가능한 아이템 확인
-	
+	static void DrawTineLine();
 	
 	void NextStage(GameManager* gm); // 다음 스테이지로 넘어감 -> 
 
