@@ -71,7 +71,7 @@ void Inventory::RemoveItemFromPointer(Item* item) {
     }
 }
 Item* Inventory::GetItem(int index) {
-    if (index < 1 || index >= m_Inventory.size()+1) {
+    if (index < 1 || index >= m_Inventory.size() + 1) {
         return nullptr;
     }
     return m_Inventory[index - 1];
