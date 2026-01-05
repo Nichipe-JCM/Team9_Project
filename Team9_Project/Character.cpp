@@ -215,8 +215,8 @@ void Character::LevelUp() {
 		else {
 			cout << "레벨 업! 현재 레벨:" << m_Level << endl;//레벨업시 대사
 		}
-		else return;
 	}
+	else return;
 	Sleep(1000);
 }
 void Character::Attack(Monster* target) {
