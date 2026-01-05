@@ -93,7 +93,7 @@ void GameManager::RunGame() { // 게임의 전체적인 프로세스 진행
 	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
 	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
 	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
-
+	
 
 	while (true) {
 		SpawnMonster(m_Stage); // 스테이지 기준 몬스터 생성

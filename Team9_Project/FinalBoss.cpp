@@ -19,7 +19,7 @@ FinalBoss::FinalBoss()
 
     static random_device rd;
     static mt19937 gen(rd());
-    uniform_real_distribution<float> ratioDist(1.5f, 2.0f);  // 기존 몬스터 스탯의 1.5 ~ 2.0배
+    uniform_real_distribution<float> ratioDist(1.0f, 1.5f);  // 기존 몬스터 스탯의 1.5 ~ 2.0배
 
     float hpRatio = ratioDist(gen);
     float atkRatio = ratioDist(gen);
