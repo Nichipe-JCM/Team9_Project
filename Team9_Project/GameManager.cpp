@@ -18,7 +18,7 @@ m_Stage(0), m_Player(nullptr), m_CurrentMonster(nullptr) {
 
 	m_Event = new EventManager();
 	m_Shop = new Shop(this);
-
+	m_UI = new UIManager();
 }
 
 
@@ -146,15 +146,20 @@ void GameManager::SpawnMonster(int stage) {
 
 void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력이 0이 될때까지 반복 루프
 	system("cls");
-	cout << "앗! 당신의 앞길을 " << m_CurrentMonster->getName() << "이(가) 가로막았다!" << endl;
-	Sleep(1000);
+	if (m_Stage % 5 == 0) cout << "앗! 갑자기 실력 점검으로" << m_CurrentMonster->getName() << " 님이 등장했다!!!" << endl;
+	else if (m_Stage == 21) m_UI->FinalBossAppearance();
+	else cout << "앗! 오늘의 코드카타로 " << m_CurrentMonster->getName() << "이(가) 문제로 나왔다!" << endl;
+	Sleep(2000);
+	m_UI->RenderBattleScreen(m_Player, m_CurrentMonster);
 	while (true) { // 둘중 하나의 체력이 0이 될때까지 반복
 		if (m_Player->getHP() <= 0) break;
 		m_Player->Attack(m_CurrentMonster);
-		Sleep(1000);
+		m_UI->RenderBattleScreen(m_Player, m_CurrentMonster);
+		Sleep(300);
 		if (m_CurrentMonster->getHP() <= 0) break;
 		m_CurrentMonster->attack(m_Player);
-		Sleep(1000);
+		m_UI->RenderBattleScreen(m_Player, m_CurrentMonster);
+		Sleep(2000);
 	}
 
 }
@@ -162,7 +167,7 @@ void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력
 
 
 void GameManager::BattleVictory() { // 전투승리시
-	cout << "\n승리!\n" << endl;
+	cout << "\n이겼다! 오늘도 열심히 공부했다!\n" << endl;
 	if (m_Stage < 21) {
 		m_Player->setEXP(m_Player->getEXP() + m_CurrentMonster->getDropEXP());
 		m_Player->setGold(m_Player->getGold() + m_CurrentMonster->getDropGold());
@@ -172,11 +177,17 @@ void GameManager::BattleVictory() { // 전투승리시
 		m_SM->AddKill(m_CurrentMonster->getName());
 		delete m_CurrentMonster; // 현재 몬스터 삭제
 		m_CurrentMonster = nullptr;
+		Sleep(1000);
 		m_AM->UpdateAchievements(m_Player, m_SM);
 	}
+	Utils::WaitForKeypress();
 	while (m_Stage < 21) { // 선택지. 최종보스 이하 스테이지일때만 나오게
+		system("cls");
+		cout << "다음 공부를 하기전에 뭘 할까? (둘 중 하나만 선택 가능)" << endl;
+		cout << "==================================" << endl;	
 		cout << "1. 상점으로" << endl;
-		cout << "2. 무작위 이벤트" << endl;
+		cout << "2. 시간을 때운다(무작위 이벤트)" << endl;
+		cout << "==================================" << endl;
 		int select = Utils::DefaultMenu(); // 기본 선택지 아래에 기본메뉴 표시 + 안전한 입력 받음
 		if (GameManager::DefaultMenuCheck(select)) { // 기본 선택지를 골랐으면 while문 반복
 			continue;
@@ -216,6 +227,8 @@ void GameManager::VisitEvent() {
 
 
 void GameManager::Opening() {
+	m_UI->Mainscreen();
+	m_UI->OpeningScene();
 	string name;
 	while (true) { // 이름 유효성 검사 프로세스
 		cout << ">> 이름을 입력하세요 (특수문자/공백 불가, 12글자 이내): ";
@@ -245,6 +258,9 @@ void GameManager::Opening() {
 		if (!isValid) { // 위에서 한 특문검사 체크
 			cout << "특수문자 또는 공백은 사용할 수 없습니다." << endl;
 		}
+		if (name == "") { // 빈 문자열 검사
+			cout << "이름을 입력해주세요." << endl;
+		}
 		else {
 			break;
 		}
@@ -257,6 +273,7 @@ void GameManager::Opening() {
 
 
 void GameManager::Ending() {
+	m_UI->EndingScene();
 	cout << "YOU WIN!" << endl; // 임시
 }
 

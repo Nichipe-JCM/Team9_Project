@@ -5,6 +5,7 @@
 #include "HealingPotion.h"
 #include "BuffPotion.h"
 #include "CashableItem.h"
+#include "Windows.h"
 
 #include <iostream>
 #include <string>
@@ -35,7 +36,8 @@ Monster::Monster(const string& name, int level, int gold, int exp)
 
 void Monster::attack(Character* target)
 {
-	cout << name << "의 공격! (공격력: " << m_ATK << ")" << endl;
+	cout << name << "이(가)" << target->getName() << "을(를) 공격합니다!" << endl;
+	Sleep(300);
 	// player->gethit(m_atk)
 	if (target != nullptr) {
 		target->GetHit(m_ATK);
@@ -46,7 +48,7 @@ void Monster::GetHit(int damage) // checkDeath 추가
 {
 	m_HP -= damage;
 	if (m_HP < 0) m_HP = 0;
-	cout << name << "이(가) " << damage << " 피해를 입었습니다. 남은 HP: " << m_HP << endl;
+	cout << name << "이(가)" << damage << "의 피해를 입었습니다. (남은 HP: " << m_HP << ")" << endl;
 
 	checkDeath(); // 해치웠나?
 }
@@ -55,11 +57,11 @@ void Monster::GetHit(int damage) // checkDeath 추가
 bool Monster::checkDeath() {
 	if (m_HP <= 0) {
 		isAlive = false;
-
+		Sleep(1000);
 		cout << name << "이(가) 쓰러졌다!" << endl;
-
+		Sleep(1000);
 		cout << m_dropGold << " 골드와 " << m_dropEXP << " 경험치를 획득했다!" << endl;
-
+		Sleep(1000);
 		return true;
 	}
 	return false;
