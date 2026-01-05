@@ -24,6 +24,7 @@ class MidBoss : public Monster // Monster 클래스를 상속받아 미드보스
 private:     // 모든 MidBoss가 공유하는 데이터 테이블/  key : id (1~4) / value : 해당 미드보스의 고정 데이터
     static map<int, MidBossData> midBossTable;
 
+
 public:
     MidBoss(int id); // 생성자 // id : GameManager에서 stage / 5 로 계산된 값 (1~4) //id에 따라 다른 미드보스가 생성됨
 
@@ -32,4 +33,7 @@ public:
 
   
     void GetHit(int damage) override; // Monster의 GetHit 함수를 오버라이드 // 미드보스만의 피격 연출 메세지 출력
+
+
+    bool checkDeath() override;
 };

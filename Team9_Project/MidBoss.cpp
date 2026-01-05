@@ -50,12 +50,18 @@ void MidBoss::GetHit(int damage) // 미드보스 피격 시 전용 메시지를 
     Monster::GetHit(damage);
 }
 
-/* void MidBoss::Die() //**********************Monster의 Die() 함수를가져와야 함.
+/*bool MidBoss::checkDeath()
 {
-    cout << "[MID BOSS] " << name << " 격파!" << endl;
-    cout << "강력한 기운이 사라진다..." << endl;
+    // 부모의 사망 처리 먼저 실행
+    if (Monster::checkDeath())
+    {
+        cout << "[MID BOSS] " << name << " 격파!" << endl;
+        cout << "강력한 기운이 사라진다..." << endl;
 
-    Monster::Die();  //  핵심: 부모에게 실제 처리 위임
+        // 튜터 처치 카운트 증가
+        StatusManager::GetInstance()->AddKill("튜터");
+
+        return true;
+    }
 }
-
 */
