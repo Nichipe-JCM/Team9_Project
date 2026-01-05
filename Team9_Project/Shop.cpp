@@ -44,7 +44,7 @@ void Shop::ItemSetting()
 
 	std::discrete_distribution<int> dist(weights.begin(), weights.end());
 	vector<int> vec;
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		int selectedIndex = dist(gen);
 		if (!vec.empty()) {
@@ -174,7 +174,8 @@ void Shop::BuyItem(Character* player)
 			
 		}
 		Utils::DrawLine();
-		cout << "4.뒤로가기" << endl;
+		
+		cout << "현재 코인: "<< player->getGold() << "              6.뒤로가기" << endl;
 		int select = Utils::DefaultMenu();
 		if (gm->DefaultMenuCheck(select)) {
 			continue;
@@ -191,7 +192,15 @@ void Shop::BuyItem(Character* player)
 		{
 			BuyItemFuntion(2, player);
 		}
-		else if (select == 4) {
+		else if (select == 4)
+		{
+			BuyItemFuntion(3, player);
+		}
+		else if (select == 5)
+		{
+			BuyItemFuntion(4, player);
+		}
+		else if (select == 6) {
 			system("cls");
 			return;
 		}
@@ -285,7 +294,7 @@ void Shop::SellItem(Character* player) {
 	}
 }
 void Shop::DrawTineLine() {
-	cout << "---------------------------------------------------------------------"<<endl;
+	cout << Color::GRAY << "---------------------------------------------------------------------"<<Color::RESET<<endl;
 }
 void Shop::NextStage(GameManager* gm) {
 	system("cls");
