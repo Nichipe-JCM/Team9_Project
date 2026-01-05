@@ -40,8 +40,8 @@ public:
 	int getAttack() const;
 	int getDropGold() const;
 	int getDropEXP() const;
-	int getlevel() const;
 	int getMaxHP() const;
+	int getLevel() const;
 	bool isAlive;
 
 	// set
@@ -54,6 +54,6 @@ protected:
 	int m_ATK;
 	int m_dropGold;
 	int m_dropEXP;
-	int m_level;
-	int m_maxHp;
+	int m_MaxHP;
+	int m_Level;
 };

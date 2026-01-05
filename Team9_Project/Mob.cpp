@@ -9,7 +9,7 @@ Monster* Mob::createRandomMonster(Character* Player) // 정해진 리스트에�
 {
 	static bool seeded = false;
 	if (!seeded) {
-		srand(time(NULL));
+		srand(static_cast<unsigned int>(time(NULL)));
 		seeded = true;
 	}
 

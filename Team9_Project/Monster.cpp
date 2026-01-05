@@ -29,6 +29,8 @@ Monster::Monster(const string& name, int level, int gold, int exp)
 	uniform_int_distribution<int> atkDist(level * 5, level * 10);
 	m_ATK = atkDist(gen);
 
+	m_MaxHP = m_HP;
+	m_Level = level;
 }
 
 void Monster::attack(Character* target)
@@ -588,8 +590,8 @@ int Monster::getHP() const { return m_HP; }
 int Monster::getAttack() const { return m_ATK; }
 int Monster::getDropGold() const { return m_dropGold; }
 int Monster::getDropEXP() const { return m_dropEXP; }
-int Monster::getlevel() const { return m_level; }
-int Monster::getMaxHP() const { return m_maxHp; }
+int Monster::getMaxHP() const { return m_MaxHP; }
+int Monster::getLevel() const { return m_Level; }
 
 // Setter
 void Monster::setName(const string name) { this->name = name; }

@@ -1,4 +1,4 @@
-#include "EventManager.h"
+﻿#include "EventManager.h"
 #include "Event.h"
 #include "EventList.h"
 #include <vector>
@@ -24,6 +24,10 @@ EventManager:: EventManager() {
 	m_EventList.push_back(new PartTimeJobEvent());
 	m_EventList.push_back(new VSUpdateEvent());
 	m_EventList.push_back(new QuestionCodeEvent());
+	m_EventList.push_back(new TemptationOfWeekendEvent());
+	m_EventList.push_back(new RelayQuizEvent());
+	m_EventList.push_back(new HowSuccessEvent());
+	m_EventList.push_back(new BlueScreenEvent());
 }
 
 EventManager :: ~EventManager(){
@@ -39,7 +43,7 @@ void EventManager:: StartEvent(Character* character,GameManager* gm) {
 	}
 	static random_device rd;
 	static mt19937 gen(rd());											// 난수 생성을 위한 준비
-	uniform_int_distribution<int> dis(0, m_EventList.size() - 1);		// 난수 범위 지정
+	uniform_int_distribution<int> dis(0, static_cast<int>(m_EventList.size() - 1));		// 난수 범위 지정
 	int EventNum = dis(gen);	// 만들어진 난수 변수에 대입		
 	m_EventList[EventNum]->EventEffect(character,gm);			//해당 되는 index에 있는 Event의 EventEffect 함수 실행 
 

@@ -20,7 +20,7 @@ public:
 	Item* GetItem(int index);
 	vector<Item*>& GetInventory();
 	int GetMaxInventorySlot() const { return m_MaxInventorySlot; }
-	int GetCurrentInventorySize() const { return m_Inventory.size(); }
+	int GetCurrentInventorySize() const { return static_cast<int>(m_Inventory.size()); }
 	void ManageInventory(StatusManager* sm, Character* ch);
 };
 

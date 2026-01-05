@@ -226,6 +226,7 @@ void Character::Attack(Monster* target) {
 		cout << m_name << "이(가)" << m_EquippedThrow->getName() << "을(를) 던졌습니다!" << endl;
 		target->GetHit(m_ATK + m_EquippedThrow->getAttack());//투척무기 자체 피해량 적용
 		m_Throw = false;//사용후 비활성화
+		m_Inventory->RemoveItemFromPointer(m_EquippedThrow);//인벤토리에서 제거
 		m_EquippedThrow = nullptr;
 	}
 	else {

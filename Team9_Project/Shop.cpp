@@ -173,7 +173,7 @@ void Shop::SellItemFuntion(int NewProduct, Character* player) {
 	Item* itemToSell = items[NewProduct];
 	string color = itemToSell->getRarityColor(itemToSell->getRarity());
 	string rName = itemToSell->rarityToString(itemToSell->getRarity());
-	int sellPrice = (int)itemToSell->getValue() * 0.6;
+	int sellPrice = static_cast<int>(itemToSell->getValue() * 0.6);
 	player->setGold(player->getGold() + sellPrice);
 
 

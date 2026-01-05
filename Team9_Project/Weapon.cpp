@@ -1,4 +1,5 @@
 ﻿#include "Weapon.h"
+#include "Utils.h"
 #include <iostream>
 using namespace std;
 
@@ -16,7 +17,7 @@ int Weapon::Damage() const
 }
 
 void Weapon::PrintInfo() const {
-	if (m_isEquipped) std::cout << "\033[36m" << "[장착중] " << "\033[0m";
+	if (m_isEquipped) std::cout << Color::CYAN << "[장착중] " << Color::RESET;
 	Item::PrintInfo();
 	cout << "타입: 무기   코딩력: " << getAttack() << "   판매 가격: " << getValue()*0.6 << "코인" << endl;
 }
