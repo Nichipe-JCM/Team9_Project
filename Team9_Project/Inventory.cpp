@@ -141,6 +141,7 @@ void Inventory::ManageInventory(StatusManager* sm, Character* ch) {
         }
         case 3:
 			cout << "이전 메뉴로 돌아갑니다." << endl;
+			Utils::WaitForKeypress();
             return;
         default:
             cout << "잘못된 선택입니다." << endl;

@@ -35,5 +35,5 @@ public:
     void GetHit(int damage) override; // Monster의 GetHit 함수를 오버라이드 // 미드보스만의 피격 연출 메세지 출력
 
 
-    bool checkDeath() override;
+    //bool checkDeath() override;
 };
