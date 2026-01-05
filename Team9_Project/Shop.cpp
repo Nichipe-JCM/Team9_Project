@@ -105,6 +105,10 @@ bool Shop::BuyItemFuntion(int NewProduct, Character* player)
 	system("cls");
 	if (NewProduct < 0 || NewProduct >= m_Product.size()) return false;
 	Item* itemPtr = m_Product[NewProduct];
+	if (itemPtr == nullptr) {
+		cout << "배치된 아이템이 없습니다." << endl;
+		return false;
+	}
 	int price = itemPtr->getValue();
 	string RarityStr = itemPtr->rarityToString(itemPtr->getRarity());
 	string RarityColor = itemPtr->getRarityColor(itemPtr->getRarity());
@@ -133,6 +137,10 @@ void Shop::BuyItem(Character* player)
 	system("cls");
 	while (true) {
 		
+		if (m_Product.empty()) {
+			cout << "배치된 아이템이 없습니다." << endl;
+			return;
+		}
 		m_ShopMessage.clear();
 		m_ShopMessage.push_back("구매할 아이템을 선택해주세요.");
 		m_ShopMessage.push_back("필요하시면 고민하지말고 사세요.");		
