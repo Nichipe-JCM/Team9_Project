@@ -109,22 +109,28 @@ void Character::manageEquipment(int action, Item* item, int slot)
 				if (choice == 2) {
 					if(m_HP == m_MaxHP) {
 						cout << "체력이 가득 차 있습니다. 포션을 사용할 수 없습니다." << endl;
-						return;
+						break;
 					}
 					usePotion(dynamic_cast<Potion*>(item));
 					m_Inventory->RemoveItemFromPointer(item);
-					return;
+					break;
 				}
-				if(m_EquippedPotion != nullptr) {
-					cout << "장착중인 " << m_EquippedPotion->getName() << "을(를) 해제했습니다." << endl;
-					m_EquippedPotion->setEquipped(false);
-					m_EquippedPotion = nullptr;
-					m_HasPotion = false;
+				if(choice == 1) {
+					if(m_EquippedPotion != nullptr) {
+						cout << "장착중인 " << m_EquippedPotion->getName() << "을(를) 해제했습니다." << endl;
+						m_EquippedPotion->setEquipped(false);
+						m_EquippedPotion = nullptr;
+						m_HasPotion = false;
+					}
+					m_EquippedPotion = item;
+					m_HasPotion = true;
+					cout << item->getName() << "을(를) 포션 슬롯에 장착했습니다. 장착한 포션은 전투 중 체력이 50% 이하가 되면 자동으로 사용합니다." << endl;//포션장착
+					item->setEquipped(true);
 				}
-				m_EquippedPotion = item;
-				m_HasPotion = true;
-				cout << item->getName() << "을(를) 포션 슬롯에 장착했습니다. 장착한 포션은 전투 중 체력이 50% 이하가 되면 자동으로 사용합니다." << endl;//포션장착
-				item->setEquipped(true);
+				else {
+					cout << "잘못된 선택입니다." << endl;
+					break;
+				}
 			}
 		}
 		break;
