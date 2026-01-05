@@ -1,4 +1,4 @@
-﻿#include "Character.h"
+#include "Character.h"
 #include "Item.h"
 #include "Monster.h"
 #include "Inventory.h"
@@ -199,23 +199,21 @@ void Character::GainGold(int amount) {//얻는 골드
 	if (m_Gold < 0) {
 		m_Gold = 0;//zep코인 음수 방지
 	}
-	cout << "Zep코인을" << amount << "획득했습니다!(보유 Zep코인: " << m_Gold << "Zep 코인)" << endl;
+	cout << " Zep코인을 " << amount << " 획득했습니다! (보유 Zep코인: " << m_Gold << "Zep 코인)" << endl;
 }
 void Character::LevelUp() {
-	while (m_EXP >= m_EXPToLevelUp) {
-		if (m_Level < m_MaxLevel && m_EXP >= m_EXPToLevelUp) {
-			m_Level++;
-			m_MaxHP += m_Level * 20;//체력 레벨 x 20
-			m_ATK += m_Level * 5;//공격력 레벨 x 5
-			m_HP = m_MaxHP;//레벨업시 풀피
-			m_EXP -= 100;
-			m_EXPToLevelUp = 100;
-			if (m_Level == m_MaxLevel) {
-				cout << "이제 일반 몬스터는 상대도 안된다." << endl;//만렙 달성시 대사
-			}
-			else {
-				cout << "레벨 업! 현재 레벨:" << m_Level << endl;//레벨업시 대사
-			}
+	if (m_Level < m_MaxLevel && m_EXP >= m_EXPToLevelUp) {
+		m_Level++;
+		m_MaxHP += m_Level * 20;//체력 레벨 x 20
+		m_ATK += m_Level * 5;//공격력 레벨 x 5
+		m_HP = m_MaxHP;//레벨업시 풀피
+		m_EXP -= m_EXPToLevelUp;//초과 되는 경험치 다음 레벨에 유지
+		m_EXPToLevelUp = 100;
+		if (m_Level == m_MaxLevel) {
+			cout << "이제 일반 몬스터는 상대도 안된다." << endl;//만렙 달성시 대사
+		}
+		else {
+			cout << "레벨 업! 현재 레벨:" << m_Level << endl;//레벨업시 대사
 		}
 		else return;
 	}
