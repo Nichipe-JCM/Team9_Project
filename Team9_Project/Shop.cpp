@@ -137,11 +137,29 @@ void Shop::BuyItem(Character* player)
 		Utils::DrawLine();
 		for (auto& msg : m_ShopMessage) { cout << msg << endl; }
 		for (int i = 0; i < m_Product.size(); i++) {
+			Utils::DrawLine();
 			string color = m_Product[i]->getRarityColor(m_Product[i]->getRarity());
 			cout << i + 1 << ". " << "품목 : "
-				<< color << m_Product[i]->getName() << "[" << m_Product[i]->rarityToString(m_Product[i]->getRarity()) << "]" << "\033[0m" // 이름에 색상 입히고 다시 초기화
-				<< " | 가격 : " << m_Product[i]->getValue() << endl;
+				<< color << m_Product[i]->getName() << "[" << m_Product[i]->rarityToString(m_Product[i]->getRarity()) << "]" << "\033[0m" << endl;
+			if(m_Product[i]->getItemType() == ItemCategory::Weapon)
+			{
+				cout << " 가격: " << m_Product[i]->getValue() << "  타입: 무기 " <<"  코딩력: " << m_Product[i]->getAttack() << endl;
+			}
+			else if(m_Product[i]->getItemType() == ItemCategory::Throwing)
+			{
+				cout << " 가격: " << m_Product[i]->getValue() << "  타입: 투척 무기 " << "  코딩력: " << m_Product[i]->getAttack() << endl;
+			}
+			else if(m_Product[i]->getItemType() == ItemCategory::HPotion)
+			{
+				cout << " 가격: " << m_Product[i]->getValue() << "  타입: 회복 포션 " << "  회복력: " << m_Product[i]->getHeal() << endl;
+			}
+			else if(m_Product[i]->getItemType() == ItemCategory::BPotion)
+			{
+				cout << " 가격: " << m_Product[i]->getValue() << "  타입: 버프 포션 " << "  버프력: " << m_Product[i]->getBuff() << endl;
+			}
+			
 		}
+		Utils::DrawLine();
 		cout << "4.뒤로가기" << endl;
 		int select = Utils::DefaultMenu();
 		if (gm->DefaultMenuCheck(select)) {
