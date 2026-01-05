@@ -44,7 +44,7 @@ void Shop::ItemSetting()
 
 	std::discrete_distribution<int> dist(weights.begin(), weights.end());
 	vector<int> vec;
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		int selectedIndex = dist(gen);
 		if (!vec.empty()) {
@@ -105,6 +105,10 @@ bool Shop::BuyItemFuntion(int NewProduct, Character* player)
 	system("cls");
 	if (NewProduct < 0 || NewProduct >= m_Product.size()) return false;
 	Item* itemPtr = m_Product[NewProduct];
+	if (itemPtr == nullptr) {
+		cout << "배치된 아이템이 없습니다." << endl;
+		return false;
+	}
 	int price = itemPtr->getValue();
 	string RarityStr = itemPtr->rarityToString(itemPtr->getRarity());
 	string RarityColor = itemPtr->getRarityColor(itemPtr->getRarity());
@@ -133,6 +137,10 @@ void Shop::BuyItem(Character* player)
 	system("cls");
 	while (true) {
 		
+		if (m_Product.empty()) {
+			cout << "배치된 아이템이 없습니다." << endl;
+			return;
+		}
 		m_ShopMessage.clear();
 		m_ShopMessage.push_back("구매할 아이템을 선택해주세요.");
 		m_ShopMessage.push_back("필요하시면 고민하지말고 사세요.");		
@@ -166,7 +174,8 @@ void Shop::BuyItem(Character* player)
 			
 		}
 		Utils::DrawLine();
-		cout << "4.뒤로가기" << endl;
+		
+		cout << "현재 코인: "<< player->getGold() << "              6.뒤로가기" << endl;
 		int select = Utils::DefaultMenu();
 		if (gm->DefaultMenuCheck(select)) {
 			continue;
@@ -183,7 +192,15 @@ void Shop::BuyItem(Character* player)
 		{
 			BuyItemFuntion(2, player);
 		}
-		else if (select == 4) {
+		else if (select == 4)
+		{
+			BuyItemFuntion(3, player);
+		}
+		else if (select == 5)
+		{
+			BuyItemFuntion(4, player);
+		}
+		else if (select == 6) {
 			system("cls");
 			return;
 		}
@@ -277,7 +294,7 @@ void Shop::SellItem(Character* player) {
 	}
 }
 void Shop::DrawTineLine() {
-	cout << "---------------------------------------------------------------------"<<endl;
+	cout << Color::GRAY << "---------------------------------------------------------------------"<<Color::RESET<<endl;
 }
 void Shop::NextStage(GameManager* gm) {
 	system("cls");
