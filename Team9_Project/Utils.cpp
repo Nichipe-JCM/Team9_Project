@@ -23,12 +23,23 @@ int Utils::GetSafeInput() {
 }
 
 int Utils::DefaultMenu() {
-    cout << "---------------------------------" << endl;
-    cout << "7.인벤토리  8.상태창  9.전적  0.업적" << endl;
-    cout << "---------------------------------" << endl;
+    cout << "===========================================" << endl;
+    cout << "7.인벤토리     8.상태창     9.전적     0.업적" << endl;
+    cout << "===========================================" << endl;
     return GetSafeInput();
 }
 
 void Utils::DrawLine() {
-    cout << "=================================" << endl;
+    cout << "===================================================================" << endl;
+}
+
+void Utils::WaitForKeypress(const std::string& msg) {
+    while (_kbhit()) {
+        int ignored = _getch();
+        (void)ignored;
+    }
+
+    if (!msg.empty()) std::cout << msg << std::endl;
+    int key = _getch();
+    (void)key;
 }

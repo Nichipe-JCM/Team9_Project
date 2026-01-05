@@ -38,6 +38,7 @@ void StatusManager::DisplayAchievements(AchievementManager* am) {
 		else {
 			cout << index << ". [ ] " << pair.first << " (미달성)" << endl;
 		}
+		index++;
 	}
 	Utils::DrawLine();
 }

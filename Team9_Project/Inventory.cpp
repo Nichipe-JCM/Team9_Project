@@ -88,6 +88,10 @@ void Inventory::ManageInventory(StatusManager* sm, Character* ch) {
         int choice = Utils::GetSafeInput();
         switch (choice) {
         case 1: {
+            if (m_Inventory.empty()) {
+                cout << "인벤토리가 비어있습니다." << endl;
+                break;
+			}
             cout << "사용/장착할 아이템의 번호를 입력하세요: ";
             int itemIndex = Utils::GetSafeInput();
             Item* item = GetItem(itemIndex);
@@ -115,16 +119,20 @@ void Inventory::ManageInventory(StatusManager* sm, Character* ch) {
             break;
         }
         case 2: {
+            if (m_Inventory.empty()) {
+                cout << "인벤토리가 비어있습니다." << endl;
+                break;
+            }
             cout << "제거할 아이템의 번호를 입력하세요: ";
             int itemIndex = Utils::GetSafeInput();
             Item* item = GetItem(itemIndex);
             if (item == nullptr) {
                 cout << "잘못된 아이템 번호입니다." << endl;
-                return;
+                break;
             }
             if (item == ch->getEquippeditem() || item == ch->getEquippedThrow() || item == ch->getEquippedPotion()) {
                 cout << "장착 중인 아이템은 제거할 수 없습니다. 먼저 장착을 해제하세요." << endl;
-                return;
+                break;
             }
             RemoveItemFromIndex(itemIndex);
             cout << item->getName() << "이(가) 인벤토리에서 제거되었습니다." << endl;
@@ -138,6 +146,6 @@ void Inventory::ManageInventory(StatusManager* sm, Character* ch) {
             cout << "잘못된 선택입니다." << endl;
             break;
         }
-		system("pause");
+		Utils::WaitForKeypress("\n▶아무 키나 눌러 인벤토리로 돌아갑니다...");
     }
 }
