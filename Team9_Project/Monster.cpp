@@ -1,4 +1,4 @@
-﻿#include "Monster.h"
+#include "Monster.h"
 #include "Character.h"
 #include "Weapon.h"
 #include "ThrowingWeapon.h"

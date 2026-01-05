@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <string>
 #include <vector>
 #include "Item.h"
@@ -32,7 +32,7 @@ public:
 	virtual void GetHit(int damage);
 
 	Item* dropItem();
-	bool checkDeath();
+	virtual bool checkDeath();
 
 	// get
 	std::string getName() const;
