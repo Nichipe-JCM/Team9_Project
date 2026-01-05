@@ -29,10 +29,11 @@ void BuyBookEvent::EventEffect(Character* character, GameManager* gm) {
 				character->setGold(character->getGold() - 100);
 				cout << "100 ZEP코인을 지불했습니다." << endl;
 				if (RandNum == 0 || RandNum == 1) {		// 66% 확률의 긍정 이벤트
+					int gain = character->getLevel() * 5;
 					cout << "원하던 책이 잘 도착했습니다!" << endl;
 					cout << "배송받은 책을 읽고 지식이 늘었습니다!" << endl;
-					cout << "코딩력이 50만큼 상승했다!" << endl;				// 후에 팀원들과 상의해서 수치 조정 필요
-					character->setATK(character->getATK() + 50);				// 현재 코딩력에 정해진 수치만큼 상승
+					cout << "코딩력이 " << gain << " 상승했다!" << endl;				// 후에 팀원들과 상의해서 수치 조정 필요
+					character->setATK(character->getATK() + gain);				// 현재 코딩력에 정해진 수치만큼 상승
 					break;
 				}
 				else {									// 33% 확률 부정 이벤트
@@ -87,20 +88,22 @@ void SurpriseSessionEvent::EventEffect(Character* character, GameManager* gm) {
 
 		if (select == 1) {
 			if (RandNum == 0 || RandNum == 1) {
+				int gain = character->getLevel() * 6;
 				cout << "튜터님의 명강의를 들었더니 개념이 확실히 잡혔다." << endl;
 				cout << "헷갈리던 개념이 잡히고 머리가 맑아진다." << endl;
-				cout << "코딩력이 30만큼 상승했다!" << endl;		// 후에 수치조정 필요
-				character->setATK(character->getATK() + 30);
+				cout << "코딩력이 " << gain << " 상승했다!" << endl;		// 후에 수치조정 필요
+				character->setATK(character->getATK() + gain);
 				break;
 			}
 			else {
+				int gain = character->getLevel() * 2;
+				int loss = static_cast<int>(character->getMaxHP() * 0.1);
 				cout << "\"실력향상에는 반복학습이 최고죠!\"" << endl;
 				cout << "튜터님께서 추가과제를 주셨다...." << endl;
 				cout << "\"안... 안돼! 이건 꿈이야!!\"" << endl;
-				cout << "코딩력이 10 상승했다!" << endl;
-				cout << "체력이 40 감소했다." << endl;
-				character->setATK(character->getATK() + 10);
-				character->setHP(character->getHP() - 40);			// 이 이벤트로 사망할 수도 있어서 후에 조정 필요
+				cout << "코딩력이 " << gain << " 상승했다! 체력이 " << loss << " 감소했다." << endl;
+				character->setATK(character->getATK() + gain);
+				character->setHP(character->getHP() - loss);			// 이 이벤트로 사망할 수도 있어서 후에 조정 필요
 				break;
 			}
 
@@ -148,11 +151,12 @@ void TILIsImportantEvent::EventEffect(Character* character, GameManager* gm) {
 			break;
 		}
 		else if (select == 2) {
+			int gain = static_cast<int>(character->getMaxHP() * 0.1);
 			cout << "\"너무 힘들어서 일어날 수가 없다...\"" << endl;
 			cout << "\"그래 하루만 쉬자... 하루 쉬는 건데 별일이야 있겠어?\"" << endl;
 			cout << "TIL을 작성하지 않았다." << endl;
-			cout << "적당한 휴식으로 HP가 10 상승했다." << endl;
-			character->setHP(character->getHP() + 10);				// 수치 팀 상의 필요
+			cout << "적당한 휴식으로 체력이 "<< gain << " 회복됐다." << endl;
+			character->setHP(character->getHP() + gain);				// 수치 팀 상의 필요
 			break;
 		}
 		else {
@@ -185,31 +189,33 @@ void DrinkCaffeineEvent::EventEffect(Character* character, GameManager* gm) {
 
 		if (select == 1) {
 			if (health >= 0.5) {		// 현재체력이 최대체력의 절반보다 높거나 같을 때
+				int gain = character->getLevel() * 6;
 				cout << "\"역시 에너지 드링크야. 먹으니까 눈이 확 떠지네.\"" << endl;
 				cout << "\"조금만 더 힘내서 해보자!\"" << endl;
 				cout << "에너지 드링크 덕분에 집중력이 올라서 성공적으로 공부를 끝마쳤다!" << endl;
-				cout << "코딩력이 40만큼 상승했다!" << endl;				// 후에 수치조정 필요
-				character->setATK(character->getATK() + 40);
+				cout << "코딩력이 " << gain << " 상승했다!" << endl;
+				character->setATK(character->getATK() + gain);
 				break;
 			}
 			else {						// 현재 체력이 최대체력의 절반이 안될 때
+				int loss = character->getLevel() * 2;
 				cout << "에너지 드링크 덕분에 오늘 공부를 다했다." << endl;
 				cout << "\"이제 자러가야지.\"" << endl;
 				cout << "\"어라? 잠이 오지 않는다. 내일 아침 일찍 일어나야하는데 큰일났다!\"" << endl;
 				cout << "다음날 생활패턴이 망가져 공부를 망쳤다." << endl;
 				cout << "\"적당히 마실껄...\"" << endl;
-				cout << "코딩력이 20 하락했다." << endl;					// 후에 수치조정 필요
-				character->setATK(character->getATK() - 20);
+				cout << "코딩력이 " << loss << " 하락했다." << endl;
+				character->setATK(character->getATK() - loss);
 				break;
 			}
 		}
 		else if (select == 2) {
+			int gain = static_cast<int>(character->getMaxHP() * 0.1);
 			cout << "\"최근에 너무 많이 마셨으니까 오늘은 마시지 말자.\"" << endl;
 			cout << "\"잠도 깰겸 물 마시고 산책이나 하고 와야지.\"" << endl;
 			cout << "에너지 드링크를 마시지 않았다." << endl;
-			cout << "체력과 최대체력이 10만큼 증가했다." << endl;			// 후에 수치조정 필요
-			character->setMaxHP(character->getMaxHP() + 10);
-			character->setHP(character->getHP() + 10);
+			cout << "체력이 " << gain << " 증가했다." << endl;
+			character->setHP(character->getHP() + gain);
 			break;
 		}
 		else {
@@ -246,33 +252,36 @@ void FixCodeEvent::EventEffect(Character* character, GameManager* gm) {
 
 		if (select == 1) {
 			if (RandNum == 0 || RandNum == 1) {
+				int gain = character->getLevel() * 7;
 				cout << "역시 함수와 클래스를 잘 활용하니까 코드가 훨씬 짧아지네" << endl;
 				cout << "\"수정하면서 배웠던 내용 활용도 해보고 복습도 됐네. 수정하기를 잘했다!\"" << endl;
 				cout << "과제를 성공적으로 수정해서 제출했다." << endl;
-				cout << "코딩력이 40 상승했다!" << endl;							// 후에 수치조정 필요
-				character->setATK(character->getATK() + 40);
+				cout << "코딩력이 " << gain << " 상승했다!" << endl;
+				character->setATK(character->getATK() + gain);
 				break;
 			}
 			else {
+				int gain = character->getLevel() * 7;
+				int loss = static_cast<int>(character->getMaxHP() * 0.1);
 				cout << "수정하기 시작한지 어언 몇시간째... 오류가 멈추지 않는다..." << endl;
 				cout << "\"어디서부터 잘못된걸까... 여기까지 왔는데 과제 제출을 못할 수는 없어...\"" << endl;
 				cout << "\"오늘도 놀기는 글렀구나...\"" << endl;
 				cout << "아슬아슬하게 수정해서 과제를 제출했다." << endl;
-				cout << "코딩력이 40 상승했다! 체력이 20 하락했다." << endl;		// 후에 수치조정 필요
-				character->setATK(character->getATK() + 40);
-				character->setHP(character->getHP() - 20);
+				cout << "코딩력이 " << gain << " 상승했다! 체력이 " << loss << " 하락했다." << endl;
+				character->setATK(character->getATK() + gain);
+				character->setHP(character->getHP() - loss);
 				break;
 			}
 		}
 		else if (select == 2) {
+			int gain = static_cast<int>(character->getMaxHP() * 0.1);
 			cout << "\"과제를 완성한게 어디냐\"" << endl;
 			cout << "일단 이 상태로 제출하고 나중에 궁금한 점이 생기면 인터넷을 찾아보자." << endl;
 			cout << "\"오랜만에 게임이나 해볼까?\"" << endl;
 			cout << "과제를 수정하지 않았다." << endl;
 			cout << "휴식을 취해서 건강이 좋아졌다." << endl;
-			cout << "체력이 10 증가했다! 최대체력이 10 증가했다!" << endl;			// 후에 수치조정 필요
-			character->setMaxHP(character->getMaxHP() + 10);
-			character->setHP(character->getHP() + 10);
+			cout << "체력이 " << gain << " 증가했다." << endl;
+			character->setHP(character->getHP() + gain);
 			break;
 		}
 		else {
@@ -303,25 +312,28 @@ void SOSRequestEvent::EventEffect(Character* character, GameManager* gm) {
 		}
 
 		if (select == 1) {
+			int loss = static_cast<int>(character->getMaxHP() * 0.05);
+			int gain = character->getLevel() * 4;
 			cout << "\"그래 결국 팀 프로젝트니까 도와주자.\"" << endl;
 			cout << "팀원과 코드를 수정해본다." << endl;
 			cout << "예상했던 시간보다 더 거리긴 했지만 오류를 전부 수정했다." << endl;
 			cout << "\"늦게 발견해서 나중에 수정했으면 큰일날 뻔 했다. 도와주길 잘했다.\"" << endl;
 			cout << "조금 힘들긴했지만 결과물을 완성했다!" << endl;
-			cout << "체력이 10 하락했다. 코딩력이 20 증가했다!" << endl;
-			character->setHP(character->getHP() - 10);
-			character->setATK(character->getATK() + 20);
+			cout << "체력이 " << loss << " 하락했다. 코딩력이 " << gain << " 증가했다!" << endl;
+			character->setHP(character->getHP() - loss);
+			character->setATK(character->getATK() + gain);
 			break;
 		}
 		else if (select == 2) {
+			int loss = character->getLevel() * 3;
 			cout << "지금은 내 코가 석자다.. 미안하지만 거절해야겠다." << endl;
 			cout << "나: 지금은 제 파트도 못 끝내서 나중에 도와드릴께요 죄송합니다." << endl;
 			cout << "팀원: 아 네 알겠습니다... 제가 한번 수정해볼께요." << endl;
 			cout << "그렇게 문제가 일단락되는 줄 알았다." << endl;
 			cout << "하지만 나중에 내가 마주하게 된 것은 감당할 수 없이 늘어나버린 오류였다." << endl;
 			cout << "수정하지 못한 오류가 남아서 결과물을 제출하지 못했다." << endl;
-			cout << "코딩력이 20 하락했다." << endl;
-			character->setATK(character->getATK() - 20);
+			cout << "코딩력이 " << loss << " 하락했다." << endl;
+			character->setATK(character->getATK() - loss);
 			break;
 		}
 		else {
@@ -353,21 +365,24 @@ void YouTubeAlgorithmEvent::EventEffect(Character* character, GameManager* gm) {
 		}
 
 		if (select == 1) {
+			int gain = static_cast<int>(character->getMaxHP() * 0.1);
+			int loss = character->getLevel() * 2;
 			cout << "\"강아지가 너무 귀엽다... 하나만 더 보자.\"" << endl;
 			cout << "\"어라? 언제 이렇게 시간이 지났지?\"" << endl;
 			cout << "머리는 식었지만 집중력이 완전히 깨져버렸다." << endl;
-			cout << "체력이 20 증가했다! 코딩력이 20 감소했다." << endl;
-			character->setHP(character->getHP() + 20);
-			character->setATK(character->getATK() - 20);
+			cout << "체력이 " << gain << " 증가했다! 코딩력이 " << loss << " 감소했다." << endl;
+			character->setHP(character->getHP() + gain);
+			character->setATK(character->getATK() - loss);
 			break;
 		}
 		else if (select == 2) {
+			int gain = character->getLevel() * 2;
 			cout << "지금은 참아야 한다." << endl;
 			cout << "유튜브를 끄고 다시 작성하던 코드로 돌아간다." << endl;
 			cout << "집중한 덕분에 작업이 생각보다 빨리 끝났다." << endl;
 			cout << "평소보다 집중력이 좋았던 것 같다." << endl;
-			cout << "코딩력이 10 증가했다!" << endl;
-			character->setATK(character->getATK() + 10);
+			cout << "코딩력이 " << gain << " 증가했다!" << endl;
+			character->setATK(character->getATK() + gain);
 			break;
 		}
 		else {
@@ -401,30 +416,34 @@ void MidnightDebugEvent::EventEffect(Character* character, GameManager* gm) {
 
 		if (select == 1) {
 			if (RandNum == 0 || RandNum == 1) {
+				int gain = character->getLevel() * 5;
+				int loss = static_cast<int>(character->getMaxHP() * 0.05);
 				cout << "\n휴.. 시간이 좀 걸리기는 했지만 결국 고쳤다!\n" << endl;
 				cout << "\n오류를 수정하면서 잘못 알고있던 개념도 제대로 알게됐네.\n" << endl;
 				cout << "\n고쳐보기를 잘했다!!\n" << endl;
 				cout << "오류를 성공적으로 수정했다." << endl;
-				cout << "코딩력이 20 증가했다! 체력이 10 감소했다." << endl;
-				character->setATK(character->getATK() + 20);
-				character->setHP(character->getHP() - 10);
+				cout << "코딩력이 " << gain << " 증가했다! 체력이 " << loss << " 감소했다." << endl;
+				character->setATK(character->getATK() + gain);
+				character->setHP(character->getHP() - loss);
 				break;
 			}
 			else {
+				int loss = static_cast<int>(character->getMaxHP() * 0.15);
 				cout << "\n벌써 새벽 3시라고?? 금방 끝날 줄 알았는데 언제 끝나는거지...\n" << endl;
 				cout << "\n그냥 자고 일어나서 할껄 망했다...\n" << endl;
 				cout << "오류를 수정하지 못했다." << endl;
-				cout << "체력이 20 감소했다." << endl;
-				character->setHP(character->getHP() - 20);
+				cout << "체력이 " << loss << " 감소했다." << endl;
+				character->setHP(character->getHP() - loss);
 				break;
 			}
 
 		}
 		else if (select == 2) {
+			int gain = static_cast<int>(character->getMaxHP() * 0.1);
 			cout << "\n무리하지말고 자자. 일어나서 하는게 집중이 더 잘될꺼야.\n" << endl;
 			cout << "오류를 수정하지 않고 잠을 잤다." << endl;
-			cout << "체력이 10 증가했다!" << endl;
-			character->setHP(character->getHP() + 10);
+			cout << "체력이 " << gain << " 증가했다!"<< endl;
+			character->setHP(character->getHP() + gain);
 			break;
 		}
 		else {
@@ -443,7 +462,7 @@ void MidnightDebugEvent::EventCount() {
 void CodeCopyEvent::EventEffect(Character* character, GameManager* gm) {
 	cout << "====================코드 카피 이벤트 발생!!!====================" << endl;
 	cout << "\"벌써 10시라고?! 과제 제출 시간이 2시간 밖에 안남았네..\"" << endl;
-	cout << "'시간 안에 못끝낼거 같은데 어떻게하지...'" << endl;
+	cout << "\"시간 안에 못끝낼거 같은데 어떻게하지...\"" << endl;
 	cout << "고민하고 있던 당신의 눈 앞에 아까검색해뒀던 제미나이의 코드가 보인다." << endl;
 	while (true) {
 		cout << "1. 복사해서 제출한다  2. 작성한만큼 제출한다" << endl;
@@ -453,17 +472,18 @@ void CodeCopyEvent::EventEffect(Character* character, GameManager* gm) {
 		}
 
 		if (select == 1) {
-			cout << "'그래 일단 과제 제출이 먼저지.'" << endl;
-			cout << "'일단 제출하고 나중에 복습해봐야겠다.'" << endl;
+			int loss = character->getLevel() * 3;
+			cout << "\"그래 일단 과제 제출이 먼저지.\"" << endl;
+			cout << "\"일단 제출하고 나중에 복습해봐야겠다.\"" << endl;
 			cout << "과제 제출을 완료했다." << endl;
 			cout << "하지만 후에 본 테스트에서 같은 문제를 똑같이 틀렸다." << endl;
-			cout << "코딩력이 10 감소했다." << endl;
-			character->setATK(character->getATK() - 10);
+			cout << "코딩력이 " << loss << " 감소했다." << endl;
+			character->setATK(character->getATK() - loss);
 			break;
 		}
 		else if (select == 2) {
-			cout << "'제미나이의 코드를 베껴서 제출하면 실력이 늘지 않을꺼야.'" << endl;
-			cout << "'지금 작성한 것까지만 제출하고 개념을 다시 정리해보자.'" << endl;
+			cout << "\"제미나이의 코드를 베껴서 제출하면 실력이 늘지 않을꺼야.\"" << endl;
+			cout << "\"지금 작성한 것까지만 제출하고 개념을 다시 정리해보자.\"" << endl;
 			cout << "작성한만큼만 과제를 제출했다." << endl;
 			break;
 		}
@@ -575,31 +595,33 @@ void FunctionNamingEvent::EventEffect(Character* character, GameManager* gm) {
 
 		if (select == 1) {
 			if (RandNum != 3) {
-				cout << "\n저번에 적어뒀던 함수를 수정해야 하는데 어디에 있더라..\n" << endl;
+				int gain = character->getLevel() * 4;
 				cout << "\n아 찾았다! 역시 이름을 잘 지어두니까 찾기 편하네.\n" << endl;
 				cout << "이름 짓기를 잘해둔 덕분에 코드의 가독성이 좋아졌다." << endl;
-				cout << "코딩력이 30 증가했다!" << endl;
-				character->setATK(character->getATK() + 30);
+				cout << "코딩력이 " << gain << " 증가했다!" << endl;
+				character->setATK(character->getATK() + gain);
 				break;
 			}
 			else {
+				int loss = character->getLevel() * 1;
 				cout << "\n휴 드디어 함수 이름을 정했다.\n" << endl;
 				cout << "\n헉! 뭐야 벌써 1시간이나 지났잖아!\n" << endl;
 				cout << "\n작성해야할 부분이 아직 산더미인데 망했다...\n" << endl;
 				cout << "함수 이름을 짓는데 시간을 많이 사용해 코딩할 시간이 적어졌다." << endl;
-				cout << "코딩력이 10 감소했다." << endl;
-				character->setATK(character->getATK() - 10);
+				cout << "코딩력이 " << loss << " 감소했다." << endl;
+				character->setATK(character->getATK() - loss);
 				break;
 			}
 
 		}
 		else if (select == 2) {
+			int loss = character->getLevel() * 2;
 			cout << "\n어라 저번에 만들어뒀던 함수를 어디에 넣어놨었지??\n" << endl;
 			cout << "\n프로젝트 내용이 너무 많아져서 찾을 수가 없잖아.\n" << endl;
 			cout << "\n다음에는 만들 때 기능에 맞춰 이름을 지어야겠다...\n" << endl;
 			cout << "만들어뒀던 함수를 찾는데 시간을 날려 코딩할 시간이 적어졌다." << endl;
-			cout << "코딩력이 20 감소했다." << endl;
-			character->setATK(character->getATK() - 20);
+			cout << "코딩력이 " << loss << " 감소했다." << endl;
+			character->setATK(character->getATK() - loss);
 			break;
 		}
 		else {
@@ -622,9 +644,9 @@ void LegacyCodeEvent::EventEffect(Character* character, GameManager* gm) {
 	int RandNum = dis(gen);
 
 	cout << "====================누군가의 코드 이벤트 발생!!!====================" << endl;
-	cout << "'이 프로젝트... 예전에 다른 사람이 만들다가 그만둔건가?'" << endl;
-	cout << "'코드에 주석도 하나도 없고 변수 이름이 a, b, c밖에 없네..'" << endl;
-	cout << "'공부하던 것도 끝나서 마침 시간도 남는데 한 번 분석해볼까?'" << endl;
+	cout << "\"이 프로젝트... 예전에 다른 사람이 만들다가 그만둔건가?\"" << endl;
+	cout << "\"코드에 주석도 하나도 없고 변수 이름이 a, b, c밖에 없네..\"" << endl;
+	cout << "\"공부하던 것도 끝나서 마침 시간도 남는데 한 번 분석해볼까?\"" << endl;
 	while (true) {
 		cout << "1. 분석해보기  2. 못 본 척 지나가기" << endl;
 		int select = Utils::DefaultMenu();
@@ -634,30 +656,33 @@ void LegacyCodeEvent::EventEffect(Character* character, GameManager* gm) {
 
 		if (select == 1) {
 			if (RandNum != 3) { 
-				cout << "'아하! 이래서 이 부분을 이렇게 작성한거구나!'" << endl;
-				cout << "'확실히 남이 작성해둔 코드를 분석하는 것도 큰 도움이 되는구나.'" << endl;
+				int gain = character->getLevel() * 7;
+				cout << "\"아하! 이래서 이 부분을 이렇게 작성한거구나!\"" << endl;
+				cout << "\"확실히 남이 작성해둔 코드를 분석하는 것도 큰 도움이 되는구나.\"" << endl;
 				cout << "코드를 분석하는데 성공했습니다! 코드를 보는 눈이 좋아집니다." << endl;
-				cout << "코딩력이 40 증가했다!" << endl;
-				character->setATK(character->getATK() + 40);
+				cout << "코딩력이 " << gain << " 증가했다!" << endl;
+				character->setATK(character->getATK() + gain);
 				break;
 			}
 			else { 
-				cout << "'어... 이게 여기서 왜 호출되지?'" << endl;
-				cout << "'어라?? 이건 왜 실행이 안되지??'" << endl;
-				cout << "'건드리지말껄.. 머리가 너무 아프다...'" << endl;
+				int loss = character->getLevel() * 3;
+				cout << "\"어... 이게 여기서 왜 호출되지?\"" << endl;
+				cout << "\"어라?? 이건 왜 실행이 안되지??\"" << endl;
+				cout << "\"건드리지말껄.. 머리가 너무 아프다...\"" << endl;
 				cout << "코드를 분석하는데 실패했습니다. 머릿속이 복잡해집니다." << endl;
-				cout << "코딩력이 15 감소했다." << endl;
-				character->setATK(character->getATK() - 15);
+				cout << "코딩력이 " << loss << " 감소했다." << endl;
+				character->setATK(character->getATK() - loss);
 				break;
 			}
 		}
 		else if (select == 2) {
-			cout << "'얼마만의 자유시간인데 오늘은 좀 쉬자'" << endl;
-			cout << "'오랜만에 친구들이랑 게임이나 해볼까'" << endl;
-			cout << "'친구들은 지금 뭐하려나. 연락해보자.'" << endl;
+			int gain = static_cast<int>(character->getMaxHP() * 0.1);
+			cout << "\"얼마만의 자유시간인데 오늘은 좀 쉬자\"" << endl;
+			cout << "\"오랜만에 친구들이랑 게임이나 해볼까\"" << endl;
+			cout << "\"친구들은 지금 뭐하려나. 연락해보자.\"" << endl;
 			cout << "친구들과 놀며 휴식을 취했다." << endl;
-			cout << "체력이 20 증가했다!" << endl;
-			character->setHP(character->getHP() + 20);
+			cout << "체력이 " << gain << " 증가했다!" << endl;
+			character->setHP(character->getHP() + gain);
 			break;
 		}
 		else {
@@ -680,10 +705,10 @@ void NappingEvent::EventEffect(Character* character, GameManager* gm) {
 	int RandNum = dis(gen);
 
 	cout << "====================낮잠 이벤트 발생!!!====================" << endl;
-	cout << "'아... 점심 먹고 나니까 계속 잠이 오네.'" << endl;
-	cout << "'모니터에 있는 내용이 머릿속에 제대로 들어오지가 않는다.'" << endl;
-	cout << "'딱 15분만 자고 일어나면 잠이 깰 것 같은데...'" << endl;
-	cout << "'잠깐만 자고 올까? 아니면 세수를 하고 올까?'" << endl;
+	cout << "\"아... 점심 먹고 나니까 계속 잠이 오네.\"" << endl;
+	cout << "\"모니터에 있는 내용이 머릿속에 제대로 들어오지가 않는다.\"" << endl;
+	cout << "\"딱 15분만 자고 일어나면 잠이 깰 것 같은데...\"" << endl;
+	cout << "\"잠깐만 자고 올까? 아니면 세수를 하고 올까?\"" << endl;
 
 	while (true) {
 		cout << "1. 잠깐 낮잠자기  2. 세수하고 오기" << endl;
@@ -694,32 +719,36 @@ void NappingEvent::EventEffect(Character* character, GameManager* gm) {
 
 		if (select == 1) {
 			if (RandNum != 3) { 
-				cout << "'낮잠 자고 일어나니까 너무 개운하다.'" << endl;
-				cout << "'역시 너무 피곤하면 해소를 해줘야하는구나.'" << endl;
-				cout << "'좋아. 아까 하던 공부를 마저해볼까!'" << endl;
+				int gainATK = character->getLevel() * 2;
+				int gainHP = static_cast<int>(character->getMaxHP() * 0.1);
+				cout << "\"낮잠 자고 일어나니까 너무 개운하다.\"" << endl;
+				cout << "\"역시 너무 피곤하면 해소를 해줘야하는구나.\"" << endl;
+				cout << "\"좋아. 아까 하던 공부를 마저해볼까!\"" << endl;
 				cout << "낮잠으로 컨디션이 회복됐다! 집중력이 올라갔다!" << endl;
-				cout << "코딩력이 20 증가했다! 체력이 20 증가했다!" << endl;
-				character->setATK(character->getATK() + 20);
-				character->setHP(character->getHP() + 20);
+				cout << "코딩력이 " << gainATK << " 증가했다! 체력이 " << gainHP << " 증가했다!" << endl;
+				character->setATK(character->getATK() + gainATK);
+				character->setHP(character->getHP() + gainHP);
 				break;
 			}
 			else { 
-				cout << "'어우 잘잤다. 너무 상쾌하네.'" << endl;
-				cout << "'뭐지? 불안하다... 왜 이렇게 상쾌한거지?'" << endl;
-				cout << "'뭐야! 2시간이나 자버렸잖아! 공부하던 것도 안끝났는데 망했다...'" << endl;
+				int loss = character->getLevel() * 3;
+				cout << "\"어우 잘잤다. 너무 상쾌하네.\"" << endl;
+				cout << "\"뭐지? 불안하다... 왜 이렇게 상쾌한거지?\"" << endl;
+				cout << "\"뭐야! 2시간이나 자버렸잖아! 공부하던 것도 안끝났는데 망했다...\"" << endl;
 				cout << "알람 소리를 듣지 못해 숙면을 취했다. 오늘치 공부를 망쳤다." << endl;
-				cout << "코딩력이 20 감소했다." << endl;
-				character->setATK(character->getATK() - 20);
+				cout << "코딩력이 " << loss << " 감소했다." << endl;
+				character->setATK(character->getATK() - loss);
 				break;
 			}
 		}
 		else if (select == 2) {
-			cout << "'세수하니까 그래도 잠이 깨네.'" << endl;
-			cout << "'집중해서 빨리 끝내고 쉬러 가야겠다.'" << endl;
-			cout << "'내가 어디까지 했더라..'" << endl;
+			int gain = character->getLevel() * 1;
+			cout << "\"세수하니까 그래도 잠이 깨네.\"" << endl;
+			cout << "\"집중해서 빨리 끝내고 쉬러 가야겠다.\"" << endl;
+			cout << "\"내가 어디까지 했더라..\"" << endl;
 			cout << "세수로 잠을 깨고 공부를 진행했다." << endl;
-			cout << "코딩력이 10 증가했다." << endl;
-			character->setATK(character->getATK() + 10);
+			cout << "코딩력이 " << gain << " 증가했다." << endl;
+			character->setATK(character->getATK() + gain);
 			break;
 		}
 		else {
@@ -737,9 +766,9 @@ void NappingEvent::EventCount() {
 
 void PartTimeJobEvent::EventEffect(Character* character, GameManager* gm) {
 	cout << "====================야간 알바 이벤트 발생!!!====================" << endl;
-	cout << "'ZEP에서 오토바이 깜짝 할인을 시작했잖아!'" << endl;
-	cout << "'지금 가지고 있는 코인이 모자란데.. 야간 알바를 잠깐 해볼까?'" << endl;
-	cout << "'야간 알바를 하게 되면 내일 공부를 못할텐데 어떻게 하지...'" << endl;
+	cout << "\"ZEP에서 오토바이 깜짝 할인을 시작했잖아!\"" << endl;
+	cout << "\"지금 가지고 있는 코인이 모자란데.. 야간 알바를 잠깐 해볼까?\"" << endl;
+	cout << "\"야간 알바를 하게 되면 내일 공부를 못할텐데 어떻게 하지...\"" << endl;
 
 	while (true) {
 		cout << "1. 야간 알바 가기  2. 잠자기" << endl;
@@ -747,21 +776,23 @@ void PartTimeJobEvent::EventEffect(Character* character, GameManager* gm) {
 		if (gm->DefaultMenuCheck(select)) continue;
 
 		if (select == 1) {
-			cout << "'아... 죽을 것 같다... 그래도 오토바이를 살 수 있는 돈을 모았다.'" << endl;
-			cout << "'원하던 걸 살 수 있어서 다행이다..'" << endl;
-			cout << "'공부는 어쩔 수 없지만 하루만 쉬어야겠다.. 너무 힘들어..'" << endl;
+			int loss = character->getLevel() * 3;
+			cout << "\"아... 죽을 것 같다... 그래도 오토바이를 살 수 있는 돈을 모았다.\"" << endl;
+			cout << "\"원하던 걸 살 수 있어서 다행이다..\"" << endl;
+			cout << "\"공부는 어쩔 수 없지만 하루만 쉬어야겠다.. 너무 힘들어..\"" << endl;
 			cout << "코인을 얻었지만 공부를 하지 못했다." << endl;
-			cout << "200 ZEP코인을 획득했다! 코딩력이 20 감소했다." << endl;
+			cout << "200 ZEP코인을 획득했다! 코딩력이 " << loss << " 감소했다." << endl;
 			character->setGold(character->getGold() + 200);
-			character->setATK(character->getATK() - 20);
+			character->setATK(character->getATK() - loss);
 			break;
 		}
 		else if (select == 2) {
-			cout << "'그래 아무리 오토바이가 가지고 싶어도 컨디션 관리가 우선이지.'" << endl;
-			cout << "'지금은 자고 다음에 코인을 더 모아서 구매하자'" << endl;
+			int gain = static_cast<int>(character->getMaxHP() * 0.15);
+			cout << "\"그래 아무리 오토바이가 가지고 싶어도 컨디션 관리가 우선이지.\"" << endl;
+			cout << "\"지금은 자고 다음에 코인을 더 모아서 구매하자\"" << endl;
 			cout << "컨디션 관리를 위해 야간 알바를 하지 않았다." << endl;
-			cout << "체력이 20 증가했다!" << endl;
-			character->setHP(character->getHP() + 20);
+			cout << "체력이 " << gain << " 증가했다!" << endl;
+			character->setHP(character->getHP() + gain);
 			break;
 		}
 		else {
@@ -784,9 +815,9 @@ void VSUpdateEvent::EventEffect(Character* character, GameManager* gm) {
 	int RandNum = dis(gen);
 
 	cout << "====================VS 업데이트 이벤트 발생!!!====================" << endl;
-	cout << "'어 비주얼 스튜디오 버전 업데이트가 생겼네?'" << endl;
-	cout << "'흠... 보안 패치도 있고 빌드 속도도 개선된다라... 해볼까?'" << endl;
-	cout << "'근데 업데이트했다가 오류나면 큰일 나는데 어떻게 하지...'" << endl;
+	cout << "\"어 비주얼 스튜디오 버전 업데이트가 생겼네?\"" << endl;
+	cout << "\"흠... 보안 패치도 있고 빌드 속도도 개선된다라... 해볼까?\"" << endl;
+	cout << "\"근데 업데이트했다가 오류나면 큰일 나는데 어떻게 하지...\"" << endl;
 	while (true) {
 		cout << "1. 업데이트한다  2. 현재버전으로 한다" << endl;
 		int select = Utils::DefaultMenu();
@@ -796,27 +827,29 @@ void VSUpdateEvent::EventEffect(Character* character, GameManager* gm) {
 
 		if (select == 1) {
 			if (RandNum != 2) {
-				cout << "'와! 업데이트하니까 획실히 쾌적하다.'" << endl;
-				cout << "'빌드 시간도 확실히 줄어든 것 같아. 업데이트 하기를 잘했다!'" << endl;
+				int gain = character->getLevel() * 5;
+				cout << "\"와! 업데이트하니까 획실히 쾌적하다.\"" << endl;
+				cout << "\"빌드 시간도 확실히 줄어든 것 같아. 업데이트 하기를 잘했다!\"" << endl;
 				cout << "업데이트 후 코딩 효율이 상승했다!" << endl;
-				cout << "코딩력이 40 증가했다!" << endl;
-				character->setATK(character->getATK() + 40);
+				cout << "코딩력이 " << gain << " 증가했다!" << endl;
+				character->setATK(character->getATK() + gain);
 				break;
 			}
 			else {
-				cout << "'안돼!! 재부팅도 해봤는데 설치 오류가 계속 나오잖아...'" << endl;
-				cout << "'망했다... 오늘 하루종일 비주얼 스튜디오 재설치만 하겠네.'" << endl;
-				cout << "'이럴 줄 알았으면 그냥 쓸 걸 ㅠㅜ'" << endl;
+				int loss = character->getLevel() * 2;
+				cout << "\"안돼!! 재부팅도 해봤는데 설치 오류가 계속 나오잖아...\"" << endl;
+				cout << "\"망했다... 오늘 하루종일 비주얼 스튜디오 재설치만 하겠네.\"" << endl;
+				cout << "\"이럴 줄 알았으면 그냥 쓸 걸 ㅠㅜ\"" << endl;
 				cout << "업데이트 중 오류로 인해 개발 환경이 망가졌다." << endl;
-				cout << "코딩력이 20 감소했다." << endl;
-				character->setHP(character->getHP() - 20);
+				cout << "코딩력이 " << loss << " 감소했다." << endl;
+				character->setATK(character->getATK() - loss);
 				break;
 			}
 			
 		}
 		else if (select == 2) {
-			cout << "'지금 괜히 건드렸다가 오류라도 나면 큰일나니까 일단 두자.'" << endl;
-			cout << "'지금은 업데이트보다는 작성하던 코드를 완성하는게 더 중요해.'" << endl;
+			cout << "\"지금 괜히 건드렸다가 오류라도 나면 큰일나니까 일단 두자.\"" << endl;
+			cout << "\"지금은 업데이트보다는 작성하던 코드를 완성하는게 더 중요해.\"" << endl;
 			cout << "비주얼 스튜디오 업데이트를 진행하지 않았다." << endl;
 			break;
 		}
@@ -834,9 +867,9 @@ void VSUpdateEvent::EventCount() {
 
 void QuestionCodeEvent::EventEffect(Character* character, GameManager* gm) {
 	cout << "====================튜터님께 질문 이벤트 발생!!!====================" << endl;
-	cout << "'여기서 도대체 왜 에러가 발생하는거지...'" << endl;
-	cout << "'2시간째 보고 있는데 도저히 이유를 모르겠다... 튜터님께 질문드려볼까?'" << endl;
-	cout << "'스스로 해결하는 능력을 키우는 것도 중요하다고 하셨는데 어떻게 해야하지..'" << endl;
+	cout << "\"여기서 도대체 왜 에러가 발생하는거지...\"" << endl;
+	cout << "\"2시간째 보고 있는데 도저히 이유를 모르겠다... 튜터님께 질문드려볼까?\"" << endl;
+	cout << "\"스스로 해결하는 능력을 키우는 것도 중요하다고 하셨는데 어떻게 해야하지..\"" << endl;
 	while (true) {
 		cout << "1. 질문드리러 간다  2. 스스로 해결해본다" << endl;
 		int select = Utils::DefaultMenu();
@@ -845,21 +878,24 @@ void QuestionCodeEvent::EventEffect(Character* character, GameManager* gm) {
 		}
 
 		if (select == 1) {
-			cout << "'아하! 이렇게 해결하면 되는 거였군요! 감사합니다 튜터님!'" << endl;
-			cout << "'튜터님의 설명덕분에 막힌 부분이 뚫렸다. 이제 다음 내용을 작성해볼까.'" << endl;
+			int gain = character->getLevel() * 4;
+			cout << "\"아하! 이렇게 해결하면 되는 거였군요! 감사합니다 튜터님!\"" << endl;
+			cout << "\"튜터님의 설명덕분에 막힌 부분이 뚫렸다. 이제 다음 내용을 작성해볼까.\"" << endl;
 			cout << "튜터님의 설명덕분에 막혀있던 문제를 해결했다." << endl;
-			cout << "코딩력이 20 증가했다!" << endl;
-			character->setATK(character->getATK() + 20);
+			cout << "코딩력이 " << gain << " 증가했다!" << endl;
+			character->setATK(character->getATK() + gain);
 			break;
 		}
 		else if (select == 2) {
-			cout << "'... 드디어 찾았다!! 여기 문장 때문에 오류가 발생하고 있었구나.'" << endl;
-			cout << "'이 오류 해결하는데만 몇시간을 사용했지만  덕분에 많이 성장한 것 같아.'" << endl;
-			cout << "'근데 너무 힘들다... 조금만 쉬자'" << endl;
+			int gain = character->getLevel() * 6;
+			int loss = static_cast<int>(character->getMaxHP() * 0.05);
+			cout << "\"... 드디어 찾았다!! 여기 문장 때문에 오류가 발생하고 있었구나.\"" << endl;
+			cout << "\"이 오류 해결하는데만 몇시간을 사용했지만  덕분에 많이 성장한 것 같아.\"" << endl;
+			cout << "\"근데 너무 힘들다... 조금만 쉬자\"" << endl;
 			cout << "오류를 해결하는데 시간이 오래걸렸지만 실력이 크게 상승했다!" << endl;
-			cout << "코딩력이 30 증가했다! 체력이 10 감소했다." << endl;
-			character->setATK(character->getATK() + 30);
-			character->setHP(character->getHP() - 10);
+			cout << "코딩력이 " << gain << " 증가했다! 체력이 " << loss << " 감소했다." << endl;
+			character->setATK(character->getATK() + gain);
+			character->setHP(character->getHP() - loss);
 			break;
 		}
 		else {
@@ -882,10 +918,10 @@ void TemptationOfWeekendEvent::EventEffect(Character* character, GameManager* gm
 	int RandNum = dis(gen);
 
 	cout << "====================주말의 유혹 이벤트 발생!!!====================" << endl;
-	cout << "'드디어 주말이다.. 이제 드디어 쉴 수 있어...'" << endl;
-	cout << "'그런데 생각해보니까 이번에 배운 포인터와 클래스가 아직 헷갈리는데..'" << endl;
-	cout << "'주말에 복습을 해야하나? 그런데 주말에도 공부를 하면 너무 힘들 것 같은데..'" << endl;
-	cout << "'어떻게 해야하지?'" << endl;
+	cout << "\"드디어 주말이다.. 이제 드디어 쉴 수 있어...\"" << endl;
+	cout << "\"그런데 생각해보니까 이번에 배운 포인터와 클래스가 아직 헷갈리는데..\"" << endl;
+	cout << "\"주말에 복습을 해야하나? 그런데 주말에도 공부를 하면 너무 힘들 것 같은데..\"" << endl;
+	cout << "\"어떻게 해야하지?\"" << endl;
 	while (true) {
 		cout << "1. 공부한다  2. 쉰다" << endl;
 		int select = Utils::DefaultMenu();
@@ -895,31 +931,33 @@ void TemptationOfWeekendEvent::EventEffect(Character* character, GameManager* gm
 
 		if (select == 1) {
 			if (RandNum != 2) {
-				cout << "'휴 이제야 좀 포인터와 클래스가 이해가 됐네.'" << endl;
-				cout << "'다음 진도가 나가기 전에 개념을 확실히 복습해 놓으니 안심이 된다.'" << endl;
-				cout << "'주말은 지나갔지만 알차게 보낸 것 같아!'" << endl;
+				int gain = character->getLevel() * 4;
+				cout << "\"휴 이제야 좀 포인터와 클래스가 이해가 됐네.\"" << endl;
+				cout << "\"다음 진도가 나가기 전에 개념을 확실히 복습해 놓으니 안심이 된다.\"" << endl;
+				cout << "\"주말은 지나갔지만 알차게 보낸 것 같아!\"" << endl;
 				cout << "주말 추가 학습으로 실력이 향상됐다!" << endl;
-				cout << "코딩력이 30 증가했다!" << endl;
-				character->setATK(character->getATK() + 30);
+				cout << "코딩력이 " << gain << " 증가했다!" << endl;
+				character->setATK(character->getATK() + gain);
 				break;
 			}
 			else {
-				cout << "'주말까지 공부를 하는 건 무리였나? 너무 힘들다...'" << endl;
-				cout << "'너무 힘들고 피곤한데 내일이 월요일이라고?? 안돼...'" << endl;
+				int loss = static_cast<int>(character->getMaxHP() * 0.15);
+				cout << "\"주말까지 공부를 하는 건 무리였나? 너무 힘들다...\"" << endl;
+				cout << "\"너무 힘들고 피곤한데 내일이 월요일이라고?? 안돼...\"" << endl;
 				cout << "과도한 학습량으로 인해 번아웃이 왔다." << endl;
-				cout << "체력이 20 감소했다." << endl;
-				character->setHP(character->getHP() - 20);
+				cout << "체력이 " << loss << " 감소했다." << endl;
+				character->setHP(character->getHP() - loss);
 				break;
 			}
 
 		}
 		else if (select == 2) {
-			cout << "'그래 쉬는 시간도 있어야 공부할 때 더 잘되는 법이지.'" << endl;
-			cout << "'주말에는 맛있는 것도 먹고 푹 쉬자!'" << endl;
+			int gain = static_cast<int>(character->getMaxHP() * 0.2);
+			cout << "\"그래 쉬는 시간도 있어야 공부할 때 더 잘되는 법이지.\"" << endl;
+			cout << "\"주말에는 맛있는 것도 먹고 푹 쉬자!\"" << endl;
 			cout << "주말에 휴식을 취한 덕분에 건강이 좋아졌다!" << endl;
-			cout << "최대체력이 20 증가했다! 체력이 20증가했다!" << endl;
-			character->setMaxHP(character->getMaxHP() + 20);
-			character->setHP(character->getHP() + 20);
+			cout << "체력이 " << gain << " 증가했다!" << endl;
+			character->setHP(character->getHP() + gain);
 			break;
 		}
 		else {
@@ -939,7 +977,7 @@ void RelayQuizEvent::EventEffect(Character* character, GameManager* gm) {
 	int correctCount = 0;
 
 	cout << "====================깜짝 퀴즈 이벤트 발생!!!====================" << endl;
-	cout << "'띠링!' Slack에 알람이 울린다." << endl;
+	cout << "\"띠링!\" Slack에 알람이 울린다." << endl;
 	cout << "깜짝 퀴즈! 모두 맞출 시 200 ZEP코인 증정!" << endl;
 	cout << "강제적으로 퀴즈가 시작됐다!" << endl;
 	while (true) {
@@ -950,12 +988,12 @@ void RelayQuizEvent::EventEffect(Character* character, GameManager* gm) {
 		if (gm->DefaultMenuCheck(select)) continue;
 
 		if (select == 2) {
-			cout << "'포인터의 기초가 잡혀있군요! 정답!'" << endl;
+			cout << "\"포인터의 기초가 잡혀있군요! 정답!\"" << endl;
 			correctCount++;
 			break;
 		}
 		else if(select == 1){
-			cout << "'기초 공부부터 다시 해야겠네요. 오답!'" << endl;
+			cout << "\"기초 공부부터 다시 해야겠네요. 오답!\"" << endl;
 			goto Failed;
 		}
 		else {
@@ -970,12 +1008,12 @@ void RelayQuizEvent::EventEffect(Character* character, GameManager* gm) {
 		if (gm->DefaultMenuCheck(select)) continue;
 
 		if (select == 2) {
-			cout << "'캡슐화의 원리를 이해했군요! 정답!'" << endl;
+			cout << "\"캡슐화의 원리를 이해했군요! 정답!\"" << endl;
 			correctCount++;
 			break;
 		}
 		else if (select == 1) {
-			cout << "'기초는 있지만 객체지향의 개념이 부족하네요. 오답!'" << endl;
+			cout << "\"기초는 있지만 객체지향의 개념이 부족하네요. 오답!\"" << endl;
 			goto Failed;
 		}
 		else {
@@ -991,34 +1029,36 @@ void RelayQuizEvent::EventEffect(Character* character, GameManager* gm) {
 		if (gm->DefaultMenuCheck(select)) continue;
 
 		if (select == 1) {
-			cout << "'동적할당을 이해하고 있군요! 정답!'" << endl;
+			cout << "\"동적할당을 이해하고 있군요! 정답!\"" << endl;
 			correctCount++;
 			break;
 		}
 		else if(select == 2){
-			cout << "'아직 동적할당까지 이해하지는 못했군요. 오답!'" << endl;
+			cout << "\"아직 동적할당까지 이해하지는 못했군요. 오답!\"" << endl;
 			goto Failed;
 		}
 		else {
 			cout << "잘못된 선택지를 선택했습니다. 1번과 2번 중 선택해주세요." << endl;
 		}
 	}
-	if (correctCount == 3) {		// 다 맞췄을 경우
+	if (correctCount == 3) {				// 다 맞췄을 경우
+		int gain = character->getLevel() * 4;
 		cout << "====================================================" << endl;
 		cout << "축하합니다! 모든 퀴즈를 맞췄습니다!" << endl;
 		cout << "퀴즈를 전부 맞춰 자신감이 상승했다." << endl;
-		cout << "200 ZEP코인을 획득했다! 코딩력이 10 증가했다!" << endl;
+		cout << "200 ZEP코인을 획득했다! 코딩력이 " << gain << " 증가했다!" << endl;
 		character->setGold(character->getGold() + 200);
-		character->setATK(character->getATK() + 10);
+		character->setATK(character->getATK() + gain);
 		m_Count++;
 		return;
 	}
 Failed:						// 도중에 틀렸을 경우
+	int loss = character->getLevel() * 2;
 	cout << "====================================================" << endl;
-	cout << "'깜짝 퀴즈를 틀렸습니다...'" << endl;
+	cout << "\"깜짝 퀴즈를 틀렸습니다...\"" << endl;
 	cout << "자신감이 하락했다." << endl;
-	cout << "코딩력이 10 감소했다." << endl;
-	character->setATK(character->getATK() - 10);
+	cout << "코딩력이 " << loss << " 감소했다." << endl;
+	character->setATK(character->getATK() - loss);
 	m_Count++;
 
 
@@ -1036,9 +1076,9 @@ void HowSuccessEvent::EventEffect(Character* character, GameManager* gm) {
 	int RandNum = dis(gen);
 
 	cout << "====================무지성 코드 성공 이벤트 발생!!!====================" << endl;
-	cout << "'...??? 이 코드 왜 돌아가는거지? 오류가 나야하는데..?'" << endl;
-	cout << "'결과가 나오긴 하네? 뭐지? 되면 안되는데?'" << endl;
-	cout << "'어떻게 하지? 이대로 제출할까? 이유를 찾아야하나?'" << endl;
+	cout << "\"...??? 이 코드 왜 돌아가는거지? 오류가 나야하는데..?\"" << endl;
+	cout << "\"결과가 나오긴 하네? 뭐지? 되면 안되는데?\"" << endl;
+	cout << "\"어떻게 하지? 이대로 제출할까? 이유를 찾아야하나?\"" << endl;
 	while (true) {
 		cout << "1. 원인을 찾는다  2. 그냥 제출한다" << endl;
 		int select = Utils::DefaultMenu();
@@ -1048,26 +1088,28 @@ void HowSuccessEvent::EventEffect(Character* character, GameManager* gm) {
 
 		if (select == 1) {
 			if (RandNum != 3) {
-				cout << "'아 이 부분의 연산이 우연히 맞아서 작동되고 있었구나!'" << endl;
-				cout << "'시간은 좀 걸렸지만 확실히 이유를 찾으니까 마음이 편하다.'" << endl;
+				int gain = character->getLevel() * 6;
+				cout << "\"아 이 부분의 연산이 우연히 맞아서 작동되고 있었구나!\"" << endl;
+				cout << "\"시간은 좀 걸렸지만 확실히 이유를 찾으니까 마음이 편하다.\"" << endl;
 				cout << "코드 분석을 통해 실력이 상승했다!" << endl;
-				cout << "코딩력이 30 증가했다!" << endl;
-				character->setATK(character->getATK() + 30);
+				cout << "코딩력이 " << gain << " 증가했다!" << endl;
+				character->setATK(character->getATK() + gain);
 				break;
 			}
 			else {
-				cout << "'큰일났다. 코드를 수정하니까 이제는 실행도 안되잖아...'" << endl;
-				cout << "'이제는 어디서부터 문제인건지 짐작도 안된다.'" << endl;
-				cout << "'제출 시간도 얼마 안남았네. 건드리지말껄...'" << endl;
+				int loss = character->getLevel() * 3;
+				cout << "\"큰일났다. 코드를 수정하니까 이제는 실행도 안되잖아...\"" << endl;
+				cout << "\"이제는 어디서부터 문제인건지 짐작도 안된다.\"" << endl;
+				cout << "\"제출 시간도 얼마 안남았네. 건드리지말껄...\"" << endl;
 				cout << "코드 분석에 실패해서 코드가 망가졌다." << endl;
-				cout << "코딩력이 20 감소했다." << endl;
-				character->setATK(character->getATK() - 20);
+				cout << "코딩력이 " << loss << " 감소했다." << endl;
+				character->setATK(character->getATK() - loss);
 				break;
 			}
 		}
 		else if (select == 2) {
-			cout << "'일단 돌아가기는 하니까 제출해야겠다.'" << endl;
-			cout << "'언젠가 미래의 내가 이유는 찾아보겠지 뭐..'" << endl;
+			cout << "\"일단 돌아가기는 하니까 제출해야겠다.\"" << endl;
+			cout << "\"언젠가 미래의 내가 이유는 찾아보겠지 뭐..\"" << endl;
 			cout << "이유를 찾지 않고 코드를 제출했다." << endl;
 			break;
 		}
@@ -1091,9 +1133,9 @@ void BlueScreenEvent::EventEffect(Character* character, GameManager* gm) {
 	int RandNum2 = dis(gen); // 2번 선택지용 확률
 
 	cout << "====================블루 스크린 이벤트 발생!!!====================" << endl;
-	cout << "'뭐야? 갑자기 화면이 멈췄잖아!!'" << endl;
-	cout << "'마지막 저장을 내가 언제 했었지?'" << endl;
-	cout << "'재부팅을 해야하나? 본체를 때려볼까?'" << endl;
+	cout << "\"뭐야? 갑자기 화면이 멈췄잖아!!\"" << endl;
+	cout << "\"마지막 저장을 내가 언제 했었지?\"" << endl;
+	cout << "\"재부팅을 해야하나? 본체를 때려볼까?\"" << endl;
 
 	while (true) {
 		cout << "1. 재부팅한다  2. 본체를 때린다" << endl;
@@ -1104,31 +1146,33 @@ void BlueScreenEvent::EventEffect(Character* character, GameManager* gm) {
 
 		if (select == 1) {	
 			if (RandNum != 2) { 
-				cout << "'제발 남아있어라...'" << endl;
-				cout << "'휴 다행이다. 평소에 저장을 습관처럼 해둬서 살았다.'" << endl;
+				int gain = character->getLevel() * 3;
+				cout << "\"제발 남아있어라...\"" << endl;
+				cout << "\"휴 다행이다. 평소에 저장을 습관처럼 해둬서 살았다.\"" << endl;
 				cout << "평소 자주 저장하는 습관 덕분에 코드는 그대로 남아있다." << endl;
-				cout << "코딩력이 20 증가했다!" << endl;
-				character->setATK(character->getATK() + 20);
+				cout << "코딩력이 " << gain << " 증가했다!" << endl;
+				character->setATK(character->getATK() + gain);
 				break;
 			}
 			else {
-				cout << "'내가 오늘 작성한 코드들이 다 어디간거지...'" << endl;
-				cout << "'말도 안돼... 처음부터 다시 해야 한다고? 이건 꿈이야...'" << endl;
+				int loss = static_cast<int>(character->getMaxHP() * 0.1);
+				cout << "\"내가 오늘 작성한 코드들이 다 어디간거지...\"" << endl;
+				cout << "\"말도 안돼... 처음부터 다시 해야 한다고? 이건 꿈이야...\"" << endl;
 				cout << "오늘치 작업이 날아갔다. 극심한 스트레스가 밀려온다." << endl;
-				cout << "체력이 20 감소했다." << endl;
-				character->setHP(character->getHP() - 20);
+				cout << "체력이 " << loss << " 감소했다." << endl;
+				character->setHP(character->getHP() - loss);
 				break;
 			}
 		}
 		else if (select == 2) {
 			if (RandNum2 != 2) {
-				cout << "'오 화면이 돌아왔다! 역시 기계는 때려야 하는건가.'" << endl;
-				cout << "'일단 바로 저장부터 하자. 진짜 다행이다..'" << endl;
+				cout << "\"오 화면이 돌아왔다! 역시 기계는 때려야 하는건가.\"" << endl;
+				cout << "\"일단 바로 저장부터 하자. 진짜 다행이다..\"" << endl;
 				cout << "컴퓨터가 원상태로 돌아왔다." << endl;
 				break;
 			}
 			else { // 부정 결과
-				cout << "'뭐야 컴퓨터가 왜 이러지. 갑자기 꺼졌잖아...'" << endl;
+				cout << "\"뭐야 컴퓨터가 왜 이러지. 갑자기 꺼졌잖아...\"" << endl;
 				cout << "컴퓨터의 전원버튼을 눌러도 컴퓨터가 응답하지 않는다." << endl;
 				cout << "컴퓨터가 고장났다. 새로 컴퓨터를 구매하는데 비용이 발생했다." << endl;
 				cout << "100 ZEP코인을 잃었다." << endl;
