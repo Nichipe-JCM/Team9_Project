@@ -5,6 +5,7 @@
 #include "EventManager.h"
 #include "StatusManager.h"
 #include "AchievementManager.h"
+#include "UIManager.h"
 
 class Inventory;
 
@@ -18,6 +19,7 @@ private:
 	Shop* m_Shop;
 	StatusManager* m_SM;
 	AchievementManager* m_AM;
+	UIManager* m_UI;
 
 public:
 	GameManager(StatusManager* sm, AchievementManager* am);
