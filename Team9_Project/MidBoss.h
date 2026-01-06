@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Monster.h" // MidBoss는 Monster를 상속받기 때문에 부모 클래스 포함
 

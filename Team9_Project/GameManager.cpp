@@ -1,4 +1,4 @@
-﻿#include "GameManager.h"
+#include "GameManager.h"
 #include "MidBoss.h"
 #include "Mob.h"
 #include "FinalBoss.h"
@@ -198,6 +198,7 @@ void GameManager::BattleVictory() { // 전투승리시
 		}
 		else if (select == 2) {
 			VisitEvent();
+			Utils::WaitForKeypress();
 			break;
 		}
 		else { // 범위 외 입력 감지시 다시
