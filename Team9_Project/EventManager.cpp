@@ -1,4 +1,4 @@
-﻿#include "EventManager.h"
+#include "EventManager.h"
 #include "Event.h"
 #include "EventList.h"
 #include <vector>
