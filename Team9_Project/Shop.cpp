@@ -133,6 +133,7 @@ bool Shop::BuyItemFuntion(int NewProduct, Character* player)
 			cout <<Color::RED << "인벤토리가 가득 찼습니다. 아이템을 구매할 수 없습니다."<<Color::RESET << endl;
 			return false;
 		}
+
 		// 골드 차감
 		player->setGold(player->getGold() - price);
 		player->getInventory()->AddItem(itemPtr);
@@ -153,7 +154,7 @@ bool Shop::BuyItemFuntion(int NewProduct, Character* player)
 		return false;
 	}
 }
-void Shop::BuyItem(Character* player)
+void Shop::BuyItem(Character* player )
 {
 	system("cls");
 	while (true) {
@@ -171,7 +172,7 @@ void Shop::BuyItem(Character* player)
 		int i = 0;
 		Item* itemPtr = m_Product[i];
 		string rarityStr = itemPtr->rarityToString(itemPtr->getRarity());
-		Utils::DrawLine();
+		Utils::DrawLine();	
 		for (auto& msg : m_ShopMessage) { cout<<Color::BEIGE << msg <<Color::RESET<< endl; }
 		for (int i = 0; i < m_Product.size(); i++) {
 			DrawTineLine();
@@ -291,12 +292,14 @@ void Shop::SellItem(Character* player) {
 		{
 			endIndex = startIndex + itemsPerPage;
 		}
+	
+
 		for (int i = startIndex; i < endIndex; ++i) {
 			cout << "----------------------------------------------------------------"<< endl;
 			DrawTineLine();
 			string color = myItems[i]->getRarityColor(myItems[i]->getRarity());
 			if (myItems[i]->getItemType() != ItemCategory::Cash) {
-				cout << color << (i - startIndex) + 1 << ". " << "[" << myItems[i]->getName() << "]" << "(" << myItems[i]->rarityToString(myItems[i]->getRarity()) << ")" 
+				cout << color << (i - startIndex) + 1 << ". " << "[" << myItems[i]->getName() << "]" << "(" << myItems[i]->rarityToString(myItems[i]->getRarity()) << ")"
 					<< " (판매가: " << (int)(myItems[i]->getValue() * 0.6) << "G)" << "\033[0m" << endl;
 			}
 			else {

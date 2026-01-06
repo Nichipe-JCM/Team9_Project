@@ -20,6 +20,7 @@ private:
     vector<string>m_ShopMessage;
 	Inventory* m_Inventory = nullptr;
 	GameManager* gm;
+	
 	//Rarity rarity;
 public:
 	Shop(GameManager* _gm) :m_Inventory(nullptr), gm(_gm) {}
