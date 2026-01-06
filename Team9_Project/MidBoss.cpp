@@ -1,7 +1,9 @@
 ﻿#include "MidBoss.h" // MidBoss 클래스 구현을 위해 헤더 포함
+#include "UIManager.h"
 #include <iostream>
 #include <map>                 // 미드보스 데이터 테이블 정의
 #include <random> // 보스 스텟 랜덤값 설정
+
 
 using namespace std;
 
@@ -54,21 +56,21 @@ MidBoss::MidBoss(int id)  // id 값에 따라 midBossTable에서 데이터를 �
 
 
 
-void MidBoss::attack(Character* player) // 미드보스 공격 // Monster의 기본 공격에 미드보스 전용 메시지를 오버라이드
+void MidBoss::attack(Character* player, UIManager* ui) // 미드보스 공격 // Monster의 기본 공격에 미드보스 전용 메시지를 오버라이드
 {
     cout << "[MID BOSS] " << name << "의 과제 공격!" << endl;
 
     // 실제 공격 로직은 부모 클래스에게 맡김
-    Monster::attack(player);
+    Monster::attack(player, ui);
 }
 
 
 
-void MidBoss::GetHit(int damage) // 미드보스 피격 시 전용 메시지를 출력한 뒤 // 실제 데미지 계산은 Monster에게 위임
+void MidBoss::GetHit(int damage, UIManager* ui) // 미드보스 피격 시 전용 메시지를 출력한 뒤 // 실제 데미지 계산은 Monster에게 위임
 {
     cout << "[MID BOSS] " << name << "는 쉽게 쓰러지지 않는다!" << endl;
 
-    Monster::GetHit(damage);
+    Monster::GetHit(damage, ui);
 }
 
 bool MidBoss::checkDeath()

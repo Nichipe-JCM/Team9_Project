@@ -1,10 +1,12 @@
-#pragma once
+﻿#pragma once
 #include <string>
 #include <vector>
 #include "Item.h"
 
 class Character;
 class Item;
+class UIManager;
+class ItemPool;
 
 
 // 아이템과 드랍확률을 그냥 묶어버리기...
@@ -28,8 +30,8 @@ public:
 	Monster(const std::string& name, int level, int gold, int exp);
 	virtual ~Monster() = default; // 임시 가상 소멸자
 
-	virtual void attack(Character* target);
-	virtual void GetHit(int damage);
+	virtual void attack(Character* target, UIManager* ui);
+	virtual void GetHit(int damage, UIManager* ui);
 
 	Item* dropItem();
 	virtual bool checkDeath();

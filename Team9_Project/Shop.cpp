@@ -267,6 +267,7 @@ void Shop::SellItem(Character* player) {
 		if (myItems.empty()) {
 			system("cls");
 			cout << Color::RED << "판매할 아이템이 없습니다." << Color::RESET << endl;
+			Utils::WaitForKeypress();
 			return;
 		}
 		
@@ -367,7 +368,6 @@ void Shop::DrawTineLine() {
 }
 void Shop::NextStage(GameManager* gm) {
 	Utils::WaitForKeypress();
-	system("cls");
 	m_ShopMessage.clear();
 	for (auto item : m_Product) delete item;
 	m_Product.clear();

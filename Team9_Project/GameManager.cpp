@@ -46,20 +46,20 @@ GameManager::~GameManager() {
 
 bool GameManager::DefaultMenuCheck(int choice) { //기본메뉴 체크. 기본메뉴에 대해서는 Utils.cpp 확인
 	switch (choice) {
-	case 96:
+	case 7:
 		OpenManageInventory(m_SM, m_Player->getInventory());
 		return true;
-	case 97:
+	case 8:
 		ViewCharacterStatus(m_SM);
 		return true;
-	case 98:
+	case 9:
 		ViewBattleStatus(m_SM);
 		return true;
-	case 99:
+	case 0:
 		ViewAchievements(m_SM);
 		return true;
 	default:
-		return false; // "96,97,98,99 아님
+		return false; // "7,8,9,0 아님
 	}
 }
 
@@ -97,7 +97,7 @@ void GameManager::RunGame() { // 게임의 전체적인 프로세스 진행
 
 	while (true) {
 		SpawnMonster(m_Stage); // 스테이지 기준 몬스터 생성
-		cout << "현재 스테이지: " << m_Stage << endl;
+		cout << Color::TEAL <<"현재 스테이지: " << m_Stage << endl;
 		Sleep(1000);
 		Battle(); // 전투
 		if (m_Player->getHP() <= 0) { // 플레이어 사망시 게임오버 출력 후 RunGame 종료
@@ -150,18 +150,23 @@ void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력
 	else if (m_Stage == 21) m_UI->FinalBossAppearance();
 	else cout << Color::BRIGHT_WHITE << "앗! 오늘의 코드카타로 " << Color::RED << m_CurrentMonster->getName()
 		<< Color::BRIGHT_WHITE << "이(가) 문제로 나왔다!" << Color::RESET << endl;
-	Sleep(2000);
+	Sleep(1000);
+	Utils::WaitForKeypress();
 	system("cls");
 	m_UI->RenderBattleScreen(m_Player, m_CurrentMonster);
+	Sleep(1000);
 	while (true) { // 둘중 하나의 체력이 0이 될때까지 반복
-		m_Player->Attack(m_CurrentMonster);
-		if (m_CurrentMonster->getHP() <= 0) break;
-		Sleep(300);
+		m_Player->Attack(m_CurrentMonster, m_UI);
 		m_UI->RenderBattleScreen(m_Player, m_CurrentMonster);
-		m_CurrentMonster->attack(m_Player);
+		if (m_CurrentMonster->getHP() <= 0) {
+			m_CurrentMonster->checkDeath();
+			break;
+		}
+		Sleep(500);		
+		m_CurrentMonster->attack(m_Player, m_UI);
+		m_UI->RenderBattleScreen(m_Player, m_CurrentMonster);
 		if (m_Player->getHP() <= 0) break;
-		m_UI->RenderBattleScreen(m_Player, m_CurrentMonster);
-		Sleep(2000);
+		Sleep(500);
 	}
 
 }
@@ -169,8 +174,8 @@ void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력
 
 
 void GameManager::BattleVictory() { // 전투승리시
-	m_UI->RenderBattleScreen(m_Player, m_CurrentMonster);
-	cout << Color::BRIGHT_GREEN << "\n이겼다! 오늘도 열심히 공부했다!\n" << Color::RESET << endl;
+	cout << Color::BRIGHT_GREEN << "\n해냈다! 오늘도 열심히 공부했다!\n" << Color::RESET << endl;
+	m_UI->ClearLog();
 	if (m_Stage < 21) {
 		m_Player->setEXP(m_Player->getEXP() + m_CurrentMonster->getDropEXP());
 		m_Player->setGold(m_Player->getGold() + m_CurrentMonster->getDropGold());
@@ -182,15 +187,17 @@ void GameManager::BattleVictory() { // 전투승리시
 		m_CurrentMonster = nullptr;
 		Sleep(1000);
 		m_AM->UpdateAchievements(m_Player, m_SM);
+		Sleep(1000);
 	}
 	Utils::WaitForKeypress();
 	while (m_Stage < 21) { // 선택지. 최종보스 이하 스테이지일때만 나오게
 		system("cls");
-		cout << Color::BRIGHT_BLUE << "다음 공부를 하기전에 뭘 할까?" << Color::RESET << endl;
-		cout << Color::GRAY << "==================================" << Color::RESET << endl;
-		cout << "1. " << Color::YELLOW << "상점으로" << Color::RESET << endl;
-		cout << "2. " << Color::MAGENTA << "시간을 때운다(무작위 이벤트)" << Color::RESET << endl;
-		cout << Color::GRAY << "==================================" << Color::RESET << endl;
+		cout << Color::BRIGHT_WHITE << "현재 스테이지: " << Color::GOLD << m_Stage << Color::RESET << endl;
+		cout << Color::TEAL << "다음 공부를 하기전에 뭘 할까?" << Color::RESET << endl;
+		cout << Color::BEIGE << "==================================" << Color::RESET << endl;
+		cout << "1. " << Color::GOLD << "상점으로" << Color::RESET << endl;
+		cout << "2. " << Color::LIME << "시간을 때운다(무작위 이벤트)" << Color::RESET << endl;
+		cout << Color::BEIGE << "==================================" << Color::RESET << endl;
 		int select = Utils::DefaultMenu(); // 기본 선택지 아래에 기본메뉴 표시 + 안전한 입력 받음
 		if (GameManager::DefaultMenuCheck(select)) { // 기본 선택지를 골랐으면 while문 반복
 			continue;
@@ -235,16 +242,16 @@ void GameManager::Opening() {
 	m_UI->OpeningScene();
 	string name;
 	while (true) { // 이름 유효성 검사 프로세스
-		cout << ">> 이름을 입력하세요 (특수문자/공백 불가, 12글자 이내): ";
+		cout << Color::BRIGHT_WHITE <<  ">> 이름을 입력하세요 (특수문자/공백 불가, 12글자 이내): " << Color::RESET;
 		getline(cin, name);
 		if (cin.fail()) { // 모종의 사유로 cin이 fail했을 때
 			cin.clear();
 			cin.ignore(10000, '\n');
-			cout << "잘못된 입력입니다." << endl;
+			cout << Color::YELLOW << "잘못된 입력입니다." << Color::RESET << endl;
 			continue;
 		}
 		if (name.length() > 12) { // 길이가 너무 길 때
-			cout << "이름이 너무 깁니다. 12글자 이내로 해주세요." << endl;
+			cout << Color::YELLOW << "이름이 너무 깁니다. 12글자 이내로 해주세요." << Color::RESET << endl;
 			continue;
 		}
 		bool isValid = true;
@@ -260,11 +267,11 @@ void GameManager::Opening() {
 			}
 		}
 		if (!isValid) { // 위에서 한 특문검사 체크
-			cout << "특수문자 또는 공백은 사용할 수 없습니다." << endl;
+			cout << Color::YELLOW << "특수문자 또는 공백은 사용할 수 없습니다." << Color::RESET << endl;
 			continue;
 		}
 		if (name == "") { // 빈 문자열 검사
-			cout << "이름을 입력해주세요." << endl;
+			cout << Color::YELLOW << "이름을 입력해주세요." << Color::RESET << endl;
 			continue;
 		}
 		else {
@@ -272,7 +279,7 @@ void GameManager::Opening() {
 		}
 	}
 	m_Player = new Character(name); // 캐릭터 생성
-	cout << "당신의 캐릭터 " << name << "이(가) 생성되었습니다!" << endl;
+	cout << Color::BRIGHT_GREEN << "당신의 캐릭터 " << name << "이(가) 생성되었습니다!" << Color::RESET << endl;
 	Sleep(1000);
 }
 

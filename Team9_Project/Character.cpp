@@ -1,4 +1,4 @@
-#include "Character.h"
+﻿#include "Character.h"
 #include "Item.h"
 #include "Monster.h"
 #include "Inventory.h"
@@ -7,6 +7,7 @@
 #include "BuffPotion.h"
 #include "Utils.h"
 #include "Windows.h"
+#include "UIManager.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -17,11 +18,6 @@ Character::Character(string name, int hp, int maxHp, int atk, int level, int gol
 	m_Equippeditem(nullptr), m_EquippedThrow(nullptr), m_EquippedPotion(nullptr), m_HasPotion(false)
 {
 	m_Inventory = new Inventory(20);
-	cout << "캐릭터 [" << m_name << "]이(가) 생성되었습니다." << endl;
-
-	if (name.length() > 12) {
-		m_name = name.substr(0, 12);
-	} // 닉네임 글자수 제한
 }
 
 Character::~Character() {
@@ -49,19 +45,19 @@ void Character::usePotion(Potion* potion) {
 			int overheal = m_HP - m_MaxHP;
 			m_HP = m_MaxHP;
 			cout << m_name << "이(가) " << Color::OLIVE << potion->getName()
-				<< "을 사용하여" << Color::LIME <<  "HP를 " << potion->getEffectAmount() - overheal
+				<< "을 사용하여 " << Color::LIME <<  "HP를 " << potion->getEffectAmount() - overheal
 				<< " 회복했습니다. "<< Color::CRIMSON << "(현재 HP : " << m_HP << ")" <<Color::RESET << endl;
 		}
 		else {
 			cout << Color::WHITE << m_name << "이(가) " << potion->getName()
-				<< "을 사용하여"<<Color::LIME << "HP를" << potion->getEffectAmount()
+				<< "을 사용하여 "<<Color::LIME << "HP를" << potion->getEffectAmount()
 				<< " 회복했습니다."<<Color::CRIMSON << "(현재 HP : " << m_HP << ")" <<Color::RESET<< endl;
 		}
 	}
 	else if (potion->getItemType() == ItemCategory::BPotion) {
 		m_ATK += potion->getEffectAmount();
 		cout <<Color::WHITE << m_name << "이(가) " <<Color::RESET<< Color::GOLD << potion->getName()
-			<< "을(를) 사용하여"<<Color::RESET<<Color::PURPLE << "코딩력이 " << potion->getEffectAmount()
+			<< "을(를) 사용하여 "<<Color::RESET<<Color::PURPLE << "코딩력이 " << potion->getEffectAmount()
 			<< " 증가했습니다."<<Color::RESET <<Color::LAVENDER<< "(현재 코딩력 : " << m_ATK << ")" <<Color::RESET<< endl;
 	}
 }
@@ -221,11 +217,9 @@ void Character::LevelUp() {
 			m_HP = m_MaxHP;//레벨업시 풀피
 			m_EXP -= m_EXPToLevelUp;//초과 되는 경험치 다음 레벨에 유지
 			m_EXPToLevelUp = 100;
+			cout << Color::GREEN << "레벨 업! 현재 레벨:" << m_Level << Color::RESET << endl;//레벨업시 대사
 			if (m_Level == m_MaxLevel) {
-				cout << "이제 일반 몬스터는 상대도 안된다." << endl;//만렙 달성시 대사
-			}
-			else {
-				cout <<Color::GREEN << "레벨 업! 현재 레벨:" << m_Level <<Color::RESET << endl;//레벨업시 대사
+				cout << Color::GOLD << "이제 일반 몬스터는 상대도 안된다!" << Color::RESET << endl;//만렙 달성시 대사
 			}
 		}
 		else {
@@ -234,32 +228,36 @@ void Character::LevelUp() {
 	}
 	Sleep(1000);
 }
-void Character::Attack(Monster* target) {
+void Character::Attack(Monster* target, UIManager* ui) {
 	if (AutoUsePotion(dynamic_cast<Potion*>(m_EquippedPotion))) {
-		cout << m_name << "은(는) 이번 턴에" <<Color::OLIVE << "포션을 사용했습니다!" <<Color::RESET<< endl;
+		ui->AddLog(Color::SKY_BLUE + m_name + Color::BRIGHT_WHITE + "은(는) 이번 턴에" + Color::OLIVE + "포션을 사용했습니다!" + Color::RESET);
+		ui->RenderBattleScreen(this, target);	
+		Sleep(500);
 		return;
 	}
 
 	if (m_Throw && m_EquippedThrow != nullptr) {//투적 무기 사용
-		cout << m_name << "이(가)" << target->getName() << "에게" << m_EquippedThrow->getName() << "을(를) 던졌습니다!" << endl;
-		Sleep(300);
-		target->GetHit(m_ATK + m_EquippedThrow->getAttack());//투척무기 자체 피해량 적용
+		ui->AddLog(Color::SKY_BLUE + m_name + Color::BRIGHT_WHITE + "이(가) " + Color::ORANGE + target->getName() + Color::BRIGHT_WHITE + "에게" + m_EquippedThrow->getName() + "을(를) 던졌습니다!");
+		ui->RenderBattleScreen(this, target);
+		Sleep(500);
+		target->GetHit(m_ATK + m_EquippedThrow->getAttack(), ui);//투척무기 자체 피해량 적용
 		m_Throw = false;//사용후 비활성화
 		m_Inventory->RemoveItemFromPointer(m_EquippedThrow);//인벤토리에서 제거
 		m_EquippedThrow = nullptr;
 	}
 	else {
-		cout << m_name << "이(가)" << target->getName() << "을(를) 공격합니다!" << endl;
-		Sleep(300);
-		target->GetHit(getATK());//캐릭터의 기본공격력 + 무기 공격력 포함
+		ui->AddLog(Color::SKY_BLUE + m_name + Color::BRIGHT_WHITE + "이(가) " + Color::ORANGE + target->getName() + Color::BRIGHT_WHITE + "을(를) 공격합니다!");
+		ui->RenderBattleScreen(this, target);
+		Sleep(500);
+		target->GetHit(getATK(), ui);//캐릭터의 기본공격력 + 무기 공격력 포함
 	}
 }
-void Character::GetHit(int damage) {
+void Character::GetHit(int damage, UIManager* ui) {
 	m_HP -= damage;
 	if (m_HP < 0) m_HP = 0;//캐릭터 체력 음수 방지
-	cout << m_name << "이(가)" << damage << "의 피해를 입었습니다." << Color::RED << "(남은 HP : " << m_HP << ")" << Color::RESET << endl;
+	ui->AddLog(Color::SKY_BLUE + m_name + Color::BRIGHT_WHITE + "이(가) " + std::to_string(damage) + "의 피해를 입었습니다." + Color::RED + "(남은 HP : " + std::to_string(m_HP) + ")" + Color::RESET);
 	if (m_HP == 0) {
 		m_Alive = false; //사망처리
-		cout << m_name << "이(가) 사망하였습니다." << endl;
+		ui->AddLog(Color::CRIMSON + m_name + "이(가) 사망하였습니다.");
 	}
 }

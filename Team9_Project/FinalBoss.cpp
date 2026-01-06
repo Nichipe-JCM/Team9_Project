@@ -1,4 +1,5 @@
 ﻿#include "FinalBoss.h"
+#include "UIManager.h"
 #include <iostream>
 #include <random>
 
@@ -40,23 +41,23 @@ FinalBoss::FinalBoss()
 }
 
 // FinalBoss 공격
-void FinalBoss::attack(Character* player)
+void FinalBoss::attack(Character* player, UIManager* ui)
 {
     // [6] 최종 보스 전용 공격 메시지
-    cout << "강창민 튜터님의 압도적인 C++ 전체 복습 공격!" << endl;
+    cout << Color::BRIGHT_CYAN << "강창민 튜터님의 압도적인 C++ 전체 복습 공격!" << Color::RESET << endl;
 
     // [7] 실제 데미지 계산은 Monster에게 위임
-    Monster::attack(player);
+    Monster::attack(player, ui);
 }
 
 // FinalBoss 피격 처리
-void FinalBoss::GetHit(int damage)
+void FinalBoss::GetHit(int damage, UIManager* ui)
 {
     // [8] 최종 보스 전용 피격 연출
-    cout << "강창민 튜터님은 아직 쓰러지지 않았다!" << endl;
+    cout << Color::BRIGHT_CYAN <<"강창민 튜터님은 아직 쓰러지지 않았다!" << Color::RESET << endl;
 
     // [9] HP 감소 및 사망 판정은 Monster 로직 사용
-    Monster::GetHit(damage);
+    Monster::GetHit(damage, ui);
 
     // [10] 체력이 0이 되었을 때 최종 메시지 출력
     if (m_HP <= 0)

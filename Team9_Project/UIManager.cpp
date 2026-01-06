@@ -16,7 +16,8 @@ UIManager::UIManager()
     | _ _       _ _ |  
         / /   \ \   
        / / | | \ \  
-      /_/  |_|  \_\   )", 9 };
+      /_/  |_|  \_\   
+                            )", 10 };
 
     
 
@@ -29,7 +30,8 @@ UIManager::UIManager()
           / / \ \/ /  
          / /   \  /  
         / /_ _ / \ \  
-        \_ _ _ _ / \_\   )", 10 };
+        \_ _ _ _ / \_\  
+                            )", 11 };
 
     MonsterArt["템플릿"] = { R"(
                               _ _  
@@ -40,7 +42,8 @@ UIManager::UIManager()
           \  _ \ \  \       /   / \   
            \ \    \  \             \   
             \ \ _  \  \_ _ _ _ _ _ _\   
-             \ _ _\ \ / _ _ _ _ _ _ _/    )", 10};
+             \ _ _\ \ / _ _ _ _ _ _ _/    
+                            )", 11};
    
 
     MonsterArt["변수"] = { R"(
@@ -48,19 +51,18 @@ UIManager::UIManager()
 		[const int MAX_HP]  
 		[SEALED]  
 ╔══════════════════════════════════════════╗  
-║                   _      _     _         ║  
-║                  (_)    | |   | |        ║  
+║                   _       _     _        ║  
+║                  (_)     | |   | |       ║  
 ║  __   ____ _ _ __ _  __ _| |__ | | ___   ║  
 ║  \ \ / / _` | '__| |/ _` | '_ \| |/ _ \  ║  
 ║   \ V / (_| | |  | | (_| | |_) | |  __ / ║  
 ║    \_/ \__,_|_|  |_|\__,_|_.__/|_|\___|  ║
 ║                                          ║  
-╚══════════════════════════════════════════╝   )", 12};
+╚══════════════════════════════════════════╝   
+                            )", 14};
 
 
     MonsterArt["함수"] = { R"(
-
-
             \       /  
         _ _ _\     / _ _ _ _ _ _ _  
         |                         |  
@@ -71,20 +73,20 @@ UIManager::UIManager()
         | _ _ _ _ _ _ _ _ "  "  _ |  
                           /     \   
                          /       \   
-                         - - - - -   )", 11 };
+                         - - - - -   
+                            )", 13 };
 
 
     MonsterArt["배열"] = { R"delim(
-
    _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
   |         |         |        |         |         |         | 
   |   ('')  | (-'- )  | (^.^)  | ( _ _ ) | (-. -)  | (^v^ )  | 
   |   - -   |   - -   |  - -   |   -  -  |   -  -  |  - -    |
-  | _ _ _ _ | _ _ _ _ | _ _ _ _| _ _ _ _ | _ _ _ _ | _ _ _ _ |  )delim", 6};
+  | _ _ _ _ | _ _ _ _ | _ _ _ _| _ _ _ _ | _ _ _ _ | _ _ _ _ |  
+                            )delim", 7};
 
 
     MonsterArt["알고리즘"] = { R"delim(
-
                  _ _ _  
                 (_ _ _)  
                _ _ | _ _  
@@ -98,7 +100,8 @@ UIManager::UIManager()
         //\     \     /     /\\  
                  \   /
                   \ /
-                   | )delim", 14 };
+                   | 
+                            )delim", 16 };
 
 
     MonsterArt["객체"] = { R"(
@@ -111,11 +114,11 @@ UIManager::UIManager()
              |                | 
          _ _ | _ _        _ _ | _ _ 
         |         |_    _|         | 
-        |_|_|_|_ _|_|  |_|_ _|_|_|_|  )", 12 };
+        |_|_|_|_ _|_|  |_|_ _|_|_|_|  
+                            )", 12 };
 
 
     MonsterArt["부동소수점"] = { R"(
-
                       ·¨ ¨ ¨ ¨ ¨ ¨·  
                      ·    ____     · 
                     :    /    |     : 
@@ -126,12 +129,12 @@ UIManager::UIManager()
                       ｏ ¨ ¨ ¨ ¨ 
                       。  
                      。 
-                    .  )", 11 };
+                    .  
+                            )", 13 };
 
 
 	MonsterArt["클래스"] = {
 		R"delim(
-
                     CLASS 
                 /===========\  
            [PROTECTED]  
@@ -145,16 +148,12 @@ UIManager::UIManager()
            [PUBLIC] 
               Attack() 
               Jump()  
-
-)delim",
-	14 
-	};
+                            )delim", 15 };
 
     
 
     MonsterArt["김조은 튜터"] = {
         R"(
-
          -===+==                                      
         =:=++++=:.:=                                   
        .-*#######*=:-                                  
@@ -179,13 +178,12 @@ UIManager::UIManager()
           .:==========+++***********+******=..         
            ..:=========++*******=+*****+-+*=           
               .:--=======++******=-----=*=:            
-              ......-=====-=++*******+-..    )", 26};
+              ......-=====-=++*******+-..    
+                            )", 27};
 
 
 	MonsterArt["손승현 튜터"] = {
-		R"(
-
-                                                       
+		R"(                                                       
                 ..::::....              ..             
               .:-===++++++-..        .:==-.            
              ..-+**=---========-:  :=**==-.            
@@ -204,13 +202,10 @@ UIManager::UIManager()
              --########*+****#*##+*+******-            
               :-**#######****##==++##+++-              
                  - .**######*++++++++*-:  
-
-
-)", 18 };
+                            )", 20 };
 
 	MonsterArt["김봉재 튜터"] = {
 		R"(
-
                  @...........*                
              ..:--==+*****+==--:..            
          %..:-===================-:..*        
@@ -229,12 +224,10 @@ UIManager::UIManager()
          -.:+******#**###**#******+: .+       
             =:+*#####+===+######+:=*          
                :-=*#########*=-:
-  )", 18 };
+                             )", 20 };
 
 	MonsterArt["박은일 튜터"] = {
-	R"(
-
-                                                     
+	R"(                                                     
                     ......::::......                   
                     .......:::......  .                
             ........................::......           
@@ -255,9 +248,7 @@ UIManager::UIManager()
                --..-=+**#####************---           
                     ..:=+*###########**=:-             
                       :  :-+++*+=--::-::         
-
-
- )", 20 };
+                             )", 22 };
 
 	MonsterArt["김극민 튜터"] = {
 R"(
@@ -278,14 +269,10 @@ R"(
                 .:---======--------==-:       
                 .:::---===---==-----:.        
                    ..::--:::-----:....   
-
-
-
- )", 18 };
+                             )", 19 };
 
 	MonsterArt["문승현 튜터"] = {
-R"(
-                                              
+R"(                                              
                 ..............                
                 ......  .....                 
              . ................ .             
@@ -313,7 +300,6 @@ R"(
 
 	MonsterArt["강창민 튜터님"] = {
 R"(
-
              .::.               ....          
           ..::::.              .::. .         
            .:--:.              .:....         
@@ -334,13 +320,25 @@ R"(
            :.::::=+**=+*#######*#+-=--        
              :....:=++**=-------==-:          
                .    ..........  -   
-
- )", 20 };
+                            )", 22 };
 }
 
 
 
 UIManager::~UIManager() {}
+
+
+void UIManager::PrintLogs() {
+    int totalLogs = static_cast<int>(m_battleLog.size());
+    int startIdx = 0;
+    if(totalLogs == 0) return;
+    if (totalLogs > Max_DisplayLog) {
+        startIdx = totalLogs - Max_DisplayLog;
+    }
+    for (int i = startIdx; i < totalLogs; i++) {
+        cout << m_battleLog[i] << endl;
+    }
+}
 
 void gotoxy(int x, int y) {
     COORD pos = { (SHORT)x, (SHORT)y };
@@ -368,34 +366,25 @@ string UIManager::RenderMonsterArt(const std::string & monsterName) {
 			return it->second.art;
 		}
 		else {
-			return "No art available";
+			return "아트가 없어요. 왜 없을까? 버근가?";
 		}
 	}
 
 
 void UIManager::RenderBattleScreen(const Character* player, const Monster* monster) {
-	COORD oldPos = GetCursorPosition();
-    if (oldPos.Y > 60) {
-        system("cls");
-        oldPos.Y = 0;
-    }
+    system("cls");
 	gotoxy(0, 0);
-	cout << "================================================================" << endl;
+	cout << Color::BRIGHT_WHITE<< "================================================================" << endl;
 	cout << " [ ENEMY ]  " << monster->getName() << "  |  레벨: " << monster->getLevel() << "  | HP: " << monster->getHP() << " / " << monster->getMaxHP() << " | 코딩력 : " << monster->getAttack() << "                            " << endl;
 	cout << "----------------------------------------------------------------" << endl;
 
 	string art = RenderMonsterArt(monster->getName());
 	cout << art << endl;
 
-    // 출력 후 커서 위치 가져오기 
-    COORD afterArtPos = GetCursorPosition();
-
 	cout << "----------------------------------------------------------------" << endl;
 	cout << " [ PLAYER ]  " << player->getName() << "  |  레벨: " << player->getLevel() << "  | HP: " << player->getHP() << " / " << player->getMaxHP() << "  |  코딩력 : " << player->getATK() << "                         " << endl;
-	cout << "================================================================" << endl;
-	int linesUsed = 6 + GetArtHeight(monster->getName());
-	int targetY = (oldPos.Y < linesUsed) ? linesUsed : oldPos.Y;
-	gotoxy(0, targetY);
+	cout << "================================================================" << Color::RESET << endl;
+    PrintLogs();
 } 
 
 void UIManager::OpeningScene() { // 임시 
