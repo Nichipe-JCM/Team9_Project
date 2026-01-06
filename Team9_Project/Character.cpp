@@ -48,31 +48,31 @@ void Character::usePotion(Potion* potion) {
 		if (m_HP > m_MaxHP) {
 			int overheal = m_HP - m_MaxHP;
 			m_HP = m_MaxHP;
-			cout << m_name << "이(가) " << potion->getName()
-				<< "을 사용하여 HP를 " << potion->getEffectAmount() - overheal
-				<< " 회복했습니다. (현재 HP: " << m_HP << ")" << endl;
+			cout << m_name << "이(가) " << Color::OLIVE << potion->getName()
+				<< "을 사용하여" << Color::LIME <<  "HP를 " << potion->getEffectAmount() - overheal
+				<< " 회복했습니다. "<< Color::CRIMSON << "(현재 HP : " << m_HP << ")" <<Color::RESET << endl;
 		}
 		else {
-			cout << m_name << "이(가) " << potion->getName()
-				<< "을 사용하여 HP를 " << potion->getEffectAmount()
-				<< " 회복했습니다. (현재 HP: " << m_HP << ")" << endl;
+			cout << Color::WHITE << m_name << "이(가) " << potion->getName()
+				<< "을 사용하여"<<Color::LIME << "HP를" << potion->getEffectAmount()
+				<< " 회복했습니다."<<Color::CRIMSON << "(현재 HP : " << m_HP << ")" <<Color::RESET<< endl;
 		}
 	}
 	else if (potion->getItemType() == ItemCategory::BPotion) {
 		m_ATK += potion->getEffectAmount();
-		cout << m_name << "이(가) " << potion->getName()
-			<< "을(를) 사용하여 코딩력이 " << potion->getEffectAmount()
-			<< " 증가했습니다. (현재 코딩력: " << m_ATK << ")" << endl;
+		cout <<Color::WHITE << m_name << "이(가) " <<Color::RESET<< Color::GOLD << potion->getName()
+			<< "을(를) 사용하여"<<Color::RESET<<Color::PURPLE << "코딩력이 " << potion->getEffectAmount()
+			<< " 증가했습니다."<<Color::RESET <<Color::LAVENDER<< "(현재 코딩력 : " << m_ATK << ")" <<Color::RESET<< endl;
 	}
 }
 
 void Character::manageEquipment(int action, Item* item, int slot) {
 	switch (action) {
 	case 0:
-		cout << "[" << m_name << "]의 장비창" << endl;
+		cout <<Color::SILVER<< "[" << m_name << "]의 장비창" <<Color::RESET<< endl;
 		cout << "무기: " << (m_Equippeditem ? m_Equippeditem->getName() : "착용중인 무기 없음") << endl;
 		cout << "투척류: " << (m_EquippedThrow ? m_EquippedThrow->getName() : "착용중인 투척류 없음") << endl;
-		cout << "포션: " << (m_EquippedPotion ? m_EquippedPotion->getName() : "착용중인 포션 없음") << endl;
+		cout <<Color::OLIVE<<"포션: " << (m_EquippedPotion ? m_EquippedPotion->getName() : "착용중인 포션 없음") <<Color::RESET<< endl;
 		break;
 
 	case 1:
@@ -102,13 +102,13 @@ void Character::manageEquipment(int action, Item* item, int slot) {
 				item->setEquipped(true);
 			}
 			else if (item->getItemType() == ItemCategory::HPotion) {
-				cout << "체력 포션을 어떻게 하시겠습니까?" << endl;
+				cout <<Color::OLIVE<< "체력 포션" <<Color::RESET << "을 어떻게 하시겠습니까?" << endl;
 				cout << "1. 포션 슬롯에 장착  2. 포션 즉시 사용" << endl;
 				int choice = Utils::GetSafeInput();
 
 				if (choice == 2) {
 					if (m_HP == m_MaxHP) {
-						cout << "체력이 가득 차 있습니다. 포션을 사용할 수 없습니다." << endl;
+						cout <<Color::LIME << "체력" <<Color::RESET<< "이 가득 차 있습니다." <<Color::OLIVE<<"포션을 사용할 수 없습니다."<<Color::RESET << endl;
 						break;
 					}
 					usePotion(dynamic_cast<Potion*>(item));
@@ -125,7 +125,7 @@ void Character::manageEquipment(int action, Item* item, int slot) {
 					m_EquippedPotion = item;
 					m_HasPotion = true;
 					cout << item->getName()
-						<< "을(를) 포션 슬롯에 장착했습니다. (전투 중 HP 50% 이하일 때 자동 사용)" << endl;
+						<< "을(를)"<<Color::OLIVE<< "포션 슬롯에 장착했습니다."<<Color::RESET << "(전투 중 "<<Color::CRIMSON<<"HP 50 % 이하일 때" <<Color::RESET << "자동 사용)"<< endl;
 					item->setEquipped(true);
 					break;
 				}
@@ -200,7 +200,7 @@ void Character::setEXP(int exp) { m_EXP = exp; }
 
 void Character::GainEXP(int amount) {//얻는 경험치
 	m_EXP += amount;
-	cout << amount << "의 경험치를 얻었습니다. (현재: " << m_EXP << "/100)" << endl;
+	cout <<Color::YELLOW << amount << "의 경험치를 얻었습니다." <<Color::RESET<<Color::BG_BRIGHT_YELLOW << "(현재: " << m_EXP << " / 100)" <<Color::RESET<< endl;
 	LevelUp();
 }
 void Character::setLevel(int level) { m_Level = level; }
@@ -210,7 +210,7 @@ void Character::GainGold(int amount) {//얻는 zep코인
 	if (m_Gold < 0) {
 		m_Gold = 0;//zep코인 음수 방지
 	}
-	cout << " Zep코인을 " << amount << " 획득했습니다! (보유 Zep코인: " << m_Gold << "Zep 코인)" << endl;
+	cout <<Color::BEIGE << " Zep코인을 " << amount << " 획득했습니다! (보유 Zep코인: " << m_Gold << "Zep 코인)" <<Color::RESET << endl;
 }
 void Character::LevelUp() {
 	while (m_EXP >= m_EXPToLevelUp){
@@ -225,7 +225,7 @@ void Character::LevelUp() {
 				cout << "이제 일반 몬스터는 상대도 안된다." << endl;//만렙 달성시 대사
 			}
 			else {
-				cout << "레벨 업! 현재 레벨:" << m_Level << endl;//레벨업시 대사
+				cout <<Color::GREEN << "레벨 업! 현재 레벨:" << m_Level <<Color::RESET << endl;//레벨업시 대사
 			}
 		}
 		else {
@@ -236,7 +236,7 @@ void Character::LevelUp() {
 }
 void Character::Attack(Monster* target) {
 	if (AutoUsePotion(dynamic_cast<Potion*>(m_EquippedPotion))) {
-		cout << m_name << "은(는) 이번 턴에 포션을 사용했습니다! " << endl;
+		cout << m_name << "은(는) 이번 턴에" <<Color::OLIVE << "포션을 사용했습니다!" <<Color::RESET<< endl;
 		return;
 	}
 
@@ -257,7 +257,7 @@ void Character::Attack(Monster* target) {
 void Character::GetHit(int damage) {
 	m_HP -= damage;
 	if (m_HP < 0) m_HP = 0;//캐릭터 체력 음수 방지
-	cout << m_name << "이(가)" << damage << "의 피해를 입었습니다. (남은 HP: " << m_HP << ")" << endl;
+	cout << m_name << "이(가)" << damage << "의 피해를 입었습니다." << Color::RED << "(남은 HP : " << m_HP << ")" << Color::RESET << endl;
 	if (m_HP == 0) {
 		m_Alive = false; //사망처리
 		cout << m_name << "이(가) 사망하였습니다." << endl;
