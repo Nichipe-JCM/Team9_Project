@@ -44,7 +44,9 @@ bool Inventory::AddItem(Item* item) {
                     else {
                         cout << Color::RED << GetItem(itemIndex)->getName() << Color::BRIGHT_WHITE << "을(를) 제거하고 "
                             << Color::GREEN << item->getName() << Color::BRIGHT_WHITE << "을(를) 획득했습니다." << Color::RESET << endl;
+						Item* removedItem = GetItem(itemIndex);
                         RemoveItemFromIndex(itemIndex);
+						delete removedItem;
                         m_Inventory.push_back(item);
                         return true;
                     }
@@ -88,7 +90,7 @@ void Inventory::ManageInventory(StatusManager* sm, Character* ch) {
     while (true) {
         sm->DisplayInventory(this);
         Utils::DrawLine();
-        cout << Color::BRIGHT_WHITE << "1. 아이템 사용/장착  2. 아이템 제거  3. 나가기" << Color::RESET << endl;
+        cout << Color::TEAL << "1. 아이템 사용/장착  2. 아이템 제거  3. 나가기" << Color::RESET << endl;
         Utils::DrawLine();
         int choice = Utils::GetSafeInput();
         switch (choice) {

@@ -18,6 +18,14 @@
 
 using namespace std;
 
+Shop::~Shop()
+{
+	for (Item* item : m_Product) {
+		delete item;
+	}
+	m_Product.clear();
+}
+
 void Shop::ItemSetting()
 {
 	static std::random_device rd;
@@ -66,6 +74,7 @@ void Shop::ShopSelect(Character* player)
 	ItemSetting();
 	while (true)
 	{		
+		system("cls");
 		m_ShopMessage.clear();
 		m_ShopMessage.push_back("----------------------------------------------------------------");
 		m_ShopMessage.push_back("                        [ TUTOR : 박은일 ]                      ");
@@ -106,8 +115,8 @@ void Shop::ShopSelect(Character* player)
 			return;
 		}
 		else {
-			system("cls");
 			cout << Color::RED << "잘못된 번호를 선택했습니다." << Color::RESET << endl;
+			Utils::WaitForKeypress();
 		}
 	}
 }
@@ -115,11 +124,11 @@ void Shop::ShopSelect(Character* player)
 // 구매이벤트
 bool Shop::BuyItemFuntion(int NewProduct, Character* player)
 {
-	system("cls");
 	if (NewProduct < 0 || NewProduct >= m_Product.size()) return false;
 	Item* itemPtr = m_Product[NewProduct];
 	if (itemPtr == nullptr) {
 		cout<<Color::RED << "배치된 아이템이 없습니다."<< Color::RESET<< endl;
+		Utils::WaitForKeypress();
 		return false;
 	}
 	int price = itemPtr->getValue();
@@ -160,7 +169,6 @@ void Shop::BuyItem(Character* player )
 	while (true) {
 		
 		if (m_Product.empty()) {
-			system("cls");
 			cout << "배치된 아이템이 없습니다." << endl;
 			return;
 		}
@@ -262,7 +270,6 @@ void Shop::SellItemFuntion(int NewProduct, Character* player) {
 }
 // 판매 가능한 아이템 확인
 void Shop::SellItem(Character* player) {
-	system("cls");
 	int currentPage = 0;
 	const int itemsPerPage = 4;
 	while (true)
@@ -382,8 +389,8 @@ void Shop::SellItem(Character* player) {
 			}
 		}
 		else {
-			system("cls");
 			cout <<Color::RED <<"잘못된 입력입니다." << Color::RESET << endl;
+			Utils::WaitForKeypress();
 		}
 	}
 }

@@ -71,27 +71,12 @@ bool Monster::checkDeath() {
 
 
 
-// 레어리티에 따른 드랍확률
-double getDefaultDropRate(Rarity rarity)
-{
-	switch (rarity)
-	{
-	case Rarity::Common: return 0.3;   // 30%
-	case Rarity::Rare: return 0.1;     // 10%
-	case Rarity::Epic: return 0.05;    // 5%
-	case Rarity::Legendary: return 0.01; // 1%
-	}
-	return 0.0;
-}
-
-
-
 Item* Monster::dropItem() {
     static random_device rd;
     static mt19937 gen(rd());
 
     uniform_int_distribution<int> dropChance(1, 100);
-    if (dropChance(gen) > 90) {
+    if (dropChance(gen) > 30) {
         cout <<Color::BRIGHT_WHITE<< "이겼지만 아무것도 나오지 않았다...\n";
         return nullptr;
     }

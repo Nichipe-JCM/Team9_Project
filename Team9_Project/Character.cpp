@@ -90,7 +90,7 @@ void Character::manageEquipment(int action, Item* item, int slot) {
 				item->setEquipped(true);
 			}
 			else if (item->getItemType() == ItemCategory::Throwing) {
-				if (m_Equippeditem == item) {
+				if (m_EquippedThrow == item) {
 					cout << Color::YELLOW << item->getName() << "은(는) 이미 장착 중입니다." << Color::RESET << endl;
 					break;
 				}
@@ -111,7 +111,7 @@ void Character::manageEquipment(int action, Item* item, int slot) {
 				int choice = Utils::GetSafeInput();
 
 				if (choice == 2) {
-					if (m_Equippeditem == item) {
+					if (m_EquippedPotion == item) {
 						cout << Color::YELLOW << item->getName() << "은(는) 이미 장착 중입니다. 장착중인 포션은 마실 수 없습니다." << Color::RESET << endl;
 						break;
 					}
@@ -121,6 +121,7 @@ void Character::manageEquipment(int action, Item* item, int slot) {
 					}
 					usePotion(dynamic_cast<Potion*>(item));
 					m_Inventory->RemoveItemFromPointer(item);
+					delete item;
 					break;
 				}
 				if (choice == 1) {
@@ -175,10 +176,12 @@ void Character::manageEquipment(int action, Item* item, int slot) {
 bool Character::AutoUsePotion(Potion* potion) {//체력 50%이하일경우 포션 사용
 	if (m_HP > 0 && m_HP <= m_MaxHP * 0.5 && m_HasPotion) {
 		Potion* equippedPotion = dynamic_cast<Potion*>(m_EquippedPotion);
-		if (equippedPotion != nullptr && equippedPotion->getType() == "회복포션") {
+		if (equippedPotion != nullptr && equippedPotion->getItemType() == ItemCategory::HPotion) {
 			usePotion(equippedPotion);
 			m_EquippedPotion = nullptr;
 			m_HasPotion = false;
+			m_Inventory->RemoveItemFromPointer(equippedPotion);
+			delete equippedPotion;
 			return true; //턴 소모후 포션 사용
 		}
 	}
@@ -259,6 +262,7 @@ void Character::Attack(Monster* target, UIManager* ui) {
 		target->GetHit(getATK() + m_EquippedThrow->getAttack(), ui);//투척무기 자체 피해량 적용
 		m_Throw = false;//사용후 비활성화
 		m_Inventory->RemoveItemFromPointer(m_EquippedThrow);//인벤토리에서 제거
+		delete m_EquippedThrow;
 		m_EquippedThrow = nullptr;
 	}
 	else {

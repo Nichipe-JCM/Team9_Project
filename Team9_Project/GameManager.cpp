@@ -40,6 +40,11 @@ GameManager::~GameManager() {
 		delete m_Shop;
 		m_Shop = nullptr;
 	}
+	if (m_UI != nullptr) {
+		delete m_UI;
+		m_UI = nullptr;
+	}
+
 }
 
 

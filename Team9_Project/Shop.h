@@ -24,7 +24,7 @@ private:
 	//Rarity rarity;
 public:
 	Shop(GameManager* _gm) :m_Inventory(nullptr), gm(_gm) {}
-	~Shop(){}
+	~Shop();
 	void ItemSetting(); // 아이템 랜덤 호출		
 	void ShopSelect(Character* player);// 상점 시작함수
 	void BuyItem(Character* player); // 구매 이벤트
