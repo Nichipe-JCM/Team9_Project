@@ -16,7 +16,7 @@ public:
 	Item* clone() const override {
 		return new BuffPotion(*this); // 복사 생성자 호출 (내용을 그대로 베낌)
 	}
-
+	bool getEquipped() { return false; }
 private:
 	int m_buffAmount;
 };
