@@ -327,7 +327,10 @@ void Shop::SellItem(Character* player) {
 		}
 		cout << "----------------------------------------------------------------" << endl;
 			
-		int select = Utils::DefaultMenu();
+		int select = Utils::DefaultMenu();		
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}
 		
 		if (select >= 1 && select <= (endIndex - startIndex)) {
 			int actualIndex = startIndex + (select - 1);
