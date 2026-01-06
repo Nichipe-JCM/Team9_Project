@@ -31,7 +31,7 @@ void BuyBookEvent::EventEffect(Character* character, GameManager* gm) {
 				cout << Color::BRIGHT_YELLOW << "100 ZEP코인을 지불했습니다." << Color::RESET << endl;
 				Sleep(500);
 				if (RandNum == 0 || RandNum == 1) {
-					int gain = character->getLevel() * 4;
+					int gain = character->getLevel() * 3;
 					cout << Color::BRIGHT_WHITE << "원하던 책이 잘 도착했습니다!" << Color::RESET << endl;
 					Sleep(500);
 					cout << Color::BRIGHT_WHITE << "배송받은 책을 읽고 지식이 늘었습니다!" << Color::RESET << endl;
@@ -77,7 +77,7 @@ void BuyBookEvent::EventEffect(Character* character, GameManager* gm) {
 void SurpriseSessionEvent::EventEffect(Character* character, GameManager* gm) {
 	static random_device rd;
 	static mt19937 gen(rd());
-	uniform_int_distribution<int> dis(0, 2);
+	uniform_int_distribution<int> dis(0, 3);
 	int RandNum = dis(gen);
 
 	cout << Color::GOLD << "====================깜짝 세션 이벤트 발생!!!====================" << Color::RESET << endl;
@@ -85,15 +85,15 @@ void SurpriseSessionEvent::EventEffect(Character* character, GameManager* gm) {
 	cout << Color::BRIGHT_WHITE << "과제를 하던 중 슬랙에 알림이 울린다." << Color::RESET << endl;
 	Sleep(500);
 	cout << Color::CYAN << "\"튜터님의 깜짝세션 개최!\"" << Color::BRIGHT_WHITE << " 참여하시겠습니까?" << Color::RESET << endl;
-	Sleep(500);
+  	Sleep(500);
 	while (true) {
 		cout << Color::BRIGHT_WHITE << "1. 참여한다  2. 참여하지 않는다" << Color::RESET << endl;
 		int select = Utils::DefaultMenu();
 		if (gm->DefaultMenuCheck(select)) continue;
 		Sleep(500);
 		if (select == 1) {
-			if (RandNum == 0 || RandNum == 1) {
-				int gain = character->getLevel() * 4;
+			if (RandNum != 3) {
+				int gain = character->getLevel() * 2;
 				cout << Color::BRIGHT_WHITE << "튜터님의 명강의를 들었더니 개념이 확실히 잡혔다." << Color::RESET << endl;
 				Sleep(500);
 				cout << Color::BRIGHT_WHITE << "헷갈리던 개념이 잡히고 머리가 맑아진다." << Color::RESET << endl;
@@ -199,7 +199,7 @@ void DrinkCaffeineEvent::EventEffect(Character* character, GameManager* gm) {
 		Sleep(500);
 		if (select == 1) {
 			if (health >= 0.5) {
-				int gain = character->getLevel() * 4;
+				int gain = character->getLevel() * 2;
 				cout << Color::CYAN << "\"역시 에너지 드링크야. 먹으니까 눈이 확 떠지네.\"" << Color::RESET << endl;
 				Sleep(500);
 				cout << Color::CYAN << "\"조금만 더 힘내서 해보자!\"" << Color::RESET << endl;
@@ -343,7 +343,7 @@ void SOSRequestEvent::EventEffect(Character* character, GameManager* gm) {
 
 		if (select == 1) {
 			int loss = static_cast<int>(character->getMaxHP() * 0.05);
-			int gain = character->getLevel() * 4;
+			int gain = character->getLevel() * 2;
 			cout << Color::CYAN << "\"그래 결국 팀 프로젝트니까 도와주자.\"" << Color::RESET << endl;
 			Sleep(500);
 			cout << Color::BRIGHT_WHITE << "팀원과 코드를 수정해본다." << Color::RESET << endl;
@@ -546,7 +546,7 @@ void CodeCopyEvent::EventEffect(Character* character, GameManager* gm) {
 		if (gm->DefaultMenuCheck(select)) continue;
 		Sleep(500);
 		if (select == 1) {
-			int loss = character->getLevel() * 3;
+			int loss = character->getLevel() * 2;
 			cout << Color::CYAN << "\"그래 일단 과제 제출이 먼저지.\"" << Color::RESET << endl;
 			Sleep(500);
 			cout << Color::CYAN << "\"일단 제출하고 나중에 복습해봐야겠다.\"" << Color::RESET << endl;
@@ -685,7 +685,7 @@ void FunctionNamingEvent::EventEffect(Character* character, GameManager* gm) {
 		Sleep(500);
 		if (select == 1) {
 			if (RandNum != 3) {
-				int gain = character->getLevel() * 4;
+				int gain = character->getLevel() * 2;
 				cout << Color::CYAN << "\"아 찾았다! 역시 이름을 잘 지어두니까 찾기 편하네.\"" << Color::RESET << endl;
 				Sleep(500);
 				cout << Color::BRIGHT_WHITE << "이름 짓기를 잘해둔 덕분에 코드의 가독성이 좋아졌다." << Color::RESET << endl;
@@ -752,7 +752,7 @@ void LegacyCodeEvent::EventEffect(Character* character, GameManager* gm) {
 		Sleep(500);
 		if (select == 1) {
 			if (RandNum != 3) {
-				int gain = character->getLevel() * 5;
+				int gain = character->getLevel() * 3;
 				cout << Color::CYAN << "\"아하! 이래서 이 부분을 이렇게 작성한거구나!\"" << Color::RESET << endl;
 				Sleep(500);
 				cout << Color::CYAN << "\"확실히 남이 작성해둔 코드를 분석하는 것도 큰 도움이 되는구나.\"" << Color::RESET << endl;
@@ -829,7 +829,7 @@ void NappingEvent::EventEffect(Character* character, GameManager* gm) {
 		Sleep(500);
 		if (select == 1) {
 			if (RandNum != 3) {
-				int gainATK = character->getLevel() * 4;
+				int gainATK = character->getLevel() * 2;
 				int gainHP = static_cast<int>(character->getMaxHP() * 0.1);
 				cout << Color::CYAN << "\"낮잠 자고 일어나니까 너무 개운하다.\"" << Color::RESET << endl;
 				Sleep(500);
@@ -901,7 +901,7 @@ void PartTimeJobEvent::EventEffect(Character* character, GameManager* gm) {
 		if (gm->DefaultMenuCheck(select)) continue;
 		Sleep(500);
 		if (select == 1) {
-			int loss = character->getLevel() * 3;
+			int loss = character->getLevel() * 2;
 			cout << Color::CYAN << "\"아... 죽을 것 같다... 그래도 오토바이를 살 수 있는 돈을 모았다.\"" << Color::RESET << endl;
 			Sleep(500);
 			cout << Color::CYAN << "\"원하던 걸 살 수 있어서 다행이다..\"" << Color::RESET << endl;
@@ -944,7 +944,7 @@ void PartTimeJobEvent::EventEffect(Character* character, GameManager* gm) {
 void VSUpdateEvent::EventEffect(Character* character, GameManager* gm) {
 	static random_device rd;
 	static mt19937 gen(rd());
-	uniform_int_distribution<int> dis(0, 2);
+	uniform_int_distribution<int> dis(0, 3);
 	int RandNum = dis(gen);
 
 	cout << Color::GOLD << "====================VS 업데이트 이벤트 발생!!!====================" << Color::RESET << endl;
@@ -962,7 +962,7 @@ void VSUpdateEvent::EventEffect(Character* character, GameManager* gm) {
 		Sleep(500);
 		if (select == 1) {
 			if (RandNum != 2) {
-				int gain = character->getLevel() * 4;
+				int gain = character->getLevel() * 2;
 				cout << Color::CYAN << "\"와! 업데이트하니까 획실히 쾌적하다.\"" << Color::RESET << endl;
 				Sleep(500);
 				cout << Color::CYAN << "\"빌드 시간도 확실히 줄어든 것 같아. 업데이트 하기를 잘했다!\"" << Color::RESET << endl;
@@ -1019,7 +1019,7 @@ void QuestionCodeEvent::EventEffect(Character* character, GameManager* gm) {
 		if (gm->DefaultMenuCheck(select)) continue;
 		Sleep(500);
 		if (select == 1) {
-			int gain = character->getLevel() * 3;
+			int gain = character->getLevel() * 2;
 			cout << Color::CYAN << "\"아하! 이렇게 해결하면 되는 거였군요! 감사합니다 튜터님!\"" << Color::RESET << endl;
 			Sleep(500);
 			cout << Color::CYAN << "\"튜터님의 설명덕분에 막힌 부분이 뚫렸다. 이제 다음 내용을 작성해볼까.\"" << Color::RESET << endl;
@@ -1030,7 +1030,7 @@ void QuestionCodeEvent::EventEffect(Character* character, GameManager* gm) {
 			break;
 		}
 		else if (select == 2) {
-			int gain = character->getLevel() * 5;
+			int gain = character->getLevel() * 4;
 			int loss = static_cast<int>(character->getMaxHP() * 0.05);
 			cout << Color::CYAN << "\"... 드디어 찾았다!! 여기 문장 때문에 오류가 발생하고 있었구나.\"" << Color::RESET << endl;
 			Sleep(500);
@@ -1083,7 +1083,7 @@ void TemptationOfWeekendEvent::EventEffect(Character* character, GameManager* gm
 		Sleep(500);
 		if (select == 1) {
 			if (RandNum != 2) {
-				int gain = character->getLevel() * 4;
+				int gain = character->getLevel() * 3;
 				cout << Color::CYAN << "\"휴 이제야 좀 포인터와 클래스가 이해가 됐네.\"" << Color::RESET << endl;
 				Sleep(500);
 				cout << Color::CYAN << "\"다음 진도가 나가기 전에 개념을 확실히 복습해 놓으니 안심이 된다.\"" << Color::RESET << endl;
@@ -1176,7 +1176,7 @@ void RelayQuizEvent::EventEffect(Character* character, GameManager* gm) {
 		cout << Color::BRIGHT_WHITE << "1. 가능하다  2. 불가능하다" << Color::RESET << endl;
 		int select = Utils::DefaultMenu();
 		if (gm->DefaultMenuCheck(select)) continue;
-
+		Sleep(1500);
 		if (select == 2) {
 			cout << Color::CYAN << "\"캡슐화의 원리를 이해했군요! 정답!\"" << Color::RESET << endl;
 			Sleep(500);
@@ -1196,7 +1196,7 @@ void RelayQuizEvent::EventEffect(Character* character, GameManager* gm) {
 		cout << Color::BRIGHT_WHITE << "1. delete    2. free" << Color::RESET << endl;
 		int select = Utils::DefaultMenu();
 		if (gm->DefaultMenuCheck(select)) continue;
-
+		Sleep(1500);
 		if (select == 1) {
 			cout << Color::CYAN << "\"동적할당을 이해하고 있군요! 정답!\"" << Color::RESET << endl;
 			Sleep(500);
@@ -1252,7 +1252,7 @@ void HowSuccessEvent::EventEffect(Character* character, GameManager* gm) {
 		Sleep(500);
 		if (select == 1) {
 			if (RandNum != 3) {
-				int gain = character->getLevel() * 4;
+				int gain = character->getLevel() * 3;
 				cout << Color::CYAN << "\"아 이 부분의 연산이 우연히 맞아서 작동되고 있었구나!\"" << Color::RESET << endl;
 				Sleep(500);
 				cout << Color::CYAN << "\"시간은 좀 걸렸지만 확실히 이유를 찾으니까 마음이 편하다.\"" << Color::RESET << endl;
@@ -1263,7 +1263,7 @@ void HowSuccessEvent::EventEffect(Character* character, GameManager* gm) {
 				break;
 			}
 			else {
-				int loss = character->getLevel() * 3;
+				int loss = character->getLevel() * 2;
 				cout << Color::CYAN << "\"큰일났다. 코드를 수정하니까 이제는 실행도 안되잖아...\"" << Color::RESET << endl;
 				Sleep(500);
 				cout << Color::CYAN << "\"이제는 어디서부터 문제인건지 짐작도 안된다.\"" << Color::RESET << endl;
@@ -1316,7 +1316,7 @@ void BlueScreenEvent::EventEffect(Character* character, GameManager* gm) {
 		Sleep(500);
 		if (select == 1) {
 			if (RandNum != 2) {
-				int gain = character->getLevel() * 3;
+				int gain = character->getLevel() * 2;
 				cout << Color::CYAN << "\"제발 남아있어라...\"" << Color::RESET << endl;
 				Sleep(500);
 				cout << Color::CYAN << "\"휴 다행이다. 평소에 저장을 습관처럼 해둬서 살았다.\"" << Color::RESET << endl;
