@@ -46,20 +46,20 @@ GameManager::~GameManager() {
 
 bool GameManager::DefaultMenuCheck(int choice) { //기본메뉴 체크. 기본메뉴에 대해서는 Utils.cpp 확인
 	switch (choice) {
-	case 7:
+	case 96:
 		OpenManageInventory(m_SM, m_Player->getInventory());
 		return true;
-	case 8:
+	case 97:
 		ViewCharacterStatus(m_SM);
 		return true;
-	case 9:
+	case 98:
 		ViewBattleStatus(m_SM);
 		return true;
-	case 0:
+	case 99:
 		ViewAchievements(m_SM);
 		return true;
 	default:
-		return false; // "7,8,9,0 아님
+		return false; // "96,97,98,99 아님
 	}
 }
 
