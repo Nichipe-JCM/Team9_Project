@@ -18,7 +18,7 @@ Rarity Item::getRarity() const { return m_rarity; }
 std::string Item::getRarityColor(Rarity rarity) const{
 	switch (rarity) {
 	case Rarity::Common:    return "\033[37m"; // 흰색
-	case Rarity::Rare:      return "\033[34m"; // 파란색
+	case Rarity::Rare:      return "\033[94m"; // 파란색
 	case Rarity::Epic:      return "\033[35m"; // 보라색
 	case Rarity::Legendary: return "\033[33m"; // 노란색
 	}

@@ -4,200 +4,179 @@
 class Character;
 
 class BuyBookEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	BuyBookEvent() :m_Count(0) {}
+	BuyBookEvent() {}
 
 	void EventEffect(Character* character, GameManager* gm) override;
 
-	void EventCount() override;
 
 };
 
 class SurpriseSessionEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	SurpriseSessionEvent() : m_Count(0) {}
+	SurpriseSessionEvent() {}
 
 	void EventEffect(Character* character, GameManager* gm) override;
 
-	void EventCount() override;
+	
 };
 
 class TILIsImportantEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	TILIsImportantEvent() : m_Count(0) {}
+	TILIsImportantEvent() {}
 
 	void EventEffect(Character* character, GameManager* gm) override;
 
-	void EventCount() override;
+	
 };
 
 class DrinkCaffeineEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	DrinkCaffeineEvent() : m_Count(0) {}
+	DrinkCaffeineEvent() {}
 
 	void EventEffect(Character* character, GameManager* gm) override;
 
-	void EventCount() override;
+	
 };
 
 class FixCodeEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	FixCodeEvent() : m_Count(0) {}
+	FixCodeEvent() {}
 
 	void EventEffect(Character* character, GameManager* gm) override;
 
-	void EventCount() override;
+	
 };
 
 class SOSRequestEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	SOSRequestEvent() : m_Count(0) {}
+	SOSRequestEvent() {}
 
 	void EventEffect(Character* character, GameManager* gm) override;
 
-	void EventCount() override;
+	
 };
 
 class YouTubeAlgorithmEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	YouTubeAlgorithmEvent() : m_Count(0) {}
+	YouTubeAlgorithmEvent() {}
 
 	void EventEffect(Character* character, GameManager* gm) override;
 
-	void EventCount() override;
+	
 };
 
 class MidnightDebugEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	MidnightDebugEvent() : m_Count(0) {}
+	MidnightDebugEvent() {}
 
 	void EventEffect(Character* character, GameManager* gm) override;
 
-	void EventCount() override;
+	
 };
 
 class CodeCopyEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	CodeCopyEvent() : m_Count(0) {}
+	CodeCopyEvent() {}
 
 	void EventEffect(Character* character, GameManager* gm) override;
 
-	void EventCount() override;
+	
 };
 
 class ZepGambleEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	ZepGambleEvent() : m_Count(0) {}
+	ZepGambleEvent() {}
 	void EventEffect(Character* character, GameManager* gm) override;
-	void EventCount() override;
+	
 };
 
 class FunctionNamingEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	FunctionNamingEvent() : m_Count(0) {}
+	FunctionNamingEvent() {}
 	void EventEffect(Character* character, GameManager* gm) override;
-	void EventCount() override;
+	
 };
 
 class LegacyCodeEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	LegacyCodeEvent() : m_Count(0) {}
+	LegacyCodeEvent() {}
 	void EventEffect(Character* character, GameManager* gm) override;
-	void EventCount() override;
+	
 };
 
 class NappingEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	NappingEvent() : m_Count(0) {}
+	NappingEvent() {}
 	void EventEffect(Character* character, GameManager* gm) override;
-	void EventCount() override;
+	
 };
 
 class PartTimeJobEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	PartTimeJobEvent() : m_Count(0) {}
+	PartTimeJobEvent() {}
 	void EventEffect(Character* character, GameManager* gm) override;
-	void EventCount() override;
+	
 };
 
 class VSUpdateEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	VSUpdateEvent() : m_Count(0) {}
+	VSUpdateEvent() {}
 	void EventEffect(Character* character, GameManager* gm) override;
-	void EventCount() override;
+	
 };
 
 class QuestionCodeEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	QuestionCodeEvent() : m_Count(0) {}
+	QuestionCodeEvent() {}
 	void EventEffect(Character* character, GameManager* gm) override;
-	void EventCount() override;
+	
 };
 
 class TemptationOfWeekendEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	TemptationOfWeekendEvent() : m_Count(0){}
+	TemptationOfWeekendEvent(){}
 	void EventEffect(Character* character, GameManager* gm) override;
-	void EventCount() override;
+	
 };
 
 class RelayQuizEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	RelayQuizEvent() : m_Count(0) {}
+	RelayQuizEvent() {}
 	void EventEffect(Character* character, GameManager* gm) override;
-	void EventCount() override;
+	
 };
 
 class HowSuccessEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	HowSuccessEvent() : m_Count(0) {}
+	HowSuccessEvent() {}
 	void EventEffect(Character* character, GameManager* gm) override;
-	void EventCount() override;
+	
 };
 
 class BlueScreenEvent : public Event {
-private:
-	int m_Count;
+
 public:
-	BlueScreenEvent() : m_Count(0) {}
+	BlueScreenEvent() {}
 	void EventEffect(Character* character, GameManager* gm) override;
-	void EventCount() override;
+	
 };

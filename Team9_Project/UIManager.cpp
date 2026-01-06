@@ -1,4 +1,4 @@
-#include "UIManager.h"
+﻿#include "UIManager.h"
 #include "Character.h"
 #include "Monster.h"
 #include "Windows.h"
@@ -429,81 +429,129 @@ void UIManager::FinalBossAppearance() { // 임시
 
 void UIManager::Mainscreen() {
     system("cls");
-	cout << "내배캠에서 살아남기!" <<endl;
-    cout << "=== Text Colors Test ===" << endl;
-    // 기본
-    cout << Color::BLACK << "BLACK " << Color::RED << "RED " << Color::GREEN << "GREEN "
-        << Color::YELLOW << "YELLOW " << Color::BLUE << "BLUE " << Color::MAGENTA << "MAGENTA "
-        << Color::CYAN << "CYAN " << Color::WHITE << "WHITE " << Color::GRAY << "GRAY" << Color::RESET << endl << endl;
+    DrawLogo();
+	cout << Color::BRIGHT_YELLOW << "\n내배캠에서 살아남기! - 코딩 지옥에서 살아남아라!!" << Color::RESET <<endl;
+    //cout << "=== Text Colors Test ===" << endl;
+    //// 기본
+    //cout << Color::BLACK << "BLACK " << Color::RED << "RED " << Color::GREEN << "GREEN "
+    //    << Color::YELLOW << "YELLOW " << Color::BLUE << "BLUE " << Color::MAGENTA << "MAGENTA "
+    //    << Color::CYAN << "CYAN " << Color::WHITE << "WHITE " << Color::GRAY << "GRAY" << Color::RESET << endl << endl;
 
-    // 붉은 계열
-    cout << Color::ORANGE << "ORANGE " << Color::GOLD << "GOLD " << Color::CRIMSON << "CRIMSON "
-        << Color::SALMON << "SALMON" << Color::RESET << endl;
+    //// 붉은 계열
+    //cout << Color::ORANGE << "ORANGE " << Color::GOLD << "GOLD " << Color::CRIMSON << "CRIMSON "
+    //    << Color::SALMON << "SALMON" << Color::RESET << endl;
 
-    // 푸른 계열
-    cout << Color::SKY_BLUE << "SKY_BLUE " << Color::NAVY << "NAVY " << Color::TEAL << "TEAL "
-        << Color::INDIGO << "INDIGO" << Color::RESET << endl;
+    //// 푸른 계열
+    //cout << Color::SKY_BLUE << "SKY_BLUE " << Color::NAVY << "NAVY " << Color::TEAL << "TEAL "
+    //    << Color::INDIGO << "INDIGO" << Color::RESET << endl;
 
-    // 초록 계열
-    cout << Color::LIME << "LIME " << Color::OLIVE << "OLIVE " << Color::MINT << "MINT" << Color::RESET << endl;
+    //// 초록 계열
+    //cout << Color::LIME << "LIME " << Color::OLIVE << "OLIVE " << Color::MINT << "MINT" << Color::RESET << endl;
 
-    // 보라/분홍 계열
-    cout << Color::PURPLE << "PURPLE " << Color::LAVENDER << "LAVENDER " << Color::PINK << "PINK "
-        << Color::HOT_PINK << "HOT_PINK" << Color::RESET << endl;
+    //// 보라/분홍 계열
+    //cout << Color::PURPLE << "PURPLE " << Color::LAVENDER << "LAVENDER " << Color::PINK << "PINK "
+    //    << Color::HOT_PINK << "HOT_PINK" << Color::RESET << endl;
 
-    // 무채색/기타
-    cout << Color::SILVER << "SILVER " << Color::BROWN << "BROWN " << Color::BEIGE << "BEIGE" << Color::RESET << endl;
+    //// 무채색/기타
+    //cout << Color::SILVER << "SILVER " << Color::BROWN << "BROWN " << Color::BEIGE << "BEIGE" << Color::RESET << endl;
 
-    // 고채도 텍스트
-    cout << Color::BRIGHT_WHITE << "B_WHITE " << Color::BRIGHT_RED << "B_RED " << Color::BRIGHT_GREEN << "B_GREEN "
-        << Color::BRIGHT_YELLOW << "B_YELLOW " << Color::BRIGHT_BLUE << "B_BLUE " << Color::BRIGHT_CYAN << "B_CYAN" << Color::RESET << endl << endl;
+    //// 고채도 텍스트
+    //cout << Color::BRIGHT_WHITE << "B_WHITE " << Color::BRIGHT_RED << "B_RED " << Color::BRIGHT_GREEN << "B_GREEN "
+    //    << Color::BRIGHT_YELLOW << "B_YELLOW " << Color::BRIGHT_BLUE << "B_BLUE " << Color::BRIGHT_CYAN << "B_CYAN" << Color::RESET << endl << endl;
 
 
-    cout << "=== Background Colors Test ===" << endl;
-    // 기본 배경
-    cout << Color::BG_RED << " RED " << Color::RESET << " "
-        << Color::BG_GREEN << " GRN " << Color::RESET << " "
-        << Color::BG_YELLOW << " YEL " << Color::RESET << " "
-        << Color::BG_BLUE << " BLU " << Color::RESET << " "
-        << Color::BG_MAGENTA << " MAG " << Color::RESET << " "
-        << Color::BG_CYAN << " CYN " << Color::RESET << " "
-        << Color::BG_WHITE << " WHT " << Color::RESET << " "
-        << Color::BG_GRAY << " GRY " << Color::RESET << endl << endl;
+    //cout << "=== Background Colors Test ===" << endl;
+    //// 기본 배경
+    //cout << Color::BG_RED << " RED " << Color::RESET << " "
+    //    << Color::BG_GREEN << " GRN " << Color::RESET << " "
+    //    << Color::BG_YELLOW << " YEL " << Color::RESET << " "
+    //    << Color::BG_BLUE << " BLU " << Color::RESET << " "
+    //    << Color::BG_MAGENTA << " MAG " << Color::RESET << " "
+    //    << Color::BG_CYAN << " CYN " << Color::RESET << " "
+    //    << Color::BG_WHITE << " WHT " << Color::RESET << " "
+    //    << Color::BG_GRAY << " GRY " << Color::RESET << endl << endl;
 
-    // 확장 배경 1
-    cout << Color::BG_ORANGE << " ORANGE " << Color::RESET << " "
-        << Color::BG_GOLD << " GOLD " << Color::RESET << " "
-        << Color::BG_CRIMSON << " CRIMSON " << Color::RESET << " "
-        << Color::BG_SALMON << " SALMON " << Color::RESET << endl;
+    //// 확장 배경 1
+    //cout << Color::BG_ORANGE << " ORANGE " << Color::RESET << " "
+    //    << Color::BG_GOLD << " GOLD " << Color::RESET << " "
+    //    << Color::BG_CRIMSON << " CRIMSON " << Color::RESET << " "
+    //    << Color::BG_SALMON << " SALMON " << Color::RESET << endl;
 
-    // 확장 배경 2
-    cout << Color::BG_SKY_BLUE << " SKY " << Color::RESET << " "
-        << Color::BG_NAVY << " NAVY " << Color::RESET << " "
-        << Color::BG_TEAL << " TEAL " << Color::RESET << " "
-        << Color::BG_INDIGO << " INDIGO " << Color::RESET << endl;
+    //// 확장 배경 2
+    //cout << Color::BG_SKY_BLUE << " SKY " << Color::RESET << " "
+    //    << Color::BG_NAVY << " NAVY " << Color::RESET << " "
+    //    << Color::BG_TEAL << " TEAL " << Color::RESET << " "
+    //    << Color::BG_INDIGO << " INDIGO " << Color::RESET << endl;
 
-    // 확장 배경 3
-    cout << Color::BG_LIME << " LIME " << Color::RESET << " "
-        << Color::BG_OLIVE << " OLIVE " << Color::RESET << " "
-        << Color::BG_MINT << " MINT " << Color::RESET << endl;
+    //// 확장 배경 3
+    //cout << Color::BG_LIME << " LIME " << Color::RESET << " "
+    //    << Color::BG_OLIVE << " OLIVE " << Color::RESET << " "
+    //    << Color::BG_MINT << " MINT " << Color::RESET << endl;
 
-    // 확장 배경 4
-    cout << Color::BG_PURPLE << " PURP " << Color::RESET << " "
-        << Color::BG_LAVENDER << " LAVE " << Color::RESET << " "
-        << Color::BG_PINK << " PINK " << Color::RESET << " "
-        << Color::BG_HOT_PINK << " HOTP " << Color::RESET << endl;
+    //// 확장 배경 4
+    //cout << Color::BG_PURPLE << " PURP " << Color::RESET << " "
+    //    << Color::BG_LAVENDER << " LAVE " << Color::RESET << " "
+    //    << Color::BG_PINK << " PINK " << Color::RESET << " "
+    //    << Color::BG_HOT_PINK << " HOTP " << Color::RESET << endl;
 
-    // 확장 배경 5
-    cout << Color::BG_SILVER << " SILV " << Color::RESET << " "
-        << Color::BG_BROWN << " BRWN " << Color::RESET << " "
-        << Color::BG_BEIGE << " BEIGE " << Color::RESET << endl << endl;
+    //// 확장 배경 5
+    //cout << Color::BG_SILVER << " SILV " << Color::RESET << " "
+    //    << Color::BG_BROWN << " BRWN " << Color::RESET << " "
+    //    << Color::BG_BEIGE << " BEIGE " << Color::RESET << endl << endl;
 
-    // 고채도 배경
-    cout << Color::BG_BRIGHT_RED << " B_RED " << Color::RESET << " "
-        << Color::BG_BRIGHT_GREEN << " B_GRN " << Color::RESET << " "
-        << Color::BG_BRIGHT_YELLOW << " B_YEL " << Color::RESET << " "
-        << Color::BG_BRIGHT_BLUE << " B_BLU " << Color::RESET << " "
-        << Color::BG_BRIGHT_CYAN << " B_CYN " << Color::RESET << " "
-        << Color::BG_BRIGHT_WHITE << " B_WHT " << Color::RESET << endl;
+    //// 고채도 배경
+    //cout << Color::BG_BRIGHT_RED << " B_RED " << Color::RESET << " "
+    //    << Color::BG_BRIGHT_GREEN << " B_GRN " << Color::RESET << " "
+    //    << Color::BG_BRIGHT_YELLOW << " B_YEL " << Color::RESET << " "
+    //    << Color::BG_BRIGHT_BLUE << " B_BLU " << Color::RESET << " "
+    //    << Color::BG_BRIGHT_CYAN << " B_CYN " << Color::RESET << " "
+    //    << Color::BG_BRIGHT_WHITE << " B_WHT " << Color::RESET << endl;
     Utils::WaitForKeypress();
+}
+
+void DrawLogo() {
+    // 1. 출력할 데이터를 배열(vector)에 저장합니다.
+    // 이렇게 데이터와 로직을 분리하는 것이 유지보수에 유리합니다.
+    const vector<string> logoData = {
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+        "@@@@@@########@@@@#######@@@@@@@@####@@@@@@@######@@@@@##########@@@@####@@@@@@@",
+        "@@@@@####@@@###@@@###@@@@###@@@@##@@##@@@@@@###@@@###@@@@@@###@@@@@@##@@##@@@@@@",
+        "@@@@@###@@@@@@@@@@###@@@@###@@@###@@###@@@@@###@@@###@@@@@@###@@@@@###@@###@@@@@",
+        "@@@@@@@######@@@@@###@@@@###@@@##@@@@##@@@@@#########@@@@@@###@@@@@##@@@@##@@@@@",
+        "@@@@@##@@@@@@##@@@#########@@@##########@@@@#######@@@@@@@@###@@@@##########@@@@",
+        "@@@@@###@@@@###@@@###@@@@@@@@@###@@@@###@@@@###@@@###@@@@@@###@@@@###@@@@###@@@@",
+        "@@@@@@########@@@@###@@@@@@@@###@@@@@@###@@@###@@@###@@@@@@###@@@###@@@@@@###@@@",
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+        "@@@@@@@@@@@@@@@@@@@@@@######################################@@@@@@@@@@@@@@@@@@@@",
+        "@@@@@@@@@@@@@@@@@@@@#######@@@@@####@@###########@@##########@@@@@@@@@@@@@@@@@@@",
+        "@@@@@@@@@@@@@@@@@@@######@@@@@@@@@##@@###########@@##########@@@@@@@@@@@@@@@@@@@",
+        "@@@@@@@@@@@@@@@@@@@#####@@@#####@@##@@##@@###@@##@@@@@@@######@@@@@@@@@@@@@@@@@@",
+        "@@@@@@@@@@@@@@@@@@@@####@@##########@@##@@###@@##@@###@@@#####@@@@@@@@@@@@@@@@@@",
+        "@@@@@@@@@@@@@@@@@@@@####@@@#####@@##@@##@@###@@##@@####@@######@@@@@@@@@@@@@@@@@",
+        "@@@@@@@@@@@@@@@@@@@@@####@@@@@@@@@##@@##@@@##@@##@@####@@######@@@@@@@@@@@@@@@@@",
+        "@@@@@@@@@@@@@@@@@@@@@######@@@@@####@@###@@@@@@##@@@@@@#######@@@@@@@@@@@@@@@@@@",
+        "@@@@@@@@@@@@@@@@@@@@@@######################################@@@@@@@@@@@@@@@@@@@@",
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+        "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    };
+
+    for (const string& line : logoData) {
+        char lastChar = '\0';
+
+        for (char c : line) {
+            if (c != lastChar) {
+                if (c == '@') {
+                    cout << Color::BG_BRIGHT_WHITE << Color::BRIGHT_WHITE;
+                }
+                else if (c == '#') {
+                    cout << Color::BG_RED << Color::RED;
+                }
+            }
+
+            cout << c;
+            lastChar = c;
+        }
+        cout << Color::RESET << endl;
+    }
 }

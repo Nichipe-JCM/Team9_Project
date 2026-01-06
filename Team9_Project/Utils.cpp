@@ -13,7 +13,7 @@ int Utils::GetSafeInput() {
         if (cin.fail()) {
             cin.clear(); 
             cin.ignore(10000, '\n');
-            cout << "잘못된 입력입니다. 숫자를 입력해주세요." << endl;
+            cout << Color::BRIGHT_YELLOW << "잘못된 입력입니다. 숫자를 입력해주세요." << Color::RESET << endl;
         }
         else {
             cin.ignore(10000, '\n'); 
@@ -25,7 +25,7 @@ int Utils::GetSafeInput() {
 
 int Utils::DefaultMenu() {
     cout << Color::BRIGHT_WHITE << "==============================================" << endl;
-    cout << "7.인벤토리     8.상태창     9.전적     0.업적" << endl;
+    cout << "96.인벤토리     97.상태창     98.전적     99.업적" << endl;
     cout << "==============================================" << Color::RESET << endl;
     return GetSafeInput();
 }

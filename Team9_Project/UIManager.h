@@ -11,10 +11,9 @@ class Monster;
 
 struct ASCIIPicture
 {
-	std::string art;
-	int height;
+    std::string art;
+    int height;
 };
-
 
 class UIManager
 {
@@ -29,5 +28,6 @@ public:
     void EndingScene();
     void FinalBossAppearance();
 	void Mainscreen();
+    int GetArtHeight(const std::string& monsterName);
 	std::string RenderMonsterArt(const std::string& monsterName);
 };
