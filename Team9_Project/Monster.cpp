@@ -104,6 +104,8 @@ Item* Monster::dropItem() {
 
     for (Item* item : allItems) {
 
+		if (item == nullptr) continue;
+
         candidates.push_back(item);
 
         double w = 0;
@@ -115,10 +117,20 @@ Item* Monster::dropItem() {
         weights.push_back(w);
     }
 
+    if (candidates.empty()) {
+        cout << Color::BRIGHT_WHITE << "이겼지만 아무것도 나오지 않았다...\n";
+        return nullptr;
+    }
+
     discrete_distribution<int> dist(weights.begin(), weights.end());
 
     int selectedIndex = dist(gen);
     Item* selectedItem = candidates[selectedIndex];
+	
+	if (selectedItem == nullptr) {
+		cout << Color::BRIGHT_WHITE << "이겼지만 아무것도 나오지 않았다...\n";
+		return nullptr;
+	}
 
     cout << Color::LIME << name << "이(가) "
         << selectedItem->getRarityColor(selectedItem->getRarity())

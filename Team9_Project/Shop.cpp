@@ -295,13 +295,26 @@ void Shop::SellItem(Character* player) {
 			cout << "----------------------------------------------------------------"<< endl;
 			DrawTineLine();
 			string color = myItems[i]->getRarityColor(myItems[i]->getRarity());
-			if (myItems[i]->getItemType() != ItemCategory::Cash) {
-				cout << color << (i - startIndex) + 1 << ". " << "[" << myItems[i]->getName() << "]" << "(" << myItems[i]->rarityToString(myItems[i]->getRarity()) << ")" 
-					<< " (판매가: " << (int)(myItems[i]->getValue() * 0.6) << "G)" << "\033[0m" << endl;
+			if (myItems[i]->getEquipped() == true) {
+				string Equipped = Color::CYAN + "[장착중] " + color ;
+				if (myItems[i]->getItemType() != ItemCategory::Cash) {
+					cout << color << (i - startIndex) + 1 << ". " << Equipped << "[" << myItems[i]->getName() << "]" << "(" << myItems[i]->rarityToString(myItems[i]->getRarity()) << ")"
+						<< " (판매가: " << (int)(myItems[i]->getValue() * 0.6) << "G)" << "\033[0m" << endl;
+				}
+				else {
+					cout << color << (i - startIndex) + 1 << ". " << Equipped << "[" << myItems[i]->getName() << "]" << "(" << myItems[i]->rarityToString(myItems[i]->getRarity()) << ")"
+						<< " (판매가: " << (int)(myItems[i]->getValue()) << "G)" << "\033[0m" << endl;
+				}
 			}
 			else {
-				cout << color << (i - startIndex) + 1 << ". " << "[" << myItems[i]->getName() << "]" << "(" << myItems[i]->rarityToString(myItems[i]->getRarity()) << ")"
-					<< " (판매가: " << (int)(myItems[i]->getValue()) << "G)" << "\033[0m" << endl;
+				if (myItems[i]->getItemType() != ItemCategory::Cash) {
+					cout << color << (i - startIndex) + 1 << ". " << "[" << myItems[i]->getName() << "]" << "(" << myItems[i]->rarityToString(myItems[i]->getRarity()) << ")"
+						<< " (판매가: " << (int)(myItems[i]->getValue() * 0.6) << "G)" << "\033[0m" << endl;
+				}
+				else {
+					cout << color << (i - startIndex) + 1 << ". " << "[" << myItems[i]->getName() << "]" << "(" << myItems[i]->rarityToString(myItems[i]->getRarity()) << ")"
+						<< " (판매가: " << (int)(myItems[i]->getValue()) << "G)" << "\033[0m" << endl;
+				}
 			}
 			if (myItems[i]->getItemType() == ItemCategory::Weapon)
 			{
