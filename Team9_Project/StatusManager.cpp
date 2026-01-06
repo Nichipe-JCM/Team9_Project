@@ -15,16 +15,30 @@ void StatusManager::AddKill(const string& name) {
 }
 void StatusManager::DisplayCharacterStatus(Character* ch) {
 	Utils::DrawLine();
-	cout << "캐릭터 정보를 출력합니다." << endl;
-	cout << "이름: " << ch->getName() << ", 레벨: " << ch->getLevel() << ", HP: " << ch->getHP() << "/" << ch->getMaxHP() << endl;
-	cout << "코딩력: " << ch->getATK() << ", Zep 코인: " << ch->getGold() << ", 경험치: " << ch->getEXP() << "/" << ch->getEXPToLevelUp() << endl;
+	cout << Color::BRIGHT_YELLOW << "=== 캐릭터 정보 ===" << Color::RESET << endl;
+
+	cout << Color::CYAN << "이름: " << Color::BRIGHT_WHITE << ch->getName()
+		<< Color::GRAY << " | "
+		<< Color::CYAN << "레벨: " << Color::BRIGHT_GREEN << ch->getLevel()
+		<< Color::GRAY << " | "
+		<< Color::CYAN << "HP: " << Color::BRIGHT_WHITE << ch->getHP() << "/" << ch->getMaxHP() << endl;
+
+	cout << Color::CYAN << "코딩력: " << Color::BRIGHT_WHITE << ch->getATK()
+		<< Color::GRAY << " | "
+		<< Color::CYAN << "Zep 코인: " << Color::GOLD << ch->getGold() << " Z" << Color::RESET
+		<< Color::GRAY << " | "
+		<< Color::CYAN << "경험치: " << Color::BRIGHT_WHITE << ch->getEXP() << "/" << ch->getEXPToLevelUp() << endl;
+
 	Utils::DrawLine();
 	Utils::WaitForKeypress();
 }
 void StatusManager::DisplayBattleStatus() {
 	Utils::DrawLine();
+	cout << Color::BRIGHT_YELLOW << "=== 전적 목록 ===" << Color::RESET << endl;
 	for (auto const& namecount : m_KillCounts) {
-		cout << "[" << namecount.first << "] 처치: " << namecount.second << "회" << endl;
+		cout << Color::BRIGHT_WHITE << "[" << namecount.first << "] "
+			<< Color::GRAY << "처치: "
+			<< Color::RED << namecount.second << Color::RESET << "회" << endl;
 	}
 	Utils::DrawLine();
 	Utils::WaitForKeypress();
