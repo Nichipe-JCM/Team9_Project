@@ -13,8 +13,9 @@ public:
 		return new HealingPotion(*this); // 복사 생성자 호출 (내용을 그대로 베낌)
 	}
 	void setEquipped(bool status) { m_isEquipped = status; }
+	bool getEquipped() override { return m_isEquipped; }
 
 private:
 	int m_healAmount{ 0 }; // healamount 변수 초기화
-	bool m_isEquipped;
+	bool m_isEquipped{ false }; // m_isEquipped 초기화 추가
 };

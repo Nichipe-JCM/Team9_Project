@@ -143,11 +143,13 @@ bool Shop::BuyItemFuntion(int NewProduct, Character* player)
 			<< "을(를) 구매했습니다." << endl;
 
 		m_Product.erase(m_Product.begin() + NewProduct);
+		Utils::WaitForKeypress();
 		return true;
 	}
 	else
 	{
-		cout << Color::RED << "골드가 부족합니다." << Color::RESET << endl;
+		cout << Color::RED << "Zep 코인이 부족합니다." << Color::RESET << endl;
+		Utils::WaitForKeypress();
 		return false;
 	}
 }
@@ -237,6 +239,13 @@ void Shop::SellItemFuntion(int NewProduct, Character* player) {
 	int sellPrice =0;
 	string color = itemToSell->getRarityColor(itemToSell->getRarity());
 	string rName = itemToSell->rarityToString(itemToSell->getRarity());
+	if (items[NewProduct]->getItemType() == ItemCategory::Weapon || items[NewProduct]->getItemType() == ItemCategory::HPotion || items[NewProduct]->getItemType() == ItemCategory::Throwing) {
+		if (items[NewProduct]->getEquipped()) {
+			cout << "장착한 아이템은 판매할 수 없습니다" << endl;
+			Utils::WaitForKeypress();
+			return;
+		}
+	}
 	if (items[NewProduct]->getItemType() != ItemCategory::Cash) {
 		sellPrice = static_cast<int>(itemToSell->getValue() * 0.6);
 	}
@@ -265,7 +274,6 @@ void Shop::SellItem(Character* player) {
 
 		vector<Item*>& myItems = player->getInventory()->GetInventory();
 		if (myItems.empty()) {
-			system("cls");
 			cout << Color::RED << "판매할 아이템이 없습니다." << Color::RESET << endl;
 			Utils::WaitForKeypress();
 			return;

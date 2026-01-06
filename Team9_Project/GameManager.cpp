@@ -110,7 +110,6 @@ void GameManager::RunGame() { // 게임의 전체적인 프로세스 진행
 		Sleep(1000);
 		m_AM->UpdateAchievements(m_Player, m_SM);
 		m_Stage++;
-		Sleep(1000);
 		if (m_Stage > 21) { // 스테이지가 22이상일 경우(최종보스를 잡았을 경우) 엔딩 출력 후 처음으로
 			Sleep(1000);
 			Ending();

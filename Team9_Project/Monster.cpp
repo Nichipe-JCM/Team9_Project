@@ -91,7 +91,7 @@ Item* Monster::dropItem() {
     static mt19937 gen(rd());
 
     uniform_int_distribution<int> dropChance(1, 100);
-    if (dropChance(gen) > 30) {
+    if (dropChance(gen) > 90) {
         cout <<Color::BRIGHT_WHITE<< "이겼지만 아무것도 나오지 않았다...\n";
         return nullptr;
     }
@@ -110,7 +110,7 @@ Item* Monster::dropItem() {
         switch (item->getRarity()) {
         case Rarity::Common:    w = 100.0; break;
         case Rarity::Rare:      w = 30.0;  break;
-        case Rarity::Legendary: w = 1.0;   break;
+        case Rarity::Legendary: w = 5.0;   break;
         }
         weights.push_back(w);
     }
