@@ -69,7 +69,7 @@ UIManager::UIManager()
         |                         |  
         |                 \  \    |  
         |                ('- ')   |  
-        |                ⊂  ⊂ )° | 
+        |                ⊂  ⊂ )°  | 
         | _ _ _ _ _ _ _ _ "  "  _ |  
                           /     \   
                          /       \   
@@ -374,16 +374,16 @@ string UIManager::RenderMonsterArt(const std::string & monsterName) {
 void UIManager::RenderBattleScreen(const Character* player, const Monster* monster) {
     system("cls");
 	gotoxy(0, 0);
-	cout << Color::BRIGHT_WHITE<< "================================================================" << endl;
+	cout << Color::BRIGHT_WHITE<< "==========================================================================" << endl;
 	cout << " [ ENEMY ]  " << monster->getName() << "  |  레벨: " << monster->getLevel() << "  | HP: " << monster->getHP() << " / " << monster->getMaxHP() << " | 코딩력 : " << monster->getAttack() << "                            " << endl;
-	cout << "----------------------------------------------------------------" << endl;
+	cout << "--------------------------------------------------------------------------" << endl;
 
 	string art = RenderMonsterArt(monster->getName());
 	cout << art << endl;
 
-	cout << "----------------------------------------------------------------" << endl;
+	cout << "--------------------------------------------------------------------------" << endl;
 	cout << " [ PLAYER ]  " << player->getName() << "  |  레벨: " << player->getLevel() << "  | HP: " << player->getHP() << " / " << player->getMaxHP() << "  |  코딩력 : " << player->getATK() << "                         " << endl;
-	cout << "================================================================" << Color::RESET << endl;
+	cout << "==========================================================================" << Color::RESET << endl;
     PrintLogs();
 } 
 

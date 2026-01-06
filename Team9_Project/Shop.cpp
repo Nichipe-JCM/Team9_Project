@@ -144,11 +144,13 @@ bool Shop::BuyItemFuntion(int NewProduct, Character* player)
 			<< "을(를) 구매했습니다." << endl;
 
 		m_Product.erase(m_Product.begin() + NewProduct);
+		Utils::WaitForKeypress();
 		return true;
 	}
 	else
 	{
-		cout << Color::RED << "골드가 부족합니다." << Color::RESET << endl;
+		cout << Color::RED << "Zep 코인이 부족합니다." << Color::RESET << endl;
+		Utils::WaitForKeypress();
 		return false;
 	}
 }
@@ -273,7 +275,6 @@ void Shop::SellItem(Character* player) {
 
 		vector<Item*>& myItems = player->getInventory()->GetInventory();
 		if (myItems.empty()) {
-			system("cls");
 			cout << Color::RED << "판매할 아이템이 없습니다." << Color::RESET << endl;
 			Utils::WaitForKeypress();
 			return;

@@ -74,6 +74,10 @@ void Character::manageEquipment(int action, Item* item, int slot) {
 	case 1:
 		if (item != nullptr) {
 			if (item->getItemType() == ItemCategory::Weapon) {
+				if (m_Equippeditem == item) {
+					cout << Color::YELLOW << item->getName() << "은(는) 이미 장착 중입니다." << Color::RESET << endl;
+					break;
+				}
 				if (m_Equippeditem != nullptr) {
 					cout << "장착중인 " << m_Equippeditem->getName() << "을(를) 해제했습니다." << endl;
 					m_Equippeditem->setEquipped(false);
@@ -86,6 +90,10 @@ void Character::manageEquipment(int action, Item* item, int slot) {
 				item->setEquipped(true);
 			}
 			else if (item->getItemType() == ItemCategory::Throwing) {
+				if (m_Equippeditem == item) {
+					cout << Color::YELLOW << item->getName() << "은(는) 이미 장착 중입니다." << Color::RESET << endl;
+					break;
+				}
 				if (m_EquippedThrow != nullptr) {
 					cout << "장착중인 " << m_EquippedThrow->getName() << "을(를) 해제했습니다." << endl;
 					m_EquippedThrow->setEquipped(false);
@@ -103,6 +111,10 @@ void Character::manageEquipment(int action, Item* item, int slot) {
 				int choice = Utils::GetSafeInput();
 
 				if (choice == 2) {
+					if (m_Equippeditem == item) {
+						cout << Color::YELLOW << item->getName() << "은(는) 이미 장착 중입니다. 장착중인 포션은 마실 수 없습니다." << Color::RESET << endl;
+						break;
+					}
 					if (m_HP == m_MaxHP) {
 						cout <<Color::LIME << "체력" <<Color::RESET<< "이 가득 차 있습니다." <<Color::OLIVE<<"포션을 사용할 수 없습니다."<<Color::RESET << endl;
 						break;
@@ -112,6 +124,10 @@ void Character::manageEquipment(int action, Item* item, int slot) {
 					break;
 				}
 				if (choice == 1) {
+					if (m_Equippeditem == item) {
+						cout << Color::YELLOW << item->getName() << "은(는) 이미 장착 중입니다." << Color::RESET << endl;
+						break;
+					}
 					if (m_EquippedPotion != nullptr) {
 						cout << "장착중인 " << m_EquippedPotion->getName() << "을(를) 해제했습니다." << endl;
 						m_EquippedPotion->setEquipped(false);
@@ -217,9 +233,9 @@ void Character::LevelUp() {
 			m_HP = m_MaxHP;//레벨업시 풀피
 			m_EXP -= m_EXPToLevelUp;//초과 되는 경험치 다음 레벨에 유지
 			m_EXPToLevelUp = 100;
-			cout << Color::GREEN << "레벨 업! 현재 레벨:" << m_Level << Color::RESET << endl;//레벨업시 대사
+			cout << Color::GREEN << "레벨 업! 현재 레벨:" << m_Level << "\n" << Color::RESET << endl;//레벨업시 대사
 			if (m_Level == m_MaxLevel) {
-				cout << Color::GOLD << "이제 일반 몬스터는 상대도 안된다!" << Color::RESET << endl;//만렙 달성시 대사
+				cout << Color::GOLD << "이제 일반 몬스터는 상대도 안된다! \n" << Color::RESET << endl;//만렙 달성시 대사
 			}
 		}
 		else {
@@ -240,7 +256,7 @@ void Character::Attack(Monster* target, UIManager* ui) {
 		ui->AddLog(Color::SKY_BLUE + m_name + Color::BRIGHT_WHITE + "이(가) " + Color::ORANGE + target->getName() + Color::BRIGHT_WHITE + "에게" + m_EquippedThrow->getName() + "을(를) 던졌습니다!");
 		ui->RenderBattleScreen(this, target);
 		Sleep(500);
-		target->GetHit(m_ATK + m_EquippedThrow->getAttack(), ui);//투척무기 자체 피해량 적용
+		target->GetHit(getATK() + m_EquippedThrow->getAttack(), ui);//투척무기 자체 피해량 적용
 		m_Throw = false;//사용후 비활성화
 		m_Inventory->RemoveItemFromPointer(m_EquippedThrow);//인벤토리에서 제거
 		m_EquippedThrow = nullptr;

@@ -38,6 +38,9 @@ bool Inventory::AddItem(Item* item) {
                     if (itemIndex < 1 || itemIndex >= m_Inventory.size() + 1) {
                         cout << Color::BRIGHT_YELLOW << "잘못된 아이템 번호입니다. 다시 입력하세요: " << Color::RESET << endl;
                     }
+                    if (GetItem(itemIndex)->getEquipped()) {
+						cout << Color::BRIGHT_YELLOW << "장착 중인 아이템은 제거할 수 없습니다." << Color::RESET << endl;
+                    }
                     else {
                         cout << Color::RED << GetItem(itemIndex)->getName() << Color::BRIGHT_WHITE << "을(를) 제거하고 "
                             << Color::GREEN << item->getName() << Color::BRIGHT_WHITE << "을(를) 획득했습니다." << Color::RESET << endl;

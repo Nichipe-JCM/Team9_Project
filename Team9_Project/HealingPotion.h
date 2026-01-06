@@ -16,5 +16,5 @@ public:
 	bool getEquipped() { return m_isEquipped; }
 private:
 	int m_healAmount{ 0 }; // healamount 변수 초기화
-	bool m_isEquipped;
+	bool m_isEquipped{ false }; // m_isEquipped 초기화 추가
 };
