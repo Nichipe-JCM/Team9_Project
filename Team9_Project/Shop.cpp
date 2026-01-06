@@ -232,7 +232,6 @@ void Shop::BuyItem(Character* player)
 }
 // 판매 이벤트 -> RemoveItem()
 void Shop::SellItemFuntion(int NewProduct, Character* player) {
-	system("cls");
 	vector<Item*>& items = player->getInventory()->GetInventory(); // 인벤토리 호출 부분
 	Item* itemToSell = items[NewProduct];
 	int sellPrice =0;
@@ -248,6 +247,8 @@ void Shop::SellItemFuntion(int NewProduct, Character* player) {
 	cout << color << "[" << itemToSell->getName() << "]" << "(" << rName << ")" 
 		<< "를 " << sellPrice << "에 판매했습니다!" << "\033[0m" << endl;
 	player->getInventory()->RemoveItemFromIndex(NewProduct + 1);
+	if(itemToSell != nullptr) delete itemToSell;
+	Utils::WaitForKeypress();
 }
 // 판매 가능한 아이템 확인
 void Shop::SellItem(Character* player) {
@@ -269,12 +270,13 @@ void Shop::SellItem(Character* player) {
 			return;
 		}
 		
+		int totalItems = static_cast<int>(myItems.size());
 		int startIndex = currentPage * itemsPerPage;
 		int endIndex;
 
-		if (startIndex + itemsPerPage > myItems.size())
+		if (startIndex + itemsPerPage > totalItems)
 		{
-			endIndex = myItems.size();
+			endIndex = totalItems;
 		}
 		else
 		{
@@ -314,9 +316,9 @@ void Shop::SellItem(Character* player) {
 			}
 		}
 		DrawTineLine();
-		bool hasNextPage = (startIndex + itemsPerPage < myItems.size());
+		bool hasNextPage = (startIndex + itemsPerPage < totalItems);
 
-		if (hasNextPage < startIndex) {
+		if (currentPage > 0) {
 			cout <<Color::YELLOW << "5. 이전 페이지로       " << Color::RESET;
 		}		
 		if (hasNextPage) {
@@ -362,6 +364,7 @@ void Shop::DrawTineLine() {
 	cout << Color::GRAY << "----------------------------------------------------------------"<<Color::RESET<<endl;
 }
 void Shop::NextStage(GameManager* gm) {
+	Utils::WaitForKeypress();
 	system("cls");
 	m_ShopMessage.clear();
 	for (auto item : m_Product) delete item;

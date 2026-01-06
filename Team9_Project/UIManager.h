@@ -12,7 +12,7 @@ class Monster;
 struct ASCIIPicture
 {
     std::string art;
-    int height;
+    int height = 0;
 };
 
 class UIManager
