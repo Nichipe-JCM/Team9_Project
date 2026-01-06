@@ -87,6 +87,6 @@ public:
 	static int GetSafeInput();
 	static int DefaultMenu();
 	static void DrawLine();
-    static void WaitForKeypress(const std::string& msg = "\n▶ 계속하려면 아무 키나 누르세요...");
+    static void WaitForKeypress(const std::string& msg = "\n\033[38;5;51m▶ 계속하려면 아무 키나 누르세요...\033[0m");
 };
 

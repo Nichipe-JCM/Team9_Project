@@ -1,4 +1,4 @@
-﻿#include "Itempool.h"
+#include "Itempool.h"
 #include "Weapon.h"
 #include "Potion.h"
 #include "ThrowingWeapon.h"
@@ -22,8 +22,8 @@ std::vector<Item*>& ItemPool::getAllItems() {
 		new ThrowingWeapon("오토바이", 3000, 9999, 1, ItemCategory::Throwing, Rarity::Legendary),
 
 		// 3. 포션류 (HealingPotion / BuffPotion)
-		new HealingPotion("에너지드링크", 40, 150, ItemCategory::HPotion, Rarity::Common),
-		new HealingPotion("스누피 초코우유", 50, 300, ItemCategory::HPotion, Rarity::Rare),
+		new HealingPotion("에너지드링크", 100, 150, ItemCategory::HPotion, Rarity::Common),
+		new HealingPotion("스누피 초코우유", 250, 400, ItemCategory::HPotion, Rarity::Rare),
 		new HealingPotion("빨간 날", 1000, 9999, ItemCategory::HPotion, Rarity::Legendary),
 
 		new BuffPotion("코딩애플 숏츠", 400, 10, ItemCategory::BPotion, Rarity::Common),

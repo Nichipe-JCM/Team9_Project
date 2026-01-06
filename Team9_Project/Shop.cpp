@@ -67,13 +67,25 @@ void Shop::ShopSelect(Character* player)
 	while (true)
 	{		
 		m_ShopMessage.clear();
-		m_ShopMessage.push_back("----------------------------------------------");
+		m_ShopMessage.push_back("----------------------------------------------------------------");
+		m_ShopMessage.push_back("                        [ TUTOR : 박은일 ]                      ");
+		m_ShopMessage.push_back("================================================================");
+		m_ShopMessage.push_back("                                                                ");
+		m_ShopMessage.push_back("                             @@@@@@@@@                          ");
+		m_ShopMessage.push_back("                            @@@@@@@@@@@                         ");
+		m_ShopMessage.push_back("                            [| -   - |]     \"흐음...\"         ");
+		m_ShopMessage.push_back("                            (|   -   |)                         ");
+		m_ShopMessage.push_back("                             |   _   |                          ");
+		m_ShopMessage.push_back("                           |  -------  |                        ");
+		m_ShopMessage.push_back("                          |             |                       ");
+		m_ShopMessage.push_back("================================================================");
 		m_ShopMessage.push_back("상점에 오신것을 환영합니다. 나는 튜터 박은일.");
 		m_ShopMessage.push_back("원하시는것을 선택해주세요.");
-		m_ShopMessage.push_back("1. 구매  2. 판매  3. 다음 스테이지로 이동 ");
-		m_ShopMessage.push_back("----------------------------------------------");
+		m_ShopMessage.push_back("----------------------------------------------------------------");
+		m_ShopMessage.push_back("1. 구매            2. 판매              3. 다음 스테이지로 이동 ");
+		m_ShopMessage.push_back("----------------------------------------------------------------");
 		for (auto& msg : m_ShopMessage) {
-			cout << msg << endl;
+			cout << Color::BEIGE << msg << Color::RESET<< endl;
 		}
 		
 		int select = Utils::DefaultMenu();
@@ -94,7 +106,8 @@ void Shop::ShopSelect(Character* player)
 			return;
 		}
 		else {
-			cout << "잘못된 번호를 선택했습니다." << endl;
+			system("cls");
+			cout << Color::RED << "잘못된 번호를 선택했습니다." << Color::RESET << endl;
 		}
 	}
 }
@@ -106,14 +119,20 @@ bool Shop::BuyItemFuntion(int NewProduct, Character* player)
 	if (NewProduct < 0 || NewProduct >= m_Product.size()) return false;
 	Item* itemPtr = m_Product[NewProduct];
 	if (itemPtr == nullptr) {
-		cout << "배치된 아이템이 없습니다." << endl;
+		cout<<Color::RED << "배치된 아이템이 없습니다."<< Color::RESET<< endl;
 		return false;
 	}
 	int price = itemPtr->getValue();
 	string RarityStr = itemPtr->rarityToString(itemPtr->getRarity());
 	string RarityColor = itemPtr->getRarityColor(itemPtr->getRarity());
+	
 	if (player->getGold() >= price)
 	{
+		if (player->getInventory()->GetCurrentInventorySize() >= player->getInventory()->GetMaxInventorySlot())
+		{
+			cout <<Color::RED << "인벤토리가 가득 찼습니다. 아이템을 구매할 수 없습니다."<<Color::RESET << endl;
+			return false;
+		}
 		// 골드 차감
 		player->setGold(player->getGold() - price);
 		player->getInventory()->AddItem(itemPtr);
@@ -128,7 +147,7 @@ bool Shop::BuyItemFuntion(int NewProduct, Character* player)
 	}
 	else
 	{
-		cout << "골드가 부족합니다." << endl;
+		cout << Color::RED << "골드가 부족합니다." << Color::RESET << endl;
 		return false;
 	}
 }
@@ -138,44 +157,46 @@ void Shop::BuyItem(Character* player)
 	while (true) {
 		
 		if (m_Product.empty()) {
+			system("cls");
 			cout << "배치된 아이템이 없습니다." << endl;
 			return;
 		}
 		m_ShopMessage.clear();
+		m_ShopMessage.push_back("----------------------------------------------------------------");
 		m_ShopMessage.push_back("구매할 아이템을 선택해주세요.");
 		m_ShopMessage.push_back("필요하시면 고민하지말고 사세요.");		
-		m_ShopMessage.push_back("----------------------------- 구매 목록 -----------------------------");
+		m_ShopMessage.push_back("-------------------------- 구매 목록 --------------------------");
 		int i = 0;
 		Item* itemPtr = m_Product[i];
 		string rarityStr = itemPtr->rarityToString(itemPtr->getRarity());
 		Utils::DrawLine();
-		for (auto& msg : m_ShopMessage) { cout << msg << endl; }
+		for (auto& msg : m_ShopMessage) { cout<<Color::BEIGE << msg <<Color::RESET<< endl; }
 		for (int i = 0; i < m_Product.size(); i++) {
 			DrawTineLine();
 			string color = m_Product[i]->getRarityColor(m_Product[i]->getRarity());
-			cout << i + 1 << ". " << "품목 : "
-				<< color << m_Product[i]->getName() << "[" << m_Product[i]->rarityToString(m_Product[i]->getRarity()) << "]" << "\033[0m" << endl;
+			cout << color << i + 1 << ". " << "품목 : "
+				 << m_Product[i]->getName() << "[" << m_Product[i]->rarityToString(m_Product[i]->getRarity()) << "]" << "\033[0m" << endl;
 			if(m_Product[i]->getItemType() == ItemCategory::Weapon)
 			{
-				cout << " 가격: " << m_Product[i]->getValue() << "  타입: 무기 " <<"  코딩력: " << m_Product[i]->getAttack() << endl;
+				cout << color << " 가격: " << m_Product[i]->getValue() << "  타입: 무기 " <<"  코딩력: " << m_Product[i]->getAttack() << "\033[0m" << endl;
 			}
 			else if(m_Product[i]->getItemType() == ItemCategory::Throwing)
 			{
-				cout << " 가격: " << m_Product[i]->getValue() << "  타입: 투척 무기 " << "  코딩력: " << m_Product[i]->getAttack() << endl;
+				cout << color << " 가격: " << m_Product[i]->getValue() << "  타입: 투척 무기 " << "  코딩력: " << m_Product[i]->getAttack() << "\033[0m" << endl;
 			}
 			else if(m_Product[i]->getItemType() == ItemCategory::HPotion)
 			{
-				cout << " 가격: " << m_Product[i]->getValue() << "  타입: 회복 포션 " << "  회복력: " << m_Product[i]->getHeal() << endl;
+				cout << color << " 가격: " << m_Product[i]->getValue() << "  타입: 회복 포션 " << "  회복력: " << m_Product[i]->getHeal() << "\033[0m" << endl;
 			}
 			else if(m_Product[i]->getItemType() == ItemCategory::BPotion)
 			{
-				cout << " 가격: " << m_Product[i]->getValue() << "  타입: 버프 포션 " << "  버프력: " << m_Product[i]->getBuff() << endl;
+				cout << color << " 가격: " << m_Product[i]->getValue() << "  타입: 버프 포션 " << "  버프력: " << m_Product[i]->getBuff() << "\033[0m" << endl;
 			}
 			
 		}
 		Utils::DrawLine();
 		
-		cout << "현재 코인: "<< player->getGold() << "              6.뒤로가기" << endl;
+		cout << Color::BG_BROWN << Color::WHITE << "[현재 코인] "<< player->getGold() <<"   " << Color::RESET << Color::RESET << "              6.뒤로가기" << endl;
 		int select = Utils::DefaultMenu();
 		if (gm->DefaultMenuCheck(select)) {
 			continue;
@@ -204,14 +225,13 @@ void Shop::BuyItem(Character* player)
 			system("cls");
 			return;
 		}
-		else
-			cout << "잘못된 번호를 선택했습니다." << endl;		
+		else			
+			cout<<Color::RED << "잘못된 번호를 선택했습니다." <<Color::RESET<< endl;		
 		break;
 	}
 }
 // 판매 이벤트 -> RemoveItem()
 void Shop::SellItemFuntion(int NewProduct, Character* player) {
-	system("cls");
 	vector<Item*>& items = player->getInventory()->GetInventory(); // 인벤토리 호출 부분
 	Item* itemToSell = items[NewProduct];
 	int sellPrice =0;
@@ -224,80 +244,130 @@ void Shop::SellItemFuntion(int NewProduct, Character* player) {
 		sellPrice = static_cast<int>(itemToSell->getValue());
 	}
 	player->setGold(player->getGold() + sellPrice);
-	cout << color << "[" << itemToSell->getName() << "]" << "(" << rName << ")" << "\033[0m"
-		<< "를 " << sellPrice << "에 판매했습니다!" << endl;
+	cout << color << "[" << itemToSell->getName() << "]" << "(" << rName << ")" 
+		<< "를 " << sellPrice << "에 판매했습니다!" << "\033[0m" << endl;
 	player->getInventory()->RemoveItemFromIndex(NewProduct + 1);
+	if(itemToSell != nullptr) delete itemToSell;
+	Utils::WaitForKeypress();
 }
 // 판매 가능한 아이템 확인
 void Shop::SellItem(Character* player) {
 	system("cls");
+	int currentPage = 0;
+	const int itemsPerPage = 4;
 	while (true)
-	{		
-		m_ShopMessage.clear();		
-		m_ShopMessage.push_back("판매할 아이템을 선택해주세요.");
-		m_ShopMessage.push_back("----------------------------- 판매 목록 -----------------------------");
-		Utils::DrawLine();
-		for (auto& msg : m_ShopMessage) cout << msg << endl;
+	{
+		system("cls");		
+		m_ShopMessage.clear();
+		cout << Color::BEIGE << "----------------------------------------------------------------"<< Color::RESET << endl;
+		cout << Color::BEIGE << "판매할 아이템을 선택해주세요. (현재 페이지: " << currentPage + 1 << ")" << Color::RESET << endl;
+		cout << Color::BEIGE << "--------------------------- 판매 목록 --------------------------" << Color::RESET << endl;
+
 		vector<Item*>& myItems = player->getInventory()->GetInventory();
 		if (myItems.empty()) {
-			cout << "판매할 아이템이 없습니다." << endl;
+			system("cls");
+			cout << Color::RED << "판매할 아이템이 없습니다." << Color::RESET << endl;
+			Utils::WaitForKeypress();
 			return;
 		}
-		for (int i = 0; i < myItems.size(); ++i) {
+		
+		int totalItems = static_cast<int>(myItems.size());
+		int startIndex = currentPage * itemsPerPage;
+		int endIndex;
+
+		if (startIndex + itemsPerPage > totalItems)
+		{
+			endIndex = totalItems;
+		}
+		else
+		{
+			endIndex = startIndex + itemsPerPage;
+		}
+		for (int i = startIndex; i < endIndex; ++i) {
+			cout << "----------------------------------------------------------------"<< endl;
 			DrawTineLine();
 			string color = myItems[i]->getRarityColor(myItems[i]->getRarity());
 			if (myItems[i]->getItemType() != ItemCategory::Cash) {
-				cout << i + 1 << ". " << color << "[" << myItems[i]->getName() << "]" << "(" << myItems[i]->rarityToString(myItems[i]->getRarity()) << ")" << "\033[0m"
-					<< " (판매가: " << (int)(myItems[i]->getValue() * 0.6) << "G)" << endl;
+				cout << color << (i - startIndex) + 1 << ". " << "[" << myItems[i]->getName() << "]" << "(" << myItems[i]->rarityToString(myItems[i]->getRarity()) << ")" 
+					<< " (판매가: " << (int)(myItems[i]->getValue() * 0.6) << "G)" << "\033[0m" << endl;
 			}
 			else {
-				cout << i + 1 << ". " << color << "[" << myItems[i]->getName() << "]" << "(" << myItems[i]->rarityToString(myItems[i]->getRarity()) << ")" << "\033[0m"
-					<< " (판매가: " << (int)(myItems[i]->getValue()) << "G)" << endl;
+				cout << color << (i - startIndex) + 1 << ". " << "[" << myItems[i]->getName() << "]" << "(" << myItems[i]->rarityToString(myItems[i]->getRarity()) << ")"
+					<< " (판매가: " << (int)(myItems[i]->getValue()) << "G)" << "\033[0m" << endl;
 			}
 			if (myItems[i]->getItemType() == ItemCategory::Weapon)
 			{
-				cout << " 가격: " << myItems[i]->getValue() << "  타입: 무기 " << "  코딩력: " << myItems[i]->getAttack() << endl;
+				cout << color << " 가격: " << myItems[i]->getValue() << "  타입: 무기 " << "  코딩력: " << myItems[i]->getAttack() << "\033[0m" << endl;
 			}
 			else if (myItems[i]->getItemType() == ItemCategory::Throwing)
 			{
-				cout << " 가격: " << myItems[i]->getValue() << "  타입: 투척 무기 " << "  코딩력: " << myItems[i]->getAttack() << endl;
+				cout << color << " 가격: " << myItems[i]->getValue() << "  타입: 투척 무기 " << "  코딩력: " << myItems[i]->getAttack() << "\033[0m" << endl;
 			}
 			else if (myItems[i]->getItemType() == ItemCategory::HPotion)
 			{
-				cout << " 가격: " << myItems[i]->getValue() << "  타입: 회복 포션 " << "  회복력: " << myItems[i]->getHeal() << endl;
+				cout << color << " 가격: " << myItems[i]->getValue() << "  타입: 회복 포션 " << "  회복력: " << myItems[i]->getHeal() << "\033[0m" << endl;
 			}
 			else if (myItems[i]->getItemType() == ItemCategory::BPotion)
 			{
-				cout << " 가격: " << myItems[i]->getValue() << "  타입: 버프 포션 " << "  버프력: " << myItems[i]->getBuff() << endl;
+				cout << color << " 가격: " << myItems[i]->getValue() << "  타입: 버프 포션 " << "  버프력: " << myItems[i]->getBuff() << "\033[0m" << endl;
 			}
 			else if (myItems[i]->getItemType() == ItemCategory::Cash)
 			{
-				cout << " 가격: " << myItems[i]->getValue() << "  타입: 환금 아이템 " << endl;
+				cout << color << " 가격: " << myItems[i]->getValue() << "  타입: 환금 아이템 " << "\033[0m" << endl;
 			}
 		}
-		cout << "21. 뒤로가기" << endl;
-		int select = Utils::DefaultMenu();
-		if (gm->DefaultMenuCheck(select)) {
-			continue;
-		}
-		if (select >= 1 && select <= myItems.size()) {
-			SellItemFuntion(select - 1, player);
+		DrawTineLine();
+		bool hasNextPage = (startIndex + itemsPerPage < totalItems);
+
+		if (currentPage > 0) {
+			cout <<Color::YELLOW << "5. 이전 페이지로       " << Color::RESET;
+		}		
+		if (hasNextPage) {
+			cout <<Color::CYAN << "6. 다음 페이지로" <<Color::RESET << endl;
 		}
 		else {
-			cout << "잘못된 입력입니다." << endl;			
+			cout << Color::CYAN << "6. 뒤로가기 (상점 종료)" << Color::RESET << endl;
 		}
-		if (select == 21) {
+		cout << "----------------------------------------------------------------" << endl;
+			
+		int select = Utils::DefaultMenu();		
+		if (gm->DefaultMenuCheck(select)) {
+			continue;
+		}		
+		if (select >= 1 && select <= (endIndex - startIndex)) {
+			int actualIndex = startIndex + (select - 1);
+			SellItemFuntion(actualIndex, player);			
+			if (myItems.size() <= startIndex && currentPage > 0) currentPage--;
+		}
+		else if (select == 5) {
+			if (currentPage > 0) {
+				currentPage--;
+			}
+			else {
+				system("cls");
+				break;
+			}
+		}
+		else if (select == 6) {
+			if (hasNextPage) {
+				currentPage++;
+			}
+			else {
+				system("cls");
+				break;
+			}
+		}
+		else {
 			system("cls");
-			break;
+			cout <<Color::RED <<"잘못된 입력입니다." << Color::RESET << endl;
 		}
-		m_ShopMessage.clear();
 	}
 }
 void Shop::DrawTineLine() {
-	cout << Color::GRAY << "---------------------------------------------------------------------"<<Color::RESET<<endl;
+	cout << Color::GRAY << "----------------------------------------------------------------"<<Color::RESET<<endl;
 }
 void Shop::NextStage(GameManager* gm) {
-	system("cls");
+	Utils::WaitForKeypress();
 	m_ShopMessage.clear();
 	for (auto item : m_Product) delete item;
 	m_Product.clear();

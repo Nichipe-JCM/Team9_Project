@@ -13,7 +13,7 @@ int Utils::GetSafeInput() {
         if (cin.fail()) {
             cin.clear(); 
             cin.ignore(10000, '\n');
-            cout << "잘못된 입력입니다. 숫자를 입력해주세요." << endl;
+            cout << Color::BRIGHT_YELLOW << "잘못된 입력입니다. 숫자를 입력해주세요." << Color::RESET << endl;
         }
         else {
             cin.ignore(10000, '\n'); 
