@@ -19,13 +19,17 @@ FinalBoss::FinalBoss()
 
     static random_device rd;
     static mt19937 gen(rd());
-    uniform_real_distribution<float> ratioDist(1.0f, 1.5f);  // 기존 몬스터 스탯의 1.5 ~ 2.0배
 
-    float hpRatio = ratioDist(gen);
-    float atkRatio = ratioDist(gen);
+   
+    uniform_real_distribution<float> hpRatioDist(2.0f, 2.3f); // 체력: 1.5 ~ 2.0 배
+  
+    uniform_real_distribution<float> atkRatioDist(1.5f, 1.8f); // 공격력: 1.5 ~ 1.8 배
+
+    float hpRatio = hpRatioDist(gen);
+    float atkRatio = atkRatioDist(gen);
 
     m_MaxHP = static_cast<int>(m_MaxHP * hpRatio);
-    m_HP = m_MaxHP;
+    m_HP = m_MaxHP; // 체력은 최대치로 초기화
     m_ATK = static_cast<int>(m_ATK * atkRatio);
     // ===== 최종 보스 스탯 강화 완료 =====
      
