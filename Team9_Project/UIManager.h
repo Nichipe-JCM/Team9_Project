@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <iostream>
 #include <vector>
 #include <string>
@@ -9,13 +9,21 @@ class Character;
 class Inventory;
 class Monster;
 
+struct ASCIIPicture
+{
+	std::string art;
+	int height;
+};
+
+
 class UIManager
 {
 public:
     UIManager();
     ~UIManager();
-	std::map<std::string, std::string> MonsterArt;
+	std::map<std::string, ASCIIPicture> MonsterArt;
 
+    int GetArtHeight(const std::string& monsterName);
     void RenderBattleScreen(const Character* player, const Monster* monster);
     void OpeningScene();
     void EndingScene();

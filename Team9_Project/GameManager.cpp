@@ -1,4 +1,4 @@
-﻿#include "GameManager.h"
+#include "GameManager.h"
 #include "MidBoss.h"
 #include "Mob.h"
 #include "FinalBoss.h"
@@ -167,6 +167,7 @@ void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력
 
 
 void GameManager::BattleVictory() { // 전투승리시
+	m_UI->RenderBattleScreen(m_Player, m_CurrentMonster);
 	cout << "\n이겼다! 오늘도 열심히 공부했다!\n" << endl;
 	if (m_Stage < 21) {
 		m_Player->setEXP(m_Player->getEXP() + m_CurrentMonster->getDropEXP());
