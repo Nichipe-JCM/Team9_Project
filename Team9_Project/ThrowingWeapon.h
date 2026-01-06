@@ -16,7 +16,6 @@ public:
 	}
 	void setEquipped(bool status) { m_isEquipped = status; }
 	bool getEquipped() { return m_isEquipped; }
-
 private:
 	int m_damage;
 	int m_quantity;
