@@ -1,4 +1,4 @@
-#include "GameManager.h"
+﻿#include "GameManager.h"
 #include "MidBoss.h"
 #include "Mob.h"
 #include "FinalBoss.h"
@@ -151,6 +151,7 @@ void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력
 	else cout << Color::BRIGHT_WHITE << "앗! 오늘의 코드카타로 " << Color::RED << m_CurrentMonster->getName()
 		<< Color::BRIGHT_WHITE << "이(가) 문제로 나왔다!" << Color::RESET << endl;
 	Sleep(2000);
+	system("cls");
 	m_UI->RenderBattleScreen(m_Player, m_CurrentMonster);
 	while (true) { // 둘중 하나의 체력이 0이 될때까지 반복
 		m_Player->Attack(m_CurrentMonster);
