@@ -6,6 +6,7 @@ class Potion;
 class Item;
 class Monster;
 class Inventory;
+class UIManager;
 class Character//캐릭터 클래스
 {
 private:
@@ -28,7 +29,9 @@ private:
 	Inventory* m_Inventory; // 임시로 인벤토리 추가
 
 public:
-	Character(string name, int hp = 200, int maxHp = 200, int atk = 9999, int level = 1, int gold = 0, int exp = 0);//캐릭터의 초기값
+	Character(string name, int hp = 200, int maxHp = 200, int atk = 30, int level = 1, int gold = 0, int exp = 0);//캐릭터의 초기값
+	Character(const Character&) = delete;
+	Character& operator=(const Character&) = delete;
 	~Character();
 
 	string getName()const;
@@ -54,8 +57,8 @@ public:
 	void setGold(int gold);
 	void GainGold(int amount);
 	void LevelUp();
-	void Attack(Monster* target);
-	void GetHit(int damage);
+	void Attack(Monster* target, UIManager* ui);
+	void GetHit(int damage, UIManager* ui);
 	void showStatus();//캐릭터 스텟 보기
 	void usePotion(Potion* potion);
 	bool AutoUsePotion(Potion* potion);

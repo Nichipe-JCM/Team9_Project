@@ -32,7 +32,7 @@ public:
 	virtual std::string getType() const { return "아이템"; }
 	virtual void PrintInfo() const;
 	virtual void setEquipped(bool equipped) {}
-
+	virtual bool getEquipped() = 0;
 	virtual ~Item() = default;
 	virtual Item* clone() const = 0;
 };

@@ -13,12 +13,37 @@
 
 using namespace std;
 
+
+size_t GetUtf8Length(const string& str) {
+	size_t length = 0;
+	for (size_t i = 0; i < str.length(); ) {
+		unsigned char c = static_cast<unsigned char>(str[i]);
+		if ((c & 0x80) == 0) {
+			i += 1;
+		}
+		else if ((c & 0xF0) == 0xE0) {
+			i += 3;
+		}
+		else if ((c & 0xE0) == 0xC0) {
+			i += 2;
+		}
+		else if ((c & 0xF8) == 0xF0) {
+			i += 4;
+		}
+		else {
+			i += 1;
+		}
+		length++;
+	}
+	return length;
+}
+
 GameManager::GameManager(StatusManager* sm, AchievementManager* am): m_SM(sm), m_AM(am),
 m_Stage(0), m_Player(nullptr), m_CurrentMonster(nullptr) {
 
 	m_Event = new EventManager();
 	m_Shop = new Shop(this);
-
+	m_UI = new UIManager();
 }
 
 
@@ -40,6 +65,11 @@ GameManager::~GameManager() {
 		delete m_Shop;
 		m_Shop = nullptr;
 	}
+	if (m_UI != nullptr) {
+		delete m_UI;
+		m_UI = nullptr;
+	}
+
 }
 
 
@@ -69,24 +99,35 @@ void GameManager::RunGame() { // 게임의 전체적인 프로세스 진행
 	m_Stage = 1; // 스테이지 초기화
 
 
-	//인벤토리 테스트 케이스
-	m_Player->getInventory()->AddItem(new ThrowingWeapon("오토바이", 3000, 9999, 1, ItemCategory::Throwing, Rarity::Legendary));
-	m_Player->getInventory()->AddItem(new HealingPotion("쓰리샷 추가한 커피", 55, 45, ItemCategory::HPotion, Rarity::Common));
-	m_Player->getInventory()->AddItem(new Weapon("키보드워리어의 너덜너덜한 키보드였던 것", 10, 10, ItemCategory::Weapon, Rarity::Common));
-	m_Player->getInventory()->AddItem(new HealingPotion("스누피 초코우유", 50, 55, ItemCategory::HPotion, Rarity::Rare));
-	m_Player->getInventory()->AddItem(new ThrowingWeapon("분노에 찬 마우스", 40, 40, 1, ItemCategory::Throwing, Rarity::Common));
-	m_Player->getInventory()->AddItem(new Weapon("전설적인 C++ 마스터의 키보드", 500, 50, ItemCategory::Weapon, Rarity::Legendary));
-	m_Player->getInventory()->AddItem(new ThrowingWeapon("투척용 플로피디스크", 20, 10, 3, ItemCategory::Throwing, Rarity::Common));
-	m_Player->getInventory()->AddItem(new HealingPotion("빨간 날", 1000, 100, ItemCategory::HPotion, Rarity::Legendary));
-	m_Player->getInventory()->AddItem(new Weapon("독거미 키보드 60% 배열", 30, 30, ItemCategory::Weapon, Rarity::Rare));
-	m_Player->getInventory()->AddItem(new ThrowingWeapon("구겨진 음료캔", 20, 30, 2, ItemCategory::Throwing, Rarity::Common));
-	m_Player->getInventory()->AddItem(new HealingPotion("에너지드링크", 40, 50, ItemCategory::HPotion, Rarity::Common));
-	m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
-
+	////인벤토리 테스트 케이스
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("오토바이", 3000, 9999, 1, ItemCategory::Throwing, Rarity::Legendary));
+	//m_Player->getInventory()->AddItem(new HealingPotion("쓰리샷 추가한 커피", 55, 45, ItemCategory::HPotion, Rarity::Common));
+	//m_Player->getInventory()->AddItem(new Weapon("키보드워리어의 너덜너덜한 키보드였던 것", 10, 10, ItemCategory::Weapon, Rarity::Common));
+	//m_Player->getInventory()->AddItem(new HealingPotion("스누피 초코우유", 50, 55, ItemCategory::HPotion, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("분노에 찬 마우스", 40, 40, 1, ItemCategory::Throwing, Rarity::Common));
+	//m_Player->getInventory()->AddItem(new Weapon("전설적인 C++ 마스터의 키보드", 500, 50, ItemCategory::Weapon, Rarity::Legendary));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("투척용 플로피디스크", 20, 10, 3, ItemCategory::Throwing, Rarity::Common));
+	//m_Player->getInventory()->AddItem(new HealingPotion("빨간 날", 1000, 100, ItemCategory::HPotion, Rarity::Legendary));
+	//m_Player->getInventory()->AddItem(new Weapon("독거미 키보드 60% 배열", 30, 30, ItemCategory::Weapon, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("구겨진 음료캔", 20, 30, 2, ItemCategory::Throwing, Rarity::Common));
+	//m_Player->getInventory()->AddItem(new HealingPotion("에너지드링크", 40, 50, ItemCategory::HPotion, Rarity::Common));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	//m_Player->getInventory()->AddItem(new ThrowingWeapon("찌르기", 50, 30, 3, ItemCategory::Throwing, Rarity::Rare));
+	
 
 	while (true) {
 		SpawnMonster(m_Stage); // 스테이지 기준 몬스터 생성
-		cout << "현재 스테이지: " << m_Stage << endl;
+		cout << Color::TEAL <<"\n현재 스테이지: " << m_Stage << endl;
 		Sleep(1000);
 		Battle(); // 전투
 		if (m_Player->getHP() <= 0) { // 플레이어 사망시 게임오버 출력 후 RunGame 종료
@@ -99,7 +140,6 @@ void GameManager::RunGame() { // 게임의 전체적인 프로세스 진행
 		Sleep(1000);
 		m_AM->UpdateAchievements(m_Player, m_SM);
 		m_Stage++;
-		Sleep(1000);
 		if (m_Stage > 21) { // 스테이지가 22이상일 경우(최종보스를 잡았을 경우) 엔딩 출력 후 처음으로
 			Sleep(1000);
 			Ending();
@@ -134,16 +174,28 @@ void GameManager::SpawnMonster(int stage) {
 
 
 void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력이 0이 될때까지 반복 루프
-	system("cls");
-	cout << "앗! 당신의 앞길을 " << m_CurrentMonster->getName() << "이(가) 가로막았다!" << endl;
+	if (m_Stage % 5 == 0) cout << Color::RED << "\n앗! 갑자기 긴급 실력 테스트로 " << Color::BRIGHT_RED <<
+		 m_CurrentMonster->getName() << Color::RED << " 님이 직접 문제를 내신다!!!" << Color::RESET << endl;
+	else if (m_Stage == 21) m_UI->FinalBossAppearance();
+	else cout << Color::BRIGHT_WHITE << "\n앗! 오늘의 코드카타로 " << Color::RED << m_CurrentMonster->getName()
+		<< Color::BRIGHT_WHITE << "이(가) 문제로 나왔다!" << Color::RESET << endl;
 	Sleep(1000);
+	Utils::WaitForKeypress();
+	system("cls");
+	m_UI->RenderBattleScreen(m_Player, m_CurrentMonster);
+	Sleep(1500);
 	while (true) { // 둘중 하나의 체력이 0이 될때까지 반복
+		m_Player->Attack(m_CurrentMonster, m_UI);
+		m_UI->RenderBattleScreen(m_Player, m_CurrentMonster);
+		if (m_CurrentMonster->getHP() <= 0) {
+			m_CurrentMonster->checkDeath();
+			break;
+		}
+		Sleep(500);		
+		m_CurrentMonster->attack(m_Player, m_UI);
+		m_UI->RenderBattleScreen(m_Player, m_CurrentMonster);
 		if (m_Player->getHP() <= 0) break;
-		m_Player->Attack(m_CurrentMonster);
-		Sleep(1000);
-		if (m_CurrentMonster->getHP() <= 0) break;
-		m_CurrentMonster->attack(m_Player);
-		Sleep(1000);
+		Sleep(500);
 	}
 
 }
@@ -151,21 +203,33 @@ void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력
 
 
 void GameManager::BattleVictory() { // 전투승리시
-	cout << "\n승리!\n" << endl;
+	cout << Color::BRIGHT_GREEN << "\n해냈다! 오늘도 열심히 공부했다!" << Color::RESET << endl;
+	m_UI->ClearLog();
+	m_SM->AddKill(m_CurrentMonster->getName());
 	if (m_Stage < 21) {
 		m_Player->setEXP(m_Player->getEXP() + m_CurrentMonster->getDropEXP());
 		m_Player->setGold(m_Player->getGold() + m_CurrentMonster->getDropGold());
 		m_Player->LevelUp();
 		Item* dropitem = m_CurrentMonster->dropItem();
 		if (dropitem != nullptr) m_Player->getInventory()->AddItem(dropitem);
-		m_SM->AddKill(m_CurrentMonster->getName());
 		delete m_CurrentMonster; // 현재 몬스터 삭제
 		m_CurrentMonster = nullptr;
 		m_AM->UpdateAchievements(m_Player, m_SM);
+		Sleep(1000);
 	}
+	else {
+		delete m_CurrentMonster; // 현재 몬스터 삭제
+		m_CurrentMonster = nullptr;
+	}
+	Utils::WaitForKeypress();
 	while (m_Stage < 21) { // 선택지. 최종보스 이하 스테이지일때만 나오게
-		cout << "1. 상점으로" << endl;
-		cout << "2. 무작위 이벤트" << endl;
+		system("cls");
+		cout << Color::BRIGHT_WHITE << "현재 스테이지: " << Color::GOLD << m_Stage << Color::RESET << endl;
+		cout << Color::TEAL << "\n다음 공부를 하기전에 뭘 할까?\n" << Color::RESET << endl;
+		cout << Color::BEIGE << "==================================" << Color::RESET << endl;
+		cout << "1. " << Color::GOLD << "상점으로" << Color::RESET << endl;
+		cout << "2. " << Color::LIME << "시간을 때운다(무작위 이벤트)" << Color::RESET << endl;
+		cout << Color::BEIGE << "==================================\n" << Color::RESET << endl;
 		int select = Utils::DefaultMenu(); // 기본 선택지 아래에 기본메뉴 표시 + 안전한 입력 받음
 		if (GameManager::DefaultMenuCheck(select)) { // 기본 선택지를 골랐으면 while문 반복
 			continue;
@@ -176,6 +240,7 @@ void GameManager::BattleVictory() { // 전투승리시
 		}
 		else if (select == 2) {
 			VisitEvent();
+			Utils::WaitForKeypress();
 			break;
 		}
 		else { // 범위 외 입력 감지시 다시
@@ -205,18 +270,23 @@ void GameManager::VisitEvent() {
 
 
 void GameManager::Opening() {
+	cout << Color::LIME << "창 크기를 크게 해주세요!" << Color::RESET << endl;
+	Utils::WaitForKeypress();
+	system("cls");
+	m_UI->Mainscreen();
+	m_UI->OpeningScene();
 	string name;
 	while (true) { // 이름 유효성 검사 프로세스
-		cout << ">> 이름을 입력하세요 (특수문자/공백 불가, 12글자 이내): ";
+		cout << Color::BRIGHT_WHITE <<  ">> 이름을 입력하세요 (특수문자/공백 불가, 12글자 이내): " << Color::RESET;
 		getline(cin, name);
 		if (cin.fail()) { // 모종의 사유로 cin이 fail했을 때
 			cin.clear();
 			cin.ignore(10000, '\n');
-			cout << "잘못된 입력입니다." << endl;
+			cout << Color::YELLOW << "잘못된 입력입니다." << Color::RESET << endl;
 			continue;
 		}
-		if (name.length() > 12) { // 길이가 너무 길 때
-			cout << "이름이 너무 깁니다. 12글자 이내로 해주세요." << endl;
+		if (GetUtf8Length(name) > 12) { // 길이가 너무 길 때
+			cout << Color::YELLOW << "이름이 너무 깁니다. 12글자 이내로 해주세요." << Color::RESET << endl;
 			continue;
 		}
 		bool isValid = true;
@@ -232,21 +302,35 @@ void GameManager::Opening() {
 			}
 		}
 		if (!isValid) { // 위에서 한 특문검사 체크
-			cout << "특수문자 또는 공백은 사용할 수 없습니다." << endl;
+			cout << Color::YELLOW << "특수문자 또는 공백은 사용할 수 없습니다." << Color::RESET << endl;
+			continue;
+		}
+		if (name == "") { // 빈 문자열 검사
+			cout << Color::YELLOW << "이름을 입력해주세요." << Color::RESET << endl;
+			continue;
 		}
 		else {
 			break;
 		}
 	}
 	m_Player = new Character(name); // 캐릭터 생성
-	cout << "당신의 캐릭터 " << name << "이(가) 생성되었습니다!" << endl;
+	cout << Color::LIME << "당신의 캐릭터 " << Color::BRIGHT_YELLOW << name << Color::LIME << " 이(가) 생성되었습니다!" << Color::RESET << endl;
+	cout << Color::BRIGHT_WHITE << "기본 체력:" << Color::BRIGHT_YELLOW << m_Player->getMaxHP() << Color::RESET
+		<< Color::BRIGHT_WHITE << ", 기본 코딩력:" << Color::BRIGHT_YELLOW << m_Player->getATK() << Color::RESET << endl;
 	Sleep(1000);
 }
 
 
 
 void GameManager::Ending() {
-	cout << "YOU WIN!" << endl; // 임시
+	m_UI->EndingScene();
+	cout << Color::CRIMSON << "\nY" << Color::ORANGE << "O" << Color::YELLOW << "U" << Color::LIME << " W" << Color::BRIGHT_BLUE << "I" << Color::NAVY << "N" << Color::PURPLE <<"!\n" << endl;
+	Sleep(1000);
+	cout << Color::BRIGHT_WHITE << "모든 코딩 테스트를 통과하고, 마침내 내배캠에서 살아남았습니다!" << Color::RESET << endl;
+	Sleep(1000);
+	cout << Color::LIME << "이제 새로운 도전이 기다리고 있습니다!" << Color::RESET << endl;
+	Sleep(1000);
+	cout << Color::LIME << "다회차 플레이를 통해 모든 업적을 달성해보세요!" << Color::RESET << endl;
 }
 
 

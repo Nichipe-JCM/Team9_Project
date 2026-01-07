@@ -16,5 +16,5 @@ public:
 	// 추상으로 두고 외부에서 제작
 	virtual int getEffectAmount() const = 0;
 	virtual string getType() const override = 0;
-
+	
 };

@@ -5,6 +5,8 @@
 
 class Character;
 class Item;
+class UIManager;
+class ItemPool;
 
 
 // 아이템과 드랍확률을 그냥 묶어버리기...
@@ -28,11 +30,11 @@ public:
 	Monster(const std::string& name, int level, int gold, int exp);
 	virtual ~Monster() = default; // 임시 가상 소멸자
 
-	virtual void attack(Character* target);
-	virtual void GetHit(int damage);
+	virtual void attack(Character* target, UIManager* ui);
+	virtual void GetHit(int damage, UIManager* ui);
 
 	Item* dropItem();
-	bool checkDeath();
+	virtual bool checkDeath();
 
 	// get
 	std::string getName() const;
@@ -40,6 +42,8 @@ public:
 	int getAttack() const;
 	int getDropGold() const;
 	int getDropEXP() const;
+	int getMaxHP() const;
+	int getLevel() const;
 	bool isAlive;
 
 	// set
@@ -52,4 +56,6 @@ protected:
 	int m_ATK;
 	int m_dropGold;
 	int m_dropEXP;
+	int m_MaxHP;
+	int m_Level;
 };
