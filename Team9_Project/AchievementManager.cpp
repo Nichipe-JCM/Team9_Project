@@ -27,11 +27,12 @@ void AchievementManager::Init() {
 }
 void AchievementManager::UpdateAchievements(Character* player, StatusManager* sm) {
     //if (!m_Achievements["업적 이름"].achieved && 업적 조건) {} 양식으로 작성
+    int t = achievedCount;
     if (!m_Achievements["첫걸음"].achieved && player->getATK() >=50) {
         m_Achievements["첫걸음"].achieved = true;
         cout << endl;
         Utils::DrawLine();
-        cout << "[업적 달성!] '첫걸음' - 코딩력 100 달성!" << endl;
+        cout << Color::LIME << "[업적 달성!] '첫걸음' - 코딩력 100 달성!" << endl;
         Utils::DrawLine();
         cout << endl;
 		achievedCount++;
@@ -40,7 +41,7 @@ void AchievementManager::UpdateAchievements(Character* player, StatusManager* sm
         m_Achievements["레벨10달성"].achieved = true;
         cout << endl;
         Utils::DrawLine();
-        cout << "[업적 달성!] 레벨 10 달성!" << endl;
+        cout << Color::LIME << "[업적 달성!] 레벨 10 달성!" << endl;
         Utils::DrawLine();
         cout << endl;
         achievedCount++;
@@ -49,7 +50,7 @@ void AchievementManager::UpdateAchievements(Character* player, StatusManager* sm
         m_Achievements["이제나도부자"].achieved = true;
         cout << endl;
         Utils::DrawLine();
-        cout << "[업적 달성!] 10000 Zep 수집!" << endl;
+        cout << Color::LIME << "[업적 달성!] 10000 Zep 수집!" << endl;
         Utils::DrawLine();
         cout << endl;
         achievedCount++;
@@ -61,7 +62,7 @@ void AchievementManager::UpdateAchievements(Character* player, StatusManager* sm
         m_Achievements["진짜개발자"].achieved = true;
         cout << endl;
         Utils::DrawLine();
-        cout << "[업적 달성!] '진짜 개발자' - 코딩력, 체력, Zep 모두 증명!" << endl;
+        cout << Color::LIME << "[업적 달성!] '진짜 개발자' - 코딩력, 체력, Zep 모두 증명!" << endl;
         Utils::DrawLine();
         cout << endl;
 		achievedCount++;
@@ -70,7 +71,7 @@ void AchievementManager::UpdateAchievements(Character* player, StatusManager* sm
         m_Achievements["내배캠지배자"].achieved = true;
         cout << endl;
         Utils::DrawLine();
-        cout << "[업적 달성!] 내배캠지배자 - 강창민 튜터님 격파!" << endl;
+        cout << Color::LIME << "[업적 달성!] 내배캠지배자 - 강창민 튜터님 격파!" << endl;
         Utils::DrawLine();
         cout << endl;
         achievedCount++;
@@ -82,7 +83,7 @@ void AchievementManager::UpdateAchievements(Character* player, StatusManager* sm
         m_Achievements["레퍼런스 마스터"].achieved = true;
         cout << endl;
         Utils::DrawLine();
-        cout << "[업적 달성!] 레퍼런스 마스터 - 레퍼런스 처치 5회 달성!" << endl;
+        cout << Color::LIME << "[업적 달성!] 레퍼런스 마스터 - 레퍼런스 처치 5회 달성!" << endl;
         Utils::DrawLine();
         cout << endl;
         achievedCount++;
@@ -94,7 +95,7 @@ void AchievementManager::UpdateAchievements(Character* player, StatusManager* sm
         m_Achievements["알고리즘 마스터"].achieved = true;
         cout << endl;
         Utils::DrawLine();
-        cout << "[업적 달성!] 알고리즘 마스터 - 알고리즘 처치 5회 달성!" << endl;
+        cout << Color::LIME << "[업적 달성!] 알고리즘 마스터 - 알고리즘 처치 5회 달성!" << endl;
         Utils::DrawLine();
         cout << endl;
         achievedCount++;
@@ -106,7 +107,7 @@ void AchievementManager::UpdateAchievements(Character* player, StatusManager* sm
         m_Achievements["템플릿 마스터"].achieved = true;
         cout << endl;
         Utils::DrawLine();
-        cout << "[업적 달성!] 템플릿 마스터 - 템플릿 처치 5회 달성!" << endl;
+        cout << Color::LIME << "[업적 달성!] 템플릿 마스터 - 템플릿 처치 5회 달성!" << endl;
         Utils::DrawLine();
         cout << endl;
         achievedCount++;
@@ -120,7 +121,7 @@ void AchievementManager::UpdateAchievements(Character* player, StatusManager* sm
         m_Achievements["내배캠행동대장"].achieved = true;
         cout << endl;
         Utils::DrawLine();
-        cout << "[업적 달성!] 내배캠행동대장 - 다양한 C++ 문법을 해결했습니다!" << endl;
+        cout << Color::LIME << "[업적 달성!] 내배캠행동대장 - 다양한 C++ 문법을 해결했습니다!" << endl;
         Utils::DrawLine();
         cout << endl;
         achievedCount++;
@@ -136,7 +137,7 @@ void AchievementManager::UpdateAchievements(Character* player, StatusManager* sm
 
         cout << endl;
         Utils::DrawLine();
-        cout << "[업적 달성!] 청출어람 - 튜터님들의 실력을 넘어섰습니다!" << endl;
+        cout << Color::LIME << "[업적 달성!] 청출어람 - 튜터님들의 실력을 넘어섰습니다!" << endl;
         Utils::DrawLine();
         cout << endl;
         achievedCount++;
@@ -146,7 +147,7 @@ void AchievementManager::UpdateAchievements(Character* player, StatusManager* sm
         m_Achievements["전투 마스터"].achieved = true;
         cout << endl;
         Utils::DrawLine();
-        cout << "[업적 달성!] 전투 마스터 - 당신은 진정한 전투의 마스터!!" << endl;
+        cout << Color::LIME << "[업적 달성!] 전투 마스터 - 당신은 진정한 전투의 마스터!!" << endl;
         Utils::DrawLine();
         cout << endl;
         achievedCount++;
@@ -156,10 +157,12 @@ void AchievementManager::UpdateAchievements(Character* player, StatusManager* sm
         m_Achievements["전설의 개발자"].achieved = true;
         cout << endl;
         Utils::DrawLine();
-        cout << "[업적 달성!] 전설의 개발자 - 강창민 튜터님을 5번이나 격파했다니!!" << endl;
+        cout << Color::LIME << "[업적 달성!] 전설의 개발자 - 강창민 튜터님을 5번이나 격파했다니!!" << endl;
         Utils::DrawLine();
         cout << endl;
         achievedCount++;
+    }
+    if(t != achievedCount){
+        Utils::WaitForKeypress();
 	}
-
 }

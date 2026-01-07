@@ -29,8 +29,8 @@ UIManager::UIManager()
           \  _  /  _  
           / / \ \/ /  
          / /   \  /  
-        / /_ _ / \ \  
-        \_ _ _ _ / \_\  
+        / /_ _ /\ \  
+        \_ _ _ _/\_\  
                             )", 11 };
 
     MonsterArt["템플릿"] = { R"(
@@ -42,7 +42,7 @@ UIManager::UIManager()
           \  _ \ \  \       /   / \   
            \ \    \  \             \   
             \ \ _  \  \_ _ _ _ _ _ _\   
-             \ _ _\ \ / _ _ _ _ _ _ _/    
+             \ _ _\ \ /_ _ _ _ _ _ _/    
                             )", 11};
    
 
@@ -55,7 +55,7 @@ UIManager::UIManager()
     ║                  (_)     | |   | |       ║  
     ║  __   ____ _ _ __ _  __ _| |__ | | ___   ║  
     ║  \ \ / / _` | '__| |/ _` | '_ \| |/ _ \  ║  
-    ║   \ V / (_| | |  | | (_| | |_) | |  __ / ║  
+    ║   \ V / (_| | |  | | (_| | |_) | |  __/  ║  
     ║    \_/ \__,_|_|  |_|\__,_|_.__/|_|\___|  ║
     ║                                          ║  
     ╚══════════════════════════════════════════╝   
@@ -382,7 +382,7 @@ void ShowBossEntrance(string rawArt, int totalLines) {
     // 3. 등장 후 웅장한 메시지 (선택 사항)
     Sleep(500);
     cout << "\n\n" << Color::BG_RED << Color::BRIGHT_WHITE
-        << "       [ 경고 ]  강창민 튜터가 등장했습니다!       "
+        << "       [ 경고 ]  강창민 튜터님이 등장했습니다!       "
         << Color::RESET << endl;
     Sleep(1000);
 }
@@ -431,36 +431,55 @@ void UIManager::RenderBattleScreen(const Character* player, const Monster* monst
     PrintLogs();
 } 
 
-void UIManager::OpeningScene() { // 임시 
+void UIManager::OpeningScene() {
     system("cls");
-    cout << "================= 게임 오프닝 씬 =================" << endl;
-    cout << "당신은 코딩 세계의 용사입니다." << endl;
-    cout << "악명 높은 버그 몬스터들이 세상을 위협하고 있습니다." << endl;
-    cout << "당신의 임무는 이 몬스터들을 물리치고 평화를 되찾는 것입니다." << endl;
-    cout << "=================================================" << endl;
+    cout << Color::BRIGHT_WHITE << "오늘도 내배캠에서 열심히 공부를 하던 나. 그런데..." << endl;
+    Sleep(2000);
+	cout << Color::TEAL << "\n「강창민 튜터 」" << Color::BRIGHT_WHITE << " 오늘부터 과제 발제합니다!!!" << endl;
+	Sleep(2000);
+	cout << Color::BRIGHT_WHITE << "\n튜터님이 손짓하자 순식간에 Zep이 수많은 코드카타 문제들로 가득 찼다!" << endl;
+	Sleep(2000);
+	cout << Color::TEAL << "\n「강창민 튜터 」" << Color::BRIGHT_WHITE << " 이번 과제는!!! 코딩 지옥에서 살아남아라!!! 으하하하하!!!" << endl;
+	Sleep(2000);
+	cout << Color::BRIGHT_WHITE << "\n튜터님은 그대로 웃으며 모습을 감췄다..." << endl;
+	Sleep(2000);
+	cout << Color::LIME << "\n수많은 코드카타 문제들을 해결하며 실력을 기르고, 그 실력을 강창민 튜터님에게 증명해서 내배캠에서 살아남자!!" << Color::RESET << endl;
+    Sleep(2000);
     Utils::WaitForKeypress();
 }
 
-void UIManager::EndingScene() { // 임시
+void UIManager::EndingScene() {
     system("cls");
-    cout << "================= 게임 엔딩 씬 =================" << endl;
-    cout << "축하합니다! 모든 몬스터를 물리치고 세상에 평화를 되찾았습니다." << endl;
-    cout << "당신의 용기와 코딩 실력에 경의를 표합니다." << endl;
-    cout << "=================================================" << endl;
+    cout << Color::BRIGHT_WHITE << "어떻게든 강창민 튜터님의 문제를 해결했다!!" << endl;
+    Sleep(2000);
+    cout << Color::TEAL << "\n「강창민 튜터 」" << Color::BRIGHT_WHITE << " 크크큭... 제법이군요... 하지만 이 과제는 앞으로 남은 과제들 중 최약체!!!" << endl;
+    Sleep(2000);
+    cout << Color::TEAL << "\n「강창민 튜터 」" << Color::BRIGHT_WHITE << " 앞으로의 과제도 기대해 주세요!! 으하하하하!!!" << endl;
+    Sleep(2000);
+    cout << Color::BRIGHT_WHITE << "\n튜터님은 또 그대로 웃으며 모습을 감췄다..." << endl;
+    Sleep(2000);
+    cout << Color::LIME << "\n하지만 그동안의 노력으로 실력이 많이 성장했다! 앞으로도 계속 정진하자!! 화이팅!!" << Color::RESET << endl;
+    Sleep(2000);
     Utils::WaitForKeypress();
 }
 
-void UIManager::FinalBossAppearance() { // 임시
+void UIManager::FinalBossAppearance() {
     system("cls");
+    cout << Color::BRIGHT_WHITE << "Zep에 남아있던 코드카타 문제들을 전부 풀었다!!" << endl;
+	Sleep(2000);
+	cout << Color::BRIGHT_WHITE << "\n하지만 갑자기 바닥이 격하게 흔들리기 시작한다...!" << endl;
+	Sleep(2000);
     string bossArt = MonsterArt["강창민 튜터"].art;
     int artHeight = 22;
     ShowBossEntrance(bossArt, artHeight);
-    cout << "================= 최종 보스 등장 씬 =================" << endl;
-    cout << "거대한 버그 몬스터가 나타났습니다!" << endl;
-    cout << "이것이 바로 당신이 물리쳐야 할 최종 보스입니다." << endl;
-    cout << "모든 힘을 다해 싸우세요!" << endl;
-    cout << "===================================================" << endl;
-    Utils::WaitForKeypress();
+    cout << Color::TEAL << "\n「강창민 튜터 」" << Color::BRIGHT_WHITE << " 크크크... 그 많던 문제들을 모두 해결하다니..." << endl;
+    Sleep(2000);
+    cout << Color::TEAL << "\n「강창민 튜터 」" << Color::BRIGHT_WHITE << " 이번엔 제가 직접 상대해드리죠!! 으랴아!!!" << endl;
+    Sleep(2000);
+    cout << Color::BRIGHT_WHITE << "\n창민 튜터님이 크고 아름다운 문제를 들고 이쪽으로 돌진한다!!!!" << endl;
+    Sleep(2000);
+    cout << Color::CRIMSON << "\n최종보스 창민 튜터님의 문제를 해결하고 이번 과제를 클리어하자!!!!" << Color::RESET << endl;
+    Sleep(2000);
 }
 
 void DrawLogo() {

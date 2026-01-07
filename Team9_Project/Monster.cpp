@@ -59,11 +59,13 @@ bool Monster::checkDeath() {
 	if (m_HP <= 0) {
 		isAlive = false;
 		Sleep(1000);
-		cout << Color::LIME << name << "이(가) 쓰러졌다!" << endl;
+		cout << "\n" << Color::LIME << name << "이(가) 쓰러졌다!" << endl;
 		Sleep(1000);
-		cout << Color::GOLD << m_dropGold << Color::LIME << " ZEP 코인과 " << Color::BRIGHT_WHITE <<
-			m_dropEXP << Color::LIME << " 경험치를 획득했다!" << endl;
-		Sleep(1000);
+		if (name != "강창민 튜터"){
+			cout << Color::GOLD << m_dropGold << Color::LIME << " ZEP 코인과 " << Color::BRIGHT_WHITE <<
+				m_dropEXP << Color::LIME << " 경험치를 획득했다!" << endl;
+			Sleep(1000);
+		}
 		return true;
 	}
 	return false;
@@ -77,7 +79,7 @@ Item* Monster::dropItem() {
 
     uniform_int_distribution<int> dropChance(1, 100);
     if (dropChance(gen) > 30) {
-        cout <<Color::BRIGHT_WHITE<< "이겼지만 아무것도 나오지 않았다...\n";
+        cout <<Color::BRIGHT_WHITE<< "\n이겼지만 아무것도 나오지 않았다...\n";
         return nullptr;
     }
 
@@ -103,7 +105,7 @@ Item* Monster::dropItem() {
     }
 
     if (candidates.empty()) {
-        cout << Color::BRIGHT_WHITE << "이겼지만 아무것도 나오지 않았다...\n";
+        cout << Color::BRIGHT_WHITE << "\n이겼지만 아무것도 나오지 않았다...\n";
         return nullptr;
     }
 
@@ -113,11 +115,11 @@ Item* Monster::dropItem() {
     Item* selectedItem = candidates[selectedIndex];
 	
 	if (selectedItem == nullptr) {
-		cout << Color::BRIGHT_WHITE << "이겼지만 아무것도 나오지 않았다...\n";
+		cout << Color::BRIGHT_WHITE << "\n이겼지만 아무것도 나오지 않았다...\n";
 		return nullptr;
 	}
 
-    cout << Color::LIME << name << "이(가) "
+    cout << "\n" << Color::LIME << name << "이(가) "
         << selectedItem->getRarityColor(selectedItem->getRarity())
         << selectedItem->getName()
         << Color::LIME << "을 드랍했다!\n";

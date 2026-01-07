@@ -96,7 +96,7 @@ bool GameManager::DefaultMenuCheck(int choice) { //기본메뉴 체크. 기본�
 
 
 void GameManager::RunGame() { // 게임의 전체적인 프로세스 진행
-	m_Stage = 21; // 스테이지 초기화
+	m_Stage = 1; // 스테이지 초기화
 
 
 	////인벤토리 테스트 케이스
@@ -175,7 +175,7 @@ void GameManager::SpawnMonster(int stage) {
 
 void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력이 0이 될때까지 반복 루프
 	if (m_Stage % 5 == 0) cout << Color::RED << "\n앗! 갑자기 긴급 실력 테스트로 " << Color::BRIGHT_RED <<
-		 m_CurrentMonster->getName() << Color::RED << " 님이 등장했다!!!" << Color::RESET << endl;
+		 m_CurrentMonster->getName() << Color::RED << " 님이 직접 문제를 내신다!!!" << Color::RESET << endl;
 	else if (m_Stage == 21) m_UI->FinalBossAppearance();
 	else cout << Color::BRIGHT_WHITE << "\n앗! 오늘의 코드카타로 " << Color::RED << m_CurrentMonster->getName()
 		<< Color::BRIGHT_WHITE << "이(가) 문제로 나왔다!" << Color::RESET << endl;
@@ -183,7 +183,7 @@ void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력
 	Utils::WaitForKeypress();
 	system("cls");
 	m_UI->RenderBattleScreen(m_Player, m_CurrentMonster);
-	Sleep(1000);
+	Sleep(1500);
 	while (true) { // 둘중 하나의 체력이 0이 될때까지 반복
 		m_Player->Attack(m_CurrentMonster, m_UI);
 		m_UI->RenderBattleScreen(m_Player, m_CurrentMonster);
@@ -203,20 +203,23 @@ void GameManager::Battle() { // 전투 판정. 몹 또는 플레이어의 체력
 
 
 void GameManager::BattleVictory() { // 전투승리시
-	cout << Color::BRIGHT_GREEN << "\n해냈다! 오늘도 열심히 공부했다!\n" << Color::RESET << endl;
+	cout << Color::BRIGHT_GREEN << "\n해냈다! 오늘도 열심히 공부했다!" << Color::RESET << endl;
 	m_UI->ClearLog();
+	m_SM->AddKill(m_CurrentMonster->getName());
 	if (m_Stage < 21) {
 		m_Player->setEXP(m_Player->getEXP() + m_CurrentMonster->getDropEXP());
 		m_Player->setGold(m_Player->getGold() + m_CurrentMonster->getDropGold());
 		m_Player->LevelUp();
 		Item* dropitem = m_CurrentMonster->dropItem();
 		if (dropitem != nullptr) m_Player->getInventory()->AddItem(dropitem);
-		m_SM->AddKill(m_CurrentMonster->getName());
 		delete m_CurrentMonster; // 현재 몬스터 삭제
 		m_CurrentMonster = nullptr;
-		Sleep(1000);
 		m_AM->UpdateAchievements(m_Player, m_SM);
 		Sleep(1000);
+	}
+	else {
+		delete m_CurrentMonster; // 현재 몬스터 삭제
+		m_CurrentMonster = nullptr;
 	}
 	Utils::WaitForKeypress();
 	while (m_Stage < 21) { // 선택지. 최종보스 이하 스테이지일때만 나오게
@@ -312,6 +315,8 @@ void GameManager::Opening() {
 	}
 	m_Player = new Character(name); // 캐릭터 생성
 	cout << Color::LIME << "당신의 캐릭터 " << Color::BRIGHT_YELLOW << name << Color::LIME << " 이(가) 생성되었습니다!" << Color::RESET << endl;
+	cout << Color::BRIGHT_WHITE << "기본 체력:" << Color::BRIGHT_YELLOW << m_Player->getMaxHP() << Color::RESET
+		<< Color::BRIGHT_WHITE << ", 기본 코딩력:" << Color::BRIGHT_YELLOW << m_Player->getATK() << Color::RESET << endl;
 	Sleep(1000);
 }
 
@@ -319,7 +324,13 @@ void GameManager::Opening() {
 
 void GameManager::Ending() {
 	m_UI->EndingScene();
-	cout << "YOU WIN!" << endl; // 임시
+	cout << Color::CRIMSON << "\nY" << Color::ORANGE << "O" << Color::YELLOW << "U" << Color::LIME << " W" << Color::BRIGHT_BLUE << "I" << Color::NAVY << "N" << Color::PURPLE <<"!\n" << endl;
+	Sleep(1000);
+	cout << Color::BRIGHT_WHITE << "모든 코딩 테스트를 통과하고, 마침내 내배캠에서 살아남았습니다!" << Color::RESET << endl;
+	Sleep(1000);
+	cout << Color::LIME << "이제 새로운 도전이 기다리고 있습니다!" << Color::RESET << endl;
+	Sleep(1000);
+	cout << Color::LIME << "다회차 플레이를 통해 모든 업적을 달성해보세요!" << Color::RESET << endl;
 }
 
 

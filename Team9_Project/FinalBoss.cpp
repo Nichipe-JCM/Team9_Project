@@ -59,9 +59,9 @@ void FinalBoss::GetHit(int damage, UIManager* ui)
     if (m_HP <= 0)
     {
         cout << endl;
-        cout << "===================================" << endl;
+        cout << Color::LIME << "===================================" << endl;
         cout << " [FINAL BOSS DEFEATED]" << endl;
         cout << " 강창민 튜터님을 쓰러뜨렸다!" << endl;
-        cout << "===================================" << endl;
+        cout << "==================================="<< Color::RESET << endl;
     }
 }
