@@ -1,4 +1,4 @@
-﻿#include "EventList.h"
+#include "EventList.h"
 #include "Utils.h"
 #include "GameManager.h"
 #include "Character.h"
@@ -161,14 +161,30 @@ void TILIsImportantEvent::EventEffect(Character* character, GameManager* gm) {
 			break;
 		}
 		else if (select == 2) {
-			int gain = static_cast<int>(character->getMaxHP() * 0.05);
-			cout << Color::CYAN << "\"너무 힘들어서 일어날 수가 없다...\"" << Color::RESET << endl;
+			int loss = static_cast<int>(character->getMaxHP() * 0.05);
+			cout << Color::CYAN << "\"너무 피곤하다. 하루만 쉬자 별 일 있겠어?\"" << Color::RESET << endl;
 			Sleep(500);
-			cout << Color::CYAN << "\"그래 하루만 쉬자... 하루 쉬는 건데 별일이야 있겠어?\"" << Color::RESET << endl;
+			cout << Color::CYAN << "\"피곤하다. 잠이나.. 자야지... Zzz....\"" << Color::RESET << endl;
+			Sleep(1000);
+			cout << Color::CYAN << "\"으음.. 여긴 어디지?\"" << Color::RESET << endl;
 			Sleep(500);
-			cout << Color::BRIGHT_WHITE << "TIL을 작성하지 않았다." << Color::RESET << endl;
-			cout << Color::LIME << "적당한 휴식으로 체력이 " << gain << " 회복됐다." << Color::RESET << endl;
-			character->setHP(min(character->getMaxHP(), character->getHP() + gain));
+			cout << Color::CYAN << "\"어 튜터님이잖아. 튜터님 안녕하세요! 여기가 어딘지 아시나요?\"" << Color::RESET << endl;
+			Sleep(1000);
+			cout << Color::BRIGHT_WHITE << "." << Color::RESET << endl;
+			Sleep(500);
+			cout << Color::BRIGHT_WHITE << ".." << Color::RESET << endl;
+			Sleep(500);
+			cout << Color::BRIGHT_WHITE << "..." << Color::RESET << endl;
+			Sleep(1000);
+			cout << Color::BG_RED << "TIL 매일 작성하라고 했죠!!!!!!!!!!!!!" << Color::RESET << endl;
+			Sleep(500);
+			cout << Color::CYAN << "\"으악!!! 아... 꿈이였구나... 다행이다...\"" << Color::RESET << endl;
+			Sleep(500);
+			cout << Color::CYAN << "\"이런 악몽까지 꾸다니... 앞으로는 꼭 매일 작성해야겠다...\"" << Color::RESET << endl;
+			Sleep(500);
+			cout << Color::BRIGHT_WHITE << "악몽때문에 잠을 설쳐 제대로 휴식을 취하지 못했다." << Color::RESET << endl;
+			cout << Color::ORANGE << "체력이 " << loss << " 감소했다." << Color::RESET << endl;
+			character->setHP(max(1, character->getHP() - loss));
 			break;
 		}
 		else {
