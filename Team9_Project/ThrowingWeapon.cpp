@@ -21,16 +21,6 @@ int ThrowingWeapon::getQuantity() const
 	return m_quantity;
 }
 
-// 무기를 던지면 수량 감소
-bool ThrowingWeapon::use()
-{
-	if (m_quantity > 0) {
-		--m_quantity;
-		return m_damage; // 맞추면 데미지 반환
-	}
-	throw runtime_error("투척할 무기가 남아있지 않습니다!"); // 더 못 써 요 (데미지 0)
-}
-
 void ThrowingWeapon::PrintInfo() const {
 	if (m_isEquipped) std::cout << "\033[36m" << "[장착중] " << "\033[0m";
 	Item::PrintInfo();

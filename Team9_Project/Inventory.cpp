@@ -18,32 +18,46 @@ Inventory::~Inventory(){
 }
 bool Inventory::AddItem(Item* item) {
 	if (m_Inventory.size() >= m_MaxInventorySlot) {
-		cout << "인벤토리가 가득 찼습니다! 어떻게 하시겠습니까?" << endl;
-		cout << "1. 소지중인 아이템 제거 후 획득  2. 아이템 획득 포기" << endl;
-		int choice = Utils::GetSafeInput();
-        if (choice == 1) {
-            Utils::DrawLine();
-            int index = 1;
-            for (const Item* i : m_Inventory) {
-                cout << index << ". ";
-                i->PrintInfo();
-                index++;
+        cout << Color::RED << "인벤토리가 가득 찼습니다! 어떻게 하시겠습니까?" << Color::RESET << endl;
+        cout << Color::BRIGHT_WHITE << "1. 소지중인 아이템 제거 후 획득" << endl;
+		cout << "2. 아이템 획득 포기" << Color::RESET << endl;
+        while (true) {
+            int choice = Utils::GetSafeInput();
+            if (choice == 1) {
+                Utils::DrawLine();
+                int index = 1;
+                for (const Item* i : m_Inventory) {
+                    cout << index << ". ";
+                    i->PrintInfo();
+                    index++;
+                }
+                Utils::DrawLine();
+                cout << Color::BRIGHT_YELLOW << "제거할 아이템의 번호를 입력하세요: " << Color::RESET;
+                while (true) {
+                    int itemIndex = Utils::GetSafeInput();
+                    if (itemIndex < 1 || itemIndex >= m_Inventory.size() + 1) {
+                        cout << Color::BRIGHT_YELLOW << "잘못된 아이템 번호입니다. 다시 입력하세요: " << Color::RESET << endl;
+                    }
+                    if (GetItem(itemIndex)->getEquipped()) {
+						cout << Color::BRIGHT_YELLOW << "장착 중인 아이템은 제거할 수 없습니다." << Color::RESET << endl;
+                    }
+                    else {
+                        cout << Color::RED << GetItem(itemIndex)->getName() << Color::BRIGHT_WHITE << "을(를) 제거하고 "
+                            << Color::GREEN << item->getName() << Color::BRIGHT_WHITE << "을(를) 획득했습니다." << Color::RESET << endl;
+						Item* removedItem = GetItem(itemIndex);
+                        RemoveItemFromIndex(itemIndex);
+						delete removedItem;
+                        m_Inventory.push_back(item);
+                        return true;
+                    }
+                }
             }
-			Utils::DrawLine();
-           cout << "제거할 아이템의 번호를 입력하세요: ";
-            while(true) {
-                int itemIndex = Utils::GetSafeInput();
-                if (itemIndex < 1 || itemIndex >= m_Inventory.size() + 1) {
-                    cout << "잘못된 아이템 번호입니다. 다시 입력하세요: ";
-                }
-                else {
-                    RemoveItemFromIndex(itemIndex);
-                    cout << "아이템을 제거하고 새로운 아이템을 획득했습니다." << endl;
-                    m_Inventory.push_back(item);
-                    return true;
-                    break;
-                }
+            if (choice == 2) {
+                cout << Color::BRIGHT_WHITE << "아이템 획득을 포기했습니다. " << Color::GREEN << item->getName() << Color::BRIGHT_WHITE <<"을(를) 저 멀리 던져버렸습니다." << Color::RESET << endl;
+                delete item;
+                return false;
 			}
+			cout << Color::BRIGHT_YELLOW << "잘못된 선택입니다." << Color::RESET << endl;
         }
         delete item;
 		return false;
@@ -64,7 +78,7 @@ void Inventory::RemoveItemFromPointer(Item* item) {
     }
 }
 Item* Inventory::GetItem(int index) {
-    if (index < 1 || index >= m_Inventory.size()+1) {
+    if (index < 1 || index >= m_Inventory.size() + 1) {
         return nullptr;
     }
     return m_Inventory[index - 1];
@@ -77,16 +91,20 @@ void Inventory::ManageInventory(StatusManager* sm, Character* ch) {
         system("cls");
         sm->DisplayInventory(this);
         Utils::DrawLine();
-        cout << "1. 아이템 사용/장착  2. 아이템 제거  3. 나가기" << endl;
+        cout << Color::TEAL << "1. 아이템 사용/장착  2. 아이템 제거  3. 나가기" << Color::RESET << endl;
         Utils::DrawLine();
         int choice = Utils::GetSafeInput();
         switch (choice) {
         case 1: {
-            cout << "사용/장착할 아이템의 번호를 입력하세요: ";
+            if (m_Inventory.empty()) {
+                cout << Color::BRIGHT_YELLOW << "인벤토리가 비어있습니다." << Color::RESET << endl;        
+                break;
+			}
+            cout << Color::BRIGHT_WHITE << "사용/장착할 아이템의 번호를 입력하세요: " << Color::RESET;
             int itemIndex = Utils::GetSafeInput();
             Item* item = GetItem(itemIndex);
             if (item == nullptr) {
-                cout << "잘못된 아이템 번호입니다." << endl;
+                cout << Color::BRIGHT_YELLOW << "잘못된 아이템 번호입니다." << Color::RESET << endl;
                 break;
             }
             if (item->getItemType() == ItemCategory::Weapon) {
@@ -104,34 +122,39 @@ void Inventory::ManageInventory(StatusManager* sm, Character* ch) {
                 delete item;
 			}
             else {
-                cout << "이 아이템은 장착하거나 사용할 수 없습니다." << endl;
+                cout << Color::BRIGHT_YELLOW << "이 아이템은 장착하거나 사용할 수 없습니다." << Color::RESET << endl;
             }
             break;
         }
         case 2: {
-            cout << "제거할 아이템의 번호를 입력하세요: ";
+            if (m_Inventory.empty()) {
+                cout << Color::BRIGHT_YELLOW << "인벤토리가 비어있습니다." << Color::RESET << endl;
+                break;
+            }
+            cout << Color::BRIGHT_WHITE << "제거할 아이템의 번호를 입력하세요: " << Color::RESET;
             int itemIndex = Utils::GetSafeInput();
             Item* item = GetItem(itemIndex);
             if (item == nullptr) {
-                cout << "잘못된 아이템 번호입니다." << endl;
-                return;
+                cout << Color::BRIGHT_YELLOW << "잘못된 아이템 번호입니다." << Color::RESET << endl;
+                break;
             }
             if (item == ch->getEquippeditem() || item == ch->getEquippedThrow() || item == ch->getEquippedPotion()) {
-                cout << "장착 중인 아이템은 제거할 수 없습니다. 먼저 장착을 해제하세요." << endl;
-                return;
+                cout << Color::BRIGHT_YELLOW << "장착 중인 아이템은 제거할 수 없습니다. 먼저 장착을 해제하세요." << Color::RESET << endl;
+                break;
             }
             RemoveItemFromIndex(itemIndex);
-            cout << item->getName() << "이(가) 인벤토리에서 제거되었습니다." << endl;
+            cout << Color::BRIGHT_WHITE << item->getName() << "이(가) 인벤토리에서 제거되었습니다." << Color::RESET << endl;
             delete item; // 메모리 해제
             break;
         }
         case 3:
-			cout << "이전 메뉴로 돌아갑니다." << endl;
+			cout << Color::BRIGHT_WHITE << "이전 메뉴로 돌아갑니다." << Color::RESET << endl;
+			Utils::WaitForKeypress();
             return;
         default:
-            cout << "잘못된 선택입니다." << endl;
+            cout << Color::BRIGHT_YELLOW << "잘못된 선택입니다." << Color::RESET << endl;
             break;
         }
-		system("pause");
+		Utils::WaitForKeypress("\n\033[38;5;51m▶아무 키나 눌러 인벤토리로 돌아갑니다...");
     }
 }

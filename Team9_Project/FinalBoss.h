@@ -5,6 +5,7 @@
 // FinalBoss 클래스
 // - 게임에서 단 1번 등장하는 최종 보스
 // - Stage 21에서만 출현
+
 class FinalBoss : public Monster
 {
 public:
@@ -14,8 +15,8 @@ public:
     FinalBoss();
 
     // 최종 보스 전용 공격 연출
-    void attack(Character* player) override;
+    void attack(Character* player, UIManager* ui) override;
 
     // 최종 보스 전용 피격 연출
-    void GetHit(int damage) override;
+    void GetHit(int damage, UIManager* ui) override;
 };

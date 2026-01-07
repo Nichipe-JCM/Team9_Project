@@ -9,7 +9,7 @@ Monster* Mob::createRandomMonster(Character* Player) // 정해진 리스트에�
 {
 	static bool seeded = false;
 	if (!seeded) {
-		srand(time(NULL));
+		srand(static_cast<unsigned int>(time(NULL)));
 		seeded = true;
 	}
 
@@ -18,8 +18,8 @@ Monster* Mob::createRandomMonster(Character* Player) // 정해진 리스트에�
 
 	int idx = rand() % 10;
 	int level = Player->getLevel();
-	int gold = rand() % 11 + 10;
-	int exp = 25;
+	int gold = rand() % 11 + 30 + rand() % (level * 10);
+	int exp = 35;
 	return new Monster(names[idx], level, gold, exp);
 }
 
