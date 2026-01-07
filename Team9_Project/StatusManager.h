@@ -10,6 +10,7 @@ class StatusManager
 {
 public:
 	map<string, int> m_KillCounts;
+	int totalKills = 0;
 	StatusManager();
 	~StatusManager();
 	void AddKill(const string& name);

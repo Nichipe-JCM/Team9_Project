@@ -6,14 +6,21 @@
 using namespace std;
 
 class StatusManager; 
-class Character;  
+class Character; 
+
+struct Achievement {
+ string name;
+ bool achieved;
+ string description;
+};
 
 class AchievementManager
 {
 public:
-    map<string, bool> m_Achievements;
-    AchievementManager();
-    ~AchievementManager();
-    void Init();
-    void UpdateAchievements(Character* player, StatusManager* sm);
+ map<string, Achievement> m_Achievements;
+ int achievedCount = 0;
+ AchievementManager();
+ ~AchievementManager();
+ void Init();
+ void UpdateAchievements(Character* player, StatusManager* sm);
 };

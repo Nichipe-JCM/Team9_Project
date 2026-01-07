@@ -8,10 +8,27 @@
 #include <algorithm>
 using namespace std;
 
-StatusManager::StatusManager() {}
+StatusManager::StatusManager() {
+	m_KillCounts["포인터"] = 0;
+	m_KillCounts["레퍼런스"] = 0;
+	m_KillCounts["템플릿"] = 0;
+	m_KillCounts["변수"] = 0;
+	m_KillCounts["함수"] = 0;
+	m_KillCounts["배열"] = 0;
+	m_KillCounts["알고리즘"] = 0;
+	m_KillCounts["객체"] = 0;
+	m_KillCounts["부동소수점"] = 0;
+	m_KillCounts["클래스"] = 0;
+	m_KillCounts["김조은 튜터"] = 0;
+	m_KillCounts["김극민 튜터"] = 0;
+	m_KillCounts["김봉재 튜터"] = 0;
+	m_KillCounts["손승현 튜터"] = 0;
+	m_KillCounts["강창민 튜터"] = 0;
+}
 StatusManager::~StatusManager() {}
 void StatusManager::AddKill(const string& name) {
 	m_KillCounts[name]++;
+	totalKills++;
 }
 void StatusManager::DisplayCharacterStatus(Character* ch) {
 	Utils::DrawLine();
@@ -40,22 +57,25 @@ void StatusManager::DisplayBattleStatus() {
 			<< Color::GRAY << "처치: "
 			<< Color::RED << namecount.second << Color::RESET << "회" << endl;
 	}
+	cout << Color::BRIGHT_GREEN << "\n총 처치 횟수: " << totalKills << "회" << Color::RESET << endl;
 	Utils::DrawLine();
 	Utils::WaitForKeypress();
 }
 void StatusManager::DisplayAchievements(AchievementManager* am) {
 	int index = 1;
 	Utils::DrawLine();
-	cout << "[ 업적 목록 ]" << endl;
+	cout << Color::GOLD << "[ 업적 목록 ]" << endl;
 	for (auto const& pair : am->m_Achievements) {
-		if (pair.second) {
-			cout << index << ". [V] " << pair.first << " (달성 완료)" << endl;
+		const Achievement& a = pair.second;
+		if (a.achieved) {
+			cout << Color::BRIGHT_WHITE << index << Color::LIME << ". [V] " << Color::BRIGHT_WHITE << a.name << " (달성 완료) - " << a.description << endl;
 		}
 		else {
-			cout << index << ". [ ] " << pair.first << " (미달성)" << endl;
+			cout << Color::BRIGHT_WHITE << index << Color::OLIVE <<". [ ] " << Color::BRIGHT_WHITE << a.name << " (미달성) - " << a.description << endl;
 		}
 		index++;
 	}
+	cout << Color::BRIGHT_GREEN << "\n총 완료 업적: " << am->achievedCount << "개" << Color::RESET << endl;
 	Utils::DrawLine();
 	Utils::WaitForKeypress();
 }
@@ -72,7 +92,7 @@ void StatusManager::DisplayInventory(Inventory* inv) {
 		});
 	int index = 1;
 	if (vec.empty()) {
-		cout << "인벤토리가 비었습니다." << endl;
+		cout << Color::GOLD <<"인벤토리가 비었습니다." << endl;
 		Utils::DrawLine();
 		return;
 	}

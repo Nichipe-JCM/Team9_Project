@@ -26,7 +26,7 @@ int Utils::GetSafeInput() {
 int Utils::DefaultMenu() {
     cout << Color::BRIGHT_WHITE << "==============================================" << endl;
     cout << "7.인벤토리     8.상태창     9.전적     0.업적" << endl;
-    cout << "==============================================" << Color::RESET << endl;
+    cout << "==============================================\n" << Color::RESET << endl;
     return GetSafeInput();
 }
 
