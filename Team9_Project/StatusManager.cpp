@@ -8,6 +8,7 @@
 #include <algorithm>
 using namespace std;
 
+
 StatusManager::StatusManager() {
 	m_KillCounts["포인터"] = 0;
 	m_KillCounts["레퍼런스"] = 0;
@@ -65,8 +66,8 @@ void StatusManager::DisplayAchievements(AchievementManager* am) {
 	int index = 1;
 	Utils::DrawLine();
 	cout << Color::GOLD << "[ 업적 목록 ]" << endl;
-	for (auto const& pair : am->m_Achievements) {
-		const Achievement& a = pair.second;
+	for (auto const& str : am->m_AchievementOrder) {
+		const Achievement& a = am->m_Achievements[str];
 		if (a.achieved) {
 			cout << Color::BRIGHT_WHITE << index << Color::LIME << ". [V] " << Color::BRIGHT_WHITE << a.name << " (달성 완료) - " << a.description << endl;
 		}

@@ -33,11 +33,7 @@ FinalBoss::FinalBoss()
     m_HP = m_MaxHP; // 체력은 최대치로 초기화
     m_ATK = static_cast<int>(m_ATK * atkRatio);
     // ===== 최종 보스 스탯 강화 완료 =====
-     
-    // [5] 최종 보스 등장 연출
-    cout << "===================================" << endl;
-    cout << " [FINAL BOSS] 강창민 튜터님 등장!" << endl;
-    cout << "===================================" << endl;
+
 }
 
 // FinalBoss 공격

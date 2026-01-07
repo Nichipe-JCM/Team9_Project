@@ -22,7 +22,7 @@ void AchievementManager::Init() {
     m_Achievements["내배캠행동대장"] = {"내배캠행동대장", false, "레퍼런스/알고리즘/템플릿 각각3회 처치"};
     m_Achievements["청출어람"] = {"청출어람", false, "김조은/김극민/김봉재/손승현 튜터 각1회 처치"};
     m_Achievements["전투 마스터"] = {"전투 마스터", false, "전체 전투에서 50회 승리"};
-	m_Achievements["전설의 개발자"] = { "전설의 개발자", false, "강창민 튜터 5회 처치" };
+    m_Achievements["전설의 개발자"] = { "전설의 개발자", false, "강창민 튜터 5회 처치" };
 
 }
 void AchievementManager::UpdateAchievements(Character* player, StatusManager* sm) {

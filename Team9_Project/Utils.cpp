@@ -44,3 +44,13 @@ void Utils::WaitForKeypress(const std::string& msg) {
     int key = _getch();
     (void)key;
 }
+std::vector<std::string> Utils::SplitString(const std::string& str, char delimiter) {
+    std::vector<std::string> lines;
+    std::stringstream ss(str);
+    std::string temp;
+
+    while (std::getline(ss, temp, delimiter)) {
+        lines.push_back(temp);
+    }
+    return lines;
+}

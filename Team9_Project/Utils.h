@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <string>
 #include <conio.h>
+#include <sstream>
+#include <vector>
 
 namespace Color {
     // [기본 8색]
@@ -88,5 +90,6 @@ public:
 	static int DefaultMenu();
 	static void DrawLine();
     static void WaitForKeypress(const std::string& msg = "\n\033[38;5;51m▶ 계속하려면 아무 키나 누르세요...\033[0m");
+    static std::vector<std::string> SplitString(const std::string& str, char delimiter);
 };
 

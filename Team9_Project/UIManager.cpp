@@ -48,17 +48,17 @@ UIManager::UIManager()
 
     MonsterArt["변수"] = { R"(
 
-		[const int MAX_HP]  
-		[SEALED]  
-╔══════════════════════════════════════════╗  
-║                   _       _     _        ║  
-║                  (_)     | |   | |       ║  
-║  __   ____ _ _ __ _  __ _| |__ | | ___   ║  
-║  \ \ / / _` | '__| |/ _` | '_ \| |/ _ \  ║  
-║   \ V / (_| | |  | | (_| | |_) | |  __ / ║  
-║    \_/ \__,_|_|  |_|\__,_|_.__/|_|\___|  ║
-║                                          ║  
-╚══════════════════════════════════════════╝   
+    		[const int MAX_HP]  
+    		[SEALED]  
+    ╔══════════════════════════════════════════╗  
+    ║                   _       _     _        ║  
+    ║                  (_)     | |   | |       ║  
+    ║  __   ____ _ _ __ _  __ _| |__ | | ___   ║  
+    ║  \ \ / / _` | '__| |/ _` | '_ \| |/ _ \  ║  
+    ║   \ V / (_| | |  | | (_| | |_) | |  __ / ║  
+    ║    \_/ \__,_|_|  |_|\__,_|_.__/|_|\___|  ║
+    ║                                          ║  
+    ╚══════════════════════════════════════════╝   
                             )", 14};
 
 
@@ -78,12 +78,12 @@ UIManager::UIManager()
 
 
     MonsterArt["배열"] = { R"delim(
-   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-  |         |         |        |         |         |         | 
-  |   ('')  | (-'- )  | (^.^)  | ( _ _ ) | (-. -)  | (^v^ )  | 
-  |   - -   |   - -   |  - -   |   -  -  |   -  -  |  - -    |
-  | _ _ _ _ | _ _ _ _ | _ _ _ _| _ _ _ _ | _ _ _ _ | _ _ _ _ |  
-                            )delim", 7};
+       _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+      |         |         |        |         |         |         | 
+      |   ('')  | (-'- )  | (^.^)  | ( _ _ ) | (-. -)  | (^v^ )  | 
+      |   - -   |   - -   |  - -   |   -  -  |   -  -  |  - -    |
+      | _ _ _ _ | _ _ _ _ | _ _ _ _| _ _ _ _ | _ _ _ _ | _ _ _ _ |  
+                                )delim", 7};
 
 
     MonsterArt["알고리즘"] = { R"delim(
@@ -97,7 +97,7 @@ UIManager::UIManager()
                 /     \   
          _ _ _ / (ㅇ)  \ _ _  
         /      \       /     \   
-        //\     \     /     /\\  
+       //\      \     /     /\\  
                  \   /
                   \ /
                    | 
@@ -298,7 +298,7 @@ R"(
 
  )", 22 };
 
-	MonsterArt["강창민 튜터님"] = {
+	MonsterArt["강창민 튜터"] = {
 R"(
              .::.               ....          
           ..::::.              .::. .         
@@ -344,6 +344,50 @@ void gotoxy(int x, int y) {
     COORD pos = { (SHORT)x, (SHORT)y };
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
+
+void ShowBossEntrance(string rawArt, int totalLines) {
+    // 1. 거대한 문자열을 한 줄씩 분해합니다.
+    vector<string> artLines = Utils::SplitString(rawArt, '\n');
+
+    // 데이터의 줄 수가 입력받은 높이(22)보다 적을 경우를 대비한 안전장치
+    if (artLines.size() < totalLines) {
+        totalLines = artLines.size();
+    }
+
+    // 2. 연출 시작 (총 totalLines 단계만큼 반복)
+    // frame 1: 맨 윗줄 1개만 바닥에 보임
+    // frame 2: 맨 윗줄은 한 칸 위로, 두 번째 줄이 바닥에 보임 ...
+    for (int frame = 1; frame <= totalLines; ++frame) {
+
+        // (1) 화면을 매번 지우면 깜빡이니, 커서를 '그림이 시작될 위치'로 되돌립니다.
+        // 예를 들어 화면 상단(0, 5)부터 그리기 시작한다고 가정합시다.
+        // 선생님의 UI 배치에 따라 Y좌표(5)는 조절하세요.
+        gotoxy(0, 0);
+
+        // (2) [공간 계산] 위쪽 여백 채우기
+        // 그림이 솟아오르려면, 아직 안 올라온 부분만큼은 '빈 줄(Newline)'로 밀어내야 합니다.
+        // 예: 22줄짜리 그림인데 5줄만 보여주고 싶다면? -> 위에 17줄은 빈 줄로 채움
+        for (int i = 0; i < totalLines - frame; ++i) {
+            cout << "                                                    " << endl; // 공백 출력
+        }
+
+        for (int i = 0; i < frame; ++i) {
+            cout << Color::CRIMSON << artLines[i] << Color::RESET << endl;
+        }
+
+        // (4) [시간 지연] 너무 빠르면 솟아오르는 느낌이 안 납니다.
+        Sleep(150); // 0.1초 대기 (속도는 취향껏 조절)
+    }
+
+    // 3. 등장 후 웅장한 메시지 (선택 사항)
+    Sleep(500);
+    cout << "\n\n" << Color::BG_RED << Color::BRIGHT_WHITE
+        << "       [ 경고 ]  강창민 튜터가 등장했습니다!       "
+        << Color::RESET << endl;
+    Sleep(1000);
+}
+
+
 
 COORD GetCursorPosition() {
     CONSOLE_SCREEN_BUFFER_INFO presentCur;
@@ -408,6 +452,9 @@ void UIManager::EndingScene() { // 임시
 
 void UIManager::FinalBossAppearance() { // 임시
     system("cls");
+    string bossArt = MonsterArt["강창민 튜터"].art;
+    int artHeight = 22;
+    ShowBossEntrance(bossArt, artHeight);
     cout << "================= 최종 보스 등장 씬 =================" << endl;
     cout << "거대한 버그 몬스터가 나타났습니다!" << endl;
     cout << "이것이 바로 당신이 물리쳐야 할 최종 보스입니다." << endl;
