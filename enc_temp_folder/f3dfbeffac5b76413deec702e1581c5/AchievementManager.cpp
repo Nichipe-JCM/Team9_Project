@@ -28,7 +28,7 @@ void AchievementManager::Init() {
 void AchievementManager::UpdateAchievements(Character* player, StatusManager* sm) {
     //if (!m_Achievements["업적 이름"].achieved && 업적 조건) {} 양식으로 작성
     int t = achievedCount;
-    if (!m_Achievements["첫걸음"].achieved && player->getATK() >=100) {
+    if (!m_Achievements["첫걸음"].achieved && player->getATK() >=50) {
         m_Achievements["첫걸음"].achieved = true;
         cout << endl;
         Utils::DrawLine();
