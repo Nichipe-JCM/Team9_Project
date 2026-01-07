@@ -74,6 +74,7 @@ vector<Item*>& Inventory::GetInventory() {
 }
 void Inventory::ManageInventory(StatusManager* sm, Character* ch) {
     while (true) {
+        system("cls");
         sm->DisplayInventory(this);
         Utils::DrawLine();
         cout << "1. 아이템 사용/장착  2. 아이템 제거  3. 나가기" << endl;
